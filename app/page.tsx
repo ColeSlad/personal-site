@@ -35,12 +35,12 @@ export default function Home() {
         <div className="about-body">
           <p>
             i&apos;m a cs student at the university of maryland building full-stack web apps,
-            ml experiments, and mobile tools. i&apos;ve shipped production code for a children&apos;s
-            hospital, engineered saas platforms, and placed 2nd at trojan hacks among 50+ teams.
+            ml projects, and mobile tools. i&apos;ve shipped production code for a children&apos;s
+            hospital, engineered saas platforms, and am currently working with MITRE as a contracted software engineering intern. 
+            i&apos;m passionate about building tools that solve real problems and have a positive impact on users. 
           </p>
           <p>
-            i care about clean architecture, interesting problems, and things that actually work.
-            reach me at{' '}
+            i like to listen to music, go to the gym, and of course, code! feel free to reach out to me at {' '}
             <a href="mailto:coleslad31@gmail.com">coleslad31@gmail.com</a>
             {' '}or find me on{' '}
             <a href="https://github.com/ColeSlad" target="_blank" rel="noopener noreferrer">
@@ -48,6 +48,9 @@ export default function Home() {
             </a>
             .
           </p>
+          <div className="project-links" style={{marginTop: '1rem'}}>
+            <a href="https://linkly-liart.vercel.app/ColeSladowsky" target="_blank" rel="noopener noreferrer" className="demo-link">my linkly profile ↗</a>
+          </div>
         </div>
       </section>
 

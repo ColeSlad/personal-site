@@ -364,6 +364,23 @@ a.project-link:hover .slash {
   flex-wrap: wrap;
   gap: 0.35rem;
 }
+.project-links {
+  margin-top: 0.6rem;
+}
+.demo-link {
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.demo-link::before { content: '['; color: var(--text-muted); }
+.demo-link::after  { content: ']'; color: var(--text-muted); }
+.demo-link:hover {
+  color: var(--accent-bright);
+  text-decoration: none;
+}
+
 .tag {
   font-size: 10px;
   color: var(--text-muted);
