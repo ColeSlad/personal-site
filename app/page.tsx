@@ -1,65 +1,232 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get dfdfstarted, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="site-wrap">
+
+      {/* ── HEADER ── */}
+      <header className="site-header">
+        <p className="sys-line">
+          COLE_SLADOWSKY.EXE v1.0 &nbsp;·&nbsp; <span className="ok">LOADED OK</span> &nbsp;·&nbsp; <span className="ok">DC / NYC</span>
+        </p>
+
+        <div className="name-row">
+          <span className="name">COLE SLADOWSKY</span>
+          <span className="cursor">█</span>
+        </div>
+
+        <p className="tagline">
+          <span className="prompt">$</span>
+          cs @ university of maryland &nbsp;//&nbsp; class of 2027 &nbsp;//&nbsp; software engineer
+        </p>
+
+        <nav className="nav">
+          <a href="#about">about</a>
+          <a href="#experience">experience</a>
+          <a href="#projects">projects</a>
+          <a href="#skills">skills</a>
+          <a href="#contact">contact</a>
+        </nav>
+
+        <hr className="header-rule" />
+      </header>
+
+      {/* ── ABOUT ── */}
+      <section id="about" className="section">
+        <h2 className="section-title">▶ about.txt</h2>
+        <div className="about-body">
+          <p>
+            i&apos;m a cs student at the university of maryland building full-stack web apps,
+            ml experiments, and mobile tools. i&apos;ve shipped production code for a children&apos;s
+            hospital, engineered saas platforms, and placed 2nd at trojan hacks among 50+ teams.
+          </p>
+          <p>
+            i care about clean architecture, interesting problems, and things that actually work.
+            reach me at{' '}
+            <a href="mailto:coleslad31@gmail.com">coleslad31@gmail.com</a>
+            {' '}or find me on{' '}
+            <a href="https://github.com/ColeSlad" target="_blank" rel="noopener noreferrer">
+              github
+            </a>
+            .
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* ── EXPERIENCE ── */}
+      <section id="experience" className="section">
+        <h2 className="section-title">▶ experience.log</h2>
+        <div className="exp-list">
+
+          <div className="exp-item">
+            <div className="exp-head">
+              <span className="exp-role">Software Engineer Intern</span>
+              <span className="exp-date">sep 2025 – dec 2025</span>
+            </div>
+            <div className="exp-company">Children&apos;s National Hospital</div>
+            <ul className="exp-bullets">
+              <li>built dockerized brain tumor segmentation tool (React + Flask) with a team of 15, improving clinical workflow by 30%</li>
+              <li>integrated custom OHIF-based DICOM viewer for MRI visualization, deployed across 5+ hospitals</li>
+              <li>designed REST APIs and modular architecture to streamline collaboration and scalability</li>
+            </ul>
+          </div>
+
+          <div className="exp-item">
+            <div className="exp-head">
+              <span className="exp-role">Software Engineer Intern</span>
+              <span className="exp-date">jun 2024 – aug 2024</span>
+            </div>
+            <div className="exp-company">RU Residence</div>
+            <ul className="exp-bullets">
+              <li>co-engineered Python–Flask–SQL system with Google Sheets integration to track $100K+ in finances, reducing manual input by 80%</li>
+              <li>automated reconciliation workflows with Google Apps Script to improve financial accuracy</li>
+              <li>reduced reported system issues by 35% through ongoing maintenance and feature work</li>
+            </ul>
+          </div>
+
+          <div className="exp-item">
+            <div className="exp-head">
+              <span className="exp-role">Machine Learning Research</span>
+              <span className="exp-date">sep 2023 – jun 2024</span>
+            </div>
+            <div className="exp-company">Ingredion Idea Lab</div>
+            <ul className="exp-bullets">
+              <li>built CNN with PyTorch to predict popcorn popping times, achieving 20% accuracy improvement</li>
+              <li>designed and preprocessed dataset of 1,000+ images with iterative model tuning</li>
+              <li>presented findings to 20+ faculty members and industry partners</li>
+            </ul>
+          </div>
+
+          <div className="exp-item">
+            <div className="exp-head">
+              <span className="exp-role">Instructional Intern</span>
+              <span className="exp-date">jun 2023 – mar 2024</span>
+            </div>
+            <div className="exp-company">Game-U</div>
+            <ul className="exp-bullets">
+              <li>instructed 100+ students (including learners with disabilities) in Unity (C#), Python, and Scratch</li>
+              <li>assisted with curriculum development and classroom technology setup</li>
+            </ul>
+          </div>
+
         </div>
-      </main>
+      </section>
+
+      {/* ── PROJECTS ── */}
+      <section id="projects" className="section">
+        <h2 className="section-title">▶ projects/</h2>
+        <div className="projects-grid">
+
+          <div className="project-card">
+            <div className="project-name">
+              <a href="https://linkly-liart.vercel.app/ColeSladowsky" target="_blank" rel="noopener noreferrer" className="project-link">
+                linkly<span className="slash">/</span>
+              </a>
+            </div>
+            <p className="project-desc">
+              full-stack linktree-style platform with JWT-based auth and REST APIs. deployed on vercel + render.
+            </p>
+            <div className="project-stack">
+              {['React', 'Next.js', 'Express.js', 'MongoDB', 'Tailwind'].map(t => (
+                <span key={t} className="tag">{t}</span>
+              ))}
+            </div>
+          </div>
+
+          <div className="project-card">
+            <div className="project-name">
+              <a href="http://lostandfound-fawn.vercel.app/" target="_blank" rel="noopener noreferrer" className="project-link">
+                lost it, found it<span className="slash">/</span>
+              </a>
+            </div>
+            <p className="project-desc">
+              multi-tenant SaaS inventory platform with org isolation, invite-code team management, image uploads, and automated item matching.
+            </p>
+            <div className="project-stack">
+              {['React', 'TypeScript', 'Flask', 'PostgreSQL', 'AWS S3'].map(t => (
+                <span key={t} className="tag">{t}</span>
+              ))}
+            </div>
+          </div>
+
+          <div className="project-card">
+            <div className="project-name">
+              <a href="https://github.com/ColeSlad/KryptoNotes" target="_blank" rel="noopener noreferrer" className="project-link">
+                kryptonotes<span className="slash">/</span>
+              </a>
+            </div>
+            <p className="project-desc">
+              secure note-taking app with Argon2id encryption, Firebase backend, and native biometric auth (FaceID, TouchID, Iris).
+            </p>
+            <div className="project-stack">
+              {['React Native', 'Expo', 'TypeScript', 'Express.js', 'Firebase'].map(t => (
+                <span key={t} className="tag">{t}</span>
+              ))}
+            </div>
+          </div>
+
+          <div className="project-card">
+            <div className="project-name">
+              <a href="https://github.com/ColeSlad/hackathon" target="_blank" rel="noopener noreferrer" className="project-link">
+                trojan hacks<span className="slash">/</span>
+              </a>
+              <span className="project-badge">2nd place</span>
+            </div>
+            <p className="project-desc">
+              hackathon project integrating OpenAI and Google Maps APIs. built with a 3-person team under a 24-hour deadline, placing 2nd among 50+ teams.
+            </p>
+            <div className="project-stack">
+              {['React', 'OpenAI API', 'Google Maps API'].map(t => (
+                <span key={t} className={t !== 'React' ? 'tag hi' : 'tag'}>{t}</span>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── SKILLS ── */}
+      <section id="skills" className="section">
+        <h2 className="section-title">▶ skills.sys</h2>
+        <div className="skills-table">
+          <div className="skill-row">
+            <span className="skill-label">languages</span>
+            <span className="skill-vals">
+              <strong>Python</strong> · <strong>JavaScript</strong> · <strong>TypeScript</strong> · <strong>Java</strong> · <strong>C#</strong> · <strong>SQL</strong> · <strong>HTML/CSS</strong>
+            </span>
+          </div>
+          <div className="skill-row">
+            <span className="skill-label">frameworks</span>
+            <span className="skill-vals">
+              <strong>React.js</strong> · <strong>Next.js</strong> · <strong>Node.js</strong> · <strong>Express.js</strong> · <strong>React Native</strong> · <strong>Flask</strong> · <strong>PyTorch</strong>
+            </span>
+          </div>
+          <div className="skill-row">
+            <span className="skill-label">tools</span>
+            <span className="skill-vals">
+              <strong>Firebase</strong> · <strong>Docker</strong> · <strong>Git</strong> · <strong>Unity</strong> · <strong>AWS S3</strong> · <strong>PostgreSQL</strong> · <strong>MongoDB</strong>
+            </span>
+          </div>
+          <div className="skill-row">
+            <span className="skill-label">other</span>
+            <span className="skill-vals">
+              REST APIs · CI/CD · Agile Development · cross-functional collaboration · team leadership
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOOTER / CONTACT ── */}
+      <footer id="contact" className="site-footer">
+        <div className="contact-links">
+          <a href="mailto:coleslad31@gmail.com">email</a>
+          <a href="https://github.com/ColeSlad" target="_blank" rel="noopener noreferrer">github</a>
+          <a href="https://linkedin.com/in/cole-sladowsky" target="_blank" rel="noopener noreferrer">linkedin</a>
+        </div>
+        <div className="footer-meta">
+          <p className="copyright">© 2026 cole sladowsky &nbsp;·&nbsp; college park, md</p>
+          <p className="visitor">// best viewed at any resolution &nbsp;·&nbsp; visitors: ████</p>
+        </div>
+      </footer>
+
     </div>
   );
 }
