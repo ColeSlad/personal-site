@@ -62,6 +62,17 @@ export default function Home() {
           <div className="exp-item">
             <div className="exp-head">
               <span className="exp-role">Software Engineer Intern</span>
+              <span className="exp-date">jan 2026 – present</span>
+            </div>
+            <div className="exp-company">MITRE Corporation</div>
+            <ul className="exp-bullets">
+              <li className="coming-soon">details coming soon</li>
+            </ul>
+          </div>
+
+          <div className="exp-item">
+            <div className="exp-head">
+              <span className="exp-role">Software Engineer Intern</span>
               <span className="exp-date">sep 2025 – dec 2025</span>
             </div>
             <div className="exp-company">Children&apos;s National Hospital</div>
