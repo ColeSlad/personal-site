@@ -66,7 +66,7 @@ export default function Home() {
             </div>
             <div className="exp-company">MITRE Corporation</div>
             <ul className="exp-bullets">
-              <li className="coming-soon">details coming soon</li>
+              <li className="coming-soon">coming soon</li>
             </ul>
           </div>
 
