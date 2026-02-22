@@ -204,7 +204,7 @@ export default function Home() {
           <div className="skill-row">
             <span className="skill-label">languages</span>
             <span className="skill-vals">
-              <strong>Python</strong> · <strong>JavaScript</strong> · <strong>TypeScript</strong> · <strong>Java</strong> · <strong>C#</strong> · <strong>SQL</strong> · <strong>HTML/CSS</strong>
+              <strong>Python</strong> · <strong>JavaScript</strong> · <strong>TypeScript</strong> · <strong>Java</strong> · <strong>C</strong> · <strong>C#</strong> · <strong>SQL</strong> · <strong>HTML/CSS</strong>
             </span>
           </div>
           <div className="skill-row">
