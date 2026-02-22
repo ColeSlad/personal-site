@@ -391,16 +391,13 @@ a.project-link:hover .slash {
 
 .tag {
   font-size: 10px;
-  color: var(--text-muted);
-  border: 1px solid var(--border-mid);
+  color: var(--accent-bright);
+  border: 1px solid var(--accent);
   padding: 0 5px;
   letter-spacing: 0.04em;
   line-height: 1.8;
-}
-.tag.hi {
-  color: var(--accent);
-  border-color: var(--accent);
-  opacity: 0.8;
+  box-shadow: 0 0 6px rgba(157, 216, 108, 0.35), inset 0 0 6px rgba(157, 216, 108, 0.05);
+  text-shadow: 0 0 8px rgba(157, 216, 108, 0.6);
 }
 
 /* ─── Skills ─── */

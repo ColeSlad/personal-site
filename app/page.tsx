@@ -189,7 +189,7 @@ export default function Home() {
             </p>
             <div className="project-stack">
               {['React', 'OpenAI API', 'Google Maps API'].map(t => (
-                <span key={t} className={t !== 'React' ? 'tag hi' : 'tag'}>{t}</span>
+                <span key={t} className="tag">{t}</span>
               ))}
             </div>
           </div>
@@ -216,7 +216,7 @@ export default function Home() {
           <div className="skill-row">
             <span className="skill-label">tools</span>
             <span className="skill-vals">
-              <strong>Firebase</strong> · <strong>Docker</strong> · <strong>Git</strong> · <strong>Unity</strong> · <strong>AWS S3</strong> · <strong>PostgreSQL</strong> · <strong>MongoDB</strong>
+              <strong>Firebase</strong> · <strong>Docker</strong> · <strong>Git</strong> · <strong>Unity</strong> · <strong>AWS</strong> · <strong>PostgreSQL</strong> · <strong>MongoDB</strong>
             </span>
           </div>
           <div className="skill-row">
@@ -236,7 +236,7 @@ export default function Home() {
           <a href="https://linkedin.com/in/cole-sladowsky" target="_blank" rel="noopener noreferrer">linkedin</a>
         </div>
         <div className="footer-meta">
-          <p className="copyright">© 2026 cole sladowsky &nbsp;·&nbsp; college park, md</p>
+          <p className="copyright">© 2026 cole sladowsky &nbsp;·&nbsp; NYC, DC</p>
           <p className="visitor">// best viewed at any resolution &nbsp;·&nbsp; visitors: ████</p>
         </div>
       </footer>
