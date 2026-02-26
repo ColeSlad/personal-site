@@ -9,8 +9,7 @@ export default function Home() {
         </p>
 
         <div className="name-row">
-          <span className="name">COLE SLADOWSKY</span>
-          <span className="cursor">█</span>
+          <span className="name">COLE SLADOWSKY<span className="cursor">█</span></span>
         </div>
 
         <p className="tagline">

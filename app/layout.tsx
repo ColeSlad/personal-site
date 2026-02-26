@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { VT323, IBM_Plex_Mono } from "next/font/google";
+import { EB_Garamond, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-const vt323 = VT323({
+const eb_Garamond = EB_Garamond({
   weight: "400",
   variable: "--font-display",
   subsets: ["latin"],
@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${vt323.variable} ${ibmPlexMono.variable}`}>
+      <body className={`${eb_Garamond.variable} ${ibmPlexMono.variable}`}>
         {children}
       </body>
     </html>

@@ -130,7 +130,7 @@ a:hover {
 
 .name {
   font-family: var(--font-display, monospace);
-  font-size: clamp(3.2rem, 9vw, 5.5rem);
+  font-size: clamp(3.2rem, 9vw, 4.5rem);
   line-height: 1;
   color: var(--accent-bright);
   letter-spacing: 0.03em;
@@ -141,9 +141,7 @@ a:hover {
 }
 
 .cursor {
-  font-family: var(--font-display, monospace);
-  font-size: clamp(3.2rem, 9vw, 5.5rem);
-  line-height: 1;
+  display: inline;
   color: var(--accent-bright);
   animation: blink 1.1s step-end infinite;
 }
