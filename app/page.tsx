@@ -4,10 +4,6 @@ export default function Home() {
 
       {/* ── HEADER ── */}
       <header className="site-header">
-        <p className="sys-line">
-          COLE_SLADOWSKY.EXE v1.0 &nbsp;·&nbsp; <span className="ok">LOADED OK</span> &nbsp;·&nbsp; <span className="ok">DC / NYC</span>
-        </p>
-
         <div className="name-row">
           <span className="name">COLE SLADOWSKY<span className="cursor">█</span></span>
         </div>
@@ -236,7 +232,6 @@ export default function Home() {
         </div>
         <div className="footer-meta">
           <p className="copyright">© 2026 cole sladowsky &nbsp;·&nbsp; NYC, DC</p>
-          <p className="visitor">// best viewed at any resolution &nbsp;·&nbsp; visitors: ████</p>
         </div>
       </footer>
 
