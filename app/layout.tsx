@@ -16,7 +16,22 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: "Cole Sladowsky",
-  description: "Software engineer & CS student at the University of Maryland",
+  description: "CS student at the University of Maryland — building full-stack apps, ML tools, and mobile software. Software engineer intern at MITRE.",
+  authors: [{ name: "Cole Sladowsky" }],
+  openGraph: {
+    title: "Cole Sladowsky",
+    description: "CS student at the University of Maryland — building full-stack apps, ML tools, and mobile software.",
+    url: "https://colesladowsky.com",
+    siteName: "Cole Sladowsky",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Cole Sladowsky",
+    description: "CS student at the University of Maryland — building full-stack apps, ML tools, and mobile software.",
+  },
+  metadataBase: new URL("https://colesladowsky.com"),
 };
 
 export default function RootLayout({
