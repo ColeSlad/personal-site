@@ -1,18 +1,5 @@
 import type { Metadata } from "next";
-import { EB_Garamond, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-
-const eb_Garamond = EB_Garamond({
-  weight: "400",
-  variable: "--font-display",
-  subsets: ["latin"],
-});
-
-const ibmPlexMono = IBM_Plex_Mono({
-  weight: ["400", "700"],
-  variable: "--font-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Cole Sladowsky",
@@ -41,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${eb_Garamond.variable} ${ibmPlexMono.variable}`}>
+      <body>
         {children}
       </body>
     </html>
