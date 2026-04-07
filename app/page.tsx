@@ -1,4 +1,5 @@
 import Image from "next/image";
+import DateTime from "./components/DateTime";
 
 export default function Home() {
   return (
@@ -7,9 +8,9 @@ export default function Home() {
       <header className="header">
         <div className="logo-wrap">
           <Image src="/logo.png" alt="Cole Sladowsky" width={180} height={54} priority />
+          <DateTime />
         </div>
-        <div className="date-time">
-          cole sladowsky
+          <div className="date-time">
         </div>
       </header>
 
