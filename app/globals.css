@@ -10,8 +10,8 @@ html, body {
   height: 100%;
   background: #000;
   color: #fff;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 14px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -48,12 +48,6 @@ html, body {
   justify-content: center;
 }
 
-.logo-placeholder {
-  width: 180px;
-  height: 54px;
-  border: 1px solid #333;
-  background: #111;
-}
 
 .date-time {
   position: absolute;
@@ -76,7 +70,7 @@ html, body {
 
 .nav ul {
   list-style: none;
-  text-align: center;
+  text-align: left;
 }
 
 .nav li {
@@ -84,8 +78,8 @@ html, body {
 }
 
 .nav a {
-  font-size: 22px;
-  font-weight: 400;
+  font-size: 12px;
+  font-weight: 00;
   color: #fff;
   text-decoration: none;
   text-transform: lowercase;

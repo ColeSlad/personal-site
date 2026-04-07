@@ -1,10 +1,12 @@
+import Image from "next/image";
+
 export default function Home() {
   return (
     <main className="main">
 
       <header className="header">
         <div className="logo-wrap">
-          <div className="logo-placeholder" />
+          <Image src="/logo.png" alt="Cole Sladowsky" width={180} height={54} priority />
         </div>
         <div className="date-time">
           cole sladowsky
