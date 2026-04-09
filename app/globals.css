@@ -107,3 +107,25 @@ html, body {
   color: #fff;
   background: #ed1c24;
 }
+
+.social {
+  display: flex;
+  gap: 16px;
+  margin-top: 36px;
+  align-items: center;
+}
+
+.social a {
+  color: #555;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.15s;
+  padding: 0;
+  background: none;
+}
+
+.social a:hover {
+  opacity: 0.5;
+  background: none;
+  color: #fff;
+}
