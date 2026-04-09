@@ -12,8 +12,9 @@ html, body {
   color: #fff;
   font-family: 'Courier New', Courier, monospace;
   font-size: 12px;
-  font-weight: 700;
-  -webkit-font-smoothing: antialiased;
+  font-weight: 400;
+  font-feature-settings: "liga";
+  font-variant-ligatures: common-ligatures;
 }
 
 .sr-only {
@@ -52,9 +53,9 @@ html, body {
 
 
 .datetime {
-  font-size: 12px;
+  font-size: 13px;
   color: #fff;
-  margin-top: 6px;
+  margin-top: 12px;
   text-align: center;
   letter-spacing: 0.02em;
 }
@@ -74,8 +75,9 @@ html, body {
   flex: 1;
   display: flex;
   align-items: flex-start;
-  justify-content: center;
-  padding: 48px 24px;
+  justify-content: flex-start;
+  padding: 100px 24px;
+  padding-left: calc(50% - 105px);
   height: 450px;
 }
 
@@ -85,7 +87,7 @@ html, body {
 }
 
 .nav li {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .nav a {
@@ -95,10 +97,13 @@ html, body {
   text-decoration: none;
   text-transform: lowercase;
   letter-spacing: 0.01em;
-  line-height: 1.6;
-  transition: opacity 0.15s;
+  line-height: 1;
+  display: inline-block;
+  padding: 0px 2px;
+  transition: background 0.1s, color 0.1s;
 }
 
 .nav a:hover {
-  opacity: 0.5;
+  color: #fff;
+  background: #ed1c24;
 }
