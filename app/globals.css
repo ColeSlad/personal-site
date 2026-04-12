@@ -108,11 +108,18 @@ html, body {
   background: #ed1c24;
 }
 
+.social-wrap {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 48px;
+}
+
 .social {
   display: flex;
   gap: 16px;
   margin-top: 36px;
   align-items: center;
+  justify-content: center;
 }
 
 .social a {
