@@ -18,11 +18,11 @@ export default function Home() {
         <h1 className="sr-only">Cole Sladowsky</h1>
         <nav className="nav">
           <ul>
-            <li><a href="#about">about</a></li>
-            <li><a href="#experience">experience</a></li>
-            <li><a href="#projects">projects</a></li>
-            <li><a href="#skills">skills</a></li>
-            <li><a href="#contact">contact</a></li>
+            <li><a href="/info#about">about</a></li>
+            <li><a href="/info#experience">experience</a></li>
+            <li><a href="/info#projects">projects</a></li>
+            <li><a href="/info#skills">skills</a></li>
+            <li><a href="/info#contact">contact</a></li>
           </ul>
           <div className="social">
             <a href="https://linkedin.com/in/cole-sladowsky" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
