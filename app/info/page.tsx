@@ -17,13 +17,16 @@ export default function Info() {
         <section id="about" className="info-section">
           <h2 className="info-heading">about</h2>
           <p className="info-body">
-            i&apos;m a cs student at the university of maryland building full-stack web apps,
-            ml experiments, and mobile tools. i&apos;ve shipped production code for a children&apos;s
-            hospital, engineered saas platforms, and placed 2nd at trojan hacks among 50+ teams.
+            i&apos;m a cs student at the university of maryland. I&apos;m 
+            passionate about learning new technologies and building things 
+            important to me.
           </p>
           <p className="info-body">
-            i care about clean architecture, interesting problems, and things that actually work.
-            reach me at <a href="mailto:coleslad31@gmail.com">coleslad31@gmail.com</a>.
+            i love to learn by doing, and i&apos;m always working on projects 
+            to explore new ideas and sharpen my skills. when i&apos;m not 
+            coding, you can find me playing at the gym, watching basketball, 
+            or spending time with friends and family. feel free to reach me at 
+            <a href="mailto:coleslad31@gmail.com">coleslad31@gmail.com</a>.
           </p>
         </section>
 

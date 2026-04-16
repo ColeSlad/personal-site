@@ -72,13 +72,11 @@ html, body {
 /* ── CONTENT / NAV ── */
 
 .content {
-  flex: 1;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 100px 24px;
+  padding: 100px 24px 0;
   padding-left: calc(50% - 105px);
-  height: 450px;
 }
 
 .nav ul {
@@ -108,22 +106,21 @@ html, body {
   background: #ed1c24;
 }
 
-.social-wrap {
+
+.social-row {
   display: flex;
   justify-content: center;
-  padding-bottom: 48px;
+  margin-top: 32px;
 }
 
 .social {
   display: flex;
   gap: 16px;
-  margin-top: 36px;
   align-items: center;
-  justify-content: center;
 }
 
 .social a {
-  color: #555;
+  color: #6e6e6e;
   display: flex;
   align-items: center;
   transition: opacity 0.15s;
