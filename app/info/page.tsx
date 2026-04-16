@@ -34,16 +34,16 @@ export default function Info() {
           <h2 className="info-heading">experience</h2>
           <div className="exp-list">
 
-            {/* <div className="exp-item">
+            <div className="exp-item">
               <div className="exp-head">
-                <span className="exp-role">Software Engineer Intern</span>
+                <span className="exp-role">Incoming Software Engineer Intern</span>
                 <span className="exp-date">may 2026 – aug 2026</span>
               </div>
               <div className="exp-company">Visa</div>
               <ul className="exp-bullets">
-                <li className="coming-soon">incoming</li>
+                <li>fraud disruption team</li>
               </ul>
-            </div> */}
+            </div>
 
             <div className="exp-item">
               <div className="exp-head">
