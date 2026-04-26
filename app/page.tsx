@@ -16,7 +16,7 @@ export default function Home() {
         <h1 className="sr-only">Cole Sladowsky</h1>
         <nav className="nav">
           <ul>
-            <li><a href="/info#about">about</a></li>
+            <li><a href="/info">about</a></li>
             <li><a href="/info#experience">experience</a></li>
             <li><a href="/info#projects">projects</a></li>
             <li><a href="/info#skills">skills</a></li>
