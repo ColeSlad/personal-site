@@ -3,7 +3,7 @@ import DateTime from "../components/DateTime";
 
 export default function Info() {
   return (
-    <main className="main">
+    <main className="main info-page">
 
       <header className="header">
         <div className="logo-wrap">

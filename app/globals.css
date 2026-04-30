@@ -136,6 +136,75 @@ html, body {
 
 /* ── INFO PAGE ── */
 
+.info-page {
+  background: #fff;
+}
+
+.info-page .datetime {
+  color: #000;
+}
+
+.info-page .info-heading {
+  color: #000;
+  border-bottom-color: #ccc;
+}
+
+.info-page .info-body {
+  color: #333;
+}
+
+.info-page .info-body a {
+  color: #000;
+}
+
+.info-page .exp-role {
+  color: #000;
+}
+
+.info-page a.exp-link {
+  color: #000;
+}
+
+.info-page .exp-date {
+  color: #666;
+}
+
+.info-page .exp-company {
+  color: #666;
+}
+
+.info-page .exp-bullets li {
+  color: #444;
+}
+
+.info-page .exp-bullets li::before {
+  color: #999;
+}
+
+.info-page .exp-bullets li.coming-soon {
+  color: #aaa;
+}
+
+.info-page .exp-bullets li.coming-soon::before {
+  color: #bbb;
+}
+
+.info-page .skill-label {
+  color: #666;
+}
+
+.info-page .skill-vals {
+  color: #444;
+}
+
+.info-page .contact-list a {
+  color: #444;
+}
+
+.info-page .contact-list a:hover {
+  color: #000;
+}
+
 .info-content {
   max-width: 600px;
   margin: 0 auto;
