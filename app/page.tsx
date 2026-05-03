@@ -20,7 +20,7 @@ export default function Home() {
             <li><a href="/info#experience">experience</a></li>
             <li><a href="/info#projects">projects</a></li>
             <li><a href="/info#skills">skills</a></li>
-            <li><a href="/info#contact">contact</a></li>
+            <li><a href="/contact">contact</a></li>
           </ul>
         </nav>
       </div>
