@@ -235,7 +235,7 @@ html, body {
   text-transform: lowercase;
   margin-bottom: 20px;
   padding-bottom: 6px;
-  border-bottom: 1px solid #222;
+  border-bottom: none;
 }
 
 .info-body {
@@ -362,7 +362,7 @@ a.exp-link:hover {
   text-transform: lowercase;
   margin-bottom: 20px;
   padding-bottom: 6px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: none;
 }
 
 .contact-form {
@@ -384,7 +384,7 @@ a.exp-link:hover {
   color: #000;
   background: transparent;
   border: 1px solid #ccc;
-  padding: 14px 12px;
+  padding: 20px 16px;
   outline: none;
   width: 100%;
   transition: border-color 0.15s;
@@ -420,10 +420,14 @@ a.exp-link:hover {
   color: #888;
   text-decoration: none;
   text-transform: lowercase;
+  display: inline-block;
+  padding: 0px 2px;
+  transition: background 0.1s, color 0.1s;
 }
 
 .contact-footer a:hover {
-  color: #000;
+  color: #fff;
+  background: #ed1c24;
 }
 
 .contact-footer-links {
