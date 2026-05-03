@@ -350,9 +350,10 @@ a.exp-link:hover {
 
 .contact-wrap {
   animation: fadeIn 0.3s ease-in-out;
-  max-width: 600px;
+  max-width: 900px;
+  width: 100%;
   margin: 0 auto;
-  padding: 48px 24px 80px;
+  padding: 48px 40px 48px;
 }
 
 .contact-title {
@@ -384,7 +385,7 @@ a.exp-link:hover {
   color: #000;
   background: transparent;
   border: 1px solid #ccc;
-  padding: 20px 16px;
+  padding: 14px 12px;
   outline: none;
   width: 100%;
   transition: border-color 0.15s;
@@ -410,9 +411,10 @@ a.exp-link:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 600px;
+  max-width: 900px;
+  width: 100%;
   margin: auto auto 40px;
-  padding: 0 24px;
+  padding: 0 40px;
 }
 
 .contact-footer a {
