@@ -21,7 +21,7 @@ export default function Home() {
             <li><a href="/info#projects">projects</a></li>
             <li><a href="/info#skills">skills</a></li>
             <li><a href="/contact">contact</a></li>
-            <li><a href="/about-site">about this site</a></li>
+            <li><a href="/about-site">this site</a></li>
           </ul>
         </nav>
       </div>
