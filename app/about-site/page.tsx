@@ -50,6 +50,32 @@ export default function AboutSite() {
         </section>
 
         <section className="info-section">
+          <h2 className="info-heading">my relationship with supreme</h2>
+          <p className="info-body">
+            i&apos;ve been into supreme for years. it started the way it starts for most
+            people — seeing a piece, not fully understanding the hype, then falling down
+            a rabbit hole you never fully climb out of.
+          </p>
+          <p className="info-body">
+            what kept me around wasn&apos;t just the clothing. it was the culture. the
+            thursday drops, the anticipation, the way a single box logo tee could carry
+            so much weight. supreme figured out how to make people genuinely care about
+            a product release, and they&apos;ve sustained that for over thirty years.
+          </p>
+          <p className="info-body">
+            the collabs are a big part of it too. supreme x louis vuitton, supreme x
+            nike, supreme x the north face — each one felt like an event. they have a
+            taste level that&apos;s hard to fake, and a consistency that most brands
+            spend their whole existence chasing.
+          </p>
+          <p className="info-body">
+            at this point supreme is more than a brand to me. it&apos;s a case study in
+            how to build something people genuinely love. that&apos;s the energy i
+            wanted this site to carry.
+          </p>
+        </section>
+
+        <section className="info-section">
           <h2 className="info-heading">the design</h2>
           <p className="info-body">
             the homepage is pure black with the logo and a live nyc clock — a direct
