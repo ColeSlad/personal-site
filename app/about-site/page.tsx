@@ -17,7 +17,7 @@ export default function AboutSite() {
         <section className="info-section">
           <h2 className="info-heading">why i built this</h2>
           <p className="info-body">
-            most personal sites are cluttered — portfolios trying too hard, full of
+            most personal sites are cluttered — portfolios dtm, full of
             gradients, animations, and hover effects that exist for their own sake.
             i wanted something that felt intentional. a site where the work speaks
             louder than the design.
