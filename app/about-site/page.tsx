@@ -23,7 +23,7 @@ export default function AboutSite() {
             louder than the design.
           </p>
           <p className="info-body">
-            the constraint was the point. by stripping everything back, what&apos;s left
+            by stripping everything back, what&apos;s left
             has to earn its place. every link, every line of text is there because it
             needs to be.
           </p>
