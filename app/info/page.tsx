@@ -48,7 +48,7 @@ export default function Info() {
             <div className="exp-item">
               <div className="exp-head">
                 <span className="exp-role">Software Engineer Intern</span>
-                <span className="exp-date">jan 2026 – present</span>
+                <span className="exp-date">jan 2026 – may 2026</span>
               </div>
               <div className="exp-company">MITRE Corporation</div>
               <ul className="exp-bullets">
