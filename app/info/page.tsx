@@ -41,7 +41,8 @@ export default function Info() {
               </div>
               <div className="exp-company">Visa</div>
               <ul className="exp-bullets">
-                <li>fraud disruption team</li>
+                <li>automatrd payment fraud disruption team</li>
+                <li>VAS ecosystem & operational risk</li>
               </ul>
             </div>
 
