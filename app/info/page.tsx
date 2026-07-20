@@ -40,7 +40,7 @@ export default function Info() {
             </div>
             <div className="about-grid-item">
               <div className="about-grid-img">
-                <Image src="/about/IMG_0494.JPG" alt="caption" fill className="about-grid-photo" />
+                <Image src="/about/IMG_0494.JPG" alt="caption" fill className="about-grid-photo" style={{ objectPosition: '75% 50%' }} />
               </div>
               <p className="about-grid-caption">caption</p>
             </div>
