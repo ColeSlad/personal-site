@@ -243,6 +243,30 @@ html, body {
   gap: 24px;
 }
 
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px 16px;
+}
+
+.project-card {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid #222;
+  padding: 16px;
+  transition: border-color 0.15s;
+}
+
+.project-card:hover {
+  border-color: #555;
+}
+
+.project-card:hover .exp-role {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .exp-head {
   display: flex;
   justify-content: space-between;

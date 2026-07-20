@@ -16,11 +16,11 @@ export default function Projects() {
 
         <section id="projects" className="info-section">
           <h2 className="info-heading">projects</h2>
-          <div className="exp-list">
+          <div className="project-grid">
 
-            <div className="exp-item">
+            <a href="https://github.com/ColeSlad/GRCUT" target="_blank" rel="noopener noreferrer" className="project-card">
               <div className="exp-head">
-                <a href="https://github.com/ColeSlad/GRCUT" target="_blank" rel="noopener noreferrer" className="exp-role exp-link">GRCUT</a>
+                <span className="exp-role">GRCUT</span>
               </div>
               <div className="exp-company">Python · NetworkX · Pyvis · pandas</div>
               <ul className="exp-bullets">
@@ -28,11 +28,11 @@ export default function Projects() {
                 <li>modeled 590K transactions as a 13,553-node, 370K-edge card co-occurrence graph linking shared device fingerprints, billing addresses, and email domains, surfacing coordinated fraud rings that per-transaction checks miss</li>
                 <li>implemented Dinic&apos;s max-flow and Gusfield&apos;s Gomory-Hu tree from scratch in pure Python, validated against NetworkX across 20 unit tests</li>
               </ul>
-            </div>
+            </a>
 
-            <div className="exp-item">
+            <a href="https://github.com/ColeSlad/DA3-Parallax-Viewer" target="_blank" rel="noopener noreferrer" className="project-card">
               <div className="exp-head">
-                <a href="https://github.com/ColeSlad/DA3-Parallax-Viewer" target="_blank" rel="noopener noreferrer" className="exp-role exp-link">Parallax</a>
+                <span className="exp-role">Parallax</span>
               </div>
               <div className="exp-company">Python · FastAPI · React · Three.js · DA3 · TRELLIS</div>
               <ul className="exp-bullets">
@@ -40,11 +40,11 @@ export default function Projects() {
                 <li>cut reconstruction latency 7x (35 min → 5 min) by restructuring the GPU pipeline and splitting container images by workload</li>
                 <li>added generative 3D asset insertion so users can describe an object in plain language and place it in their scene, halving per-insertion time by generating assets in parallel with scene prep</li>
               </ul>
-            </div>
+            </a>
 
-            <div className="exp-item">
+            <a href="https://github.com/ColeSlad/entrain" target="_blank" rel="noopener noreferrer" className="project-card">
               <div className="exp-head">
-                <a href="https://github.com/ColeSlad/entrain" target="_blank" rel="noopener noreferrer" className="exp-role exp-link">Entrain</a>
+                <span className="exp-role">Entrain</span>
               </div>
               <div className="exp-company">TypeScript · React · Three.js · C++17 · WebAssembly</div>
               <ul className="exp-bullets">
@@ -53,47 +53,47 @@ export default function Projects() {
                 <li>drove a live demo of 250+ independently simulated dancers at 0.29ms/frame, cutting motion math from 19% to under 2% of the 60fps frame budget</li>
                 <li>guaranteed correctness with a harness checking every C++/WebAssembly result against the TypeScript reference</li>
               </ul>
-            </div>
+            </a>
 
-            <div className="exp-item">
+            <a href="https://linkly-liart.vercel.app/ColeSladowsky" target="_blank" rel="noopener noreferrer" className="project-card">
               <div className="exp-head">
-                <a href="https://linkly-liart.vercel.app/ColeSladowsky" target="_blank" rel="noopener noreferrer" className="exp-role exp-link">linkly</a>
+                <span className="exp-role">linkly</span>
               </div>
               <div className="exp-company">React · Next.js · Express.js · MongoDB · Tailwind</div>
               <ul className="exp-bullets">
                 <li>full-stack linktree-style platform with JWT-based auth and REST APIs. deployed on vercel + render.</li>
               </ul>
-            </div>
+            </a>
 
-            <div className="exp-item">
+            <a href="http://lostandfound-fawn.vercel.app/" target="_blank" rel="noopener noreferrer" className="project-card">
               <div className="exp-head">
-                <a href="http://lostandfound-fawn.vercel.app/" target="_blank" rel="noopener noreferrer" className="exp-role exp-link">lost it, found it</a>
+                <span className="exp-role">lost it, found it</span>
               </div>
               <div className="exp-company">React · TypeScript · Flask · PostgreSQL · AWS S3</div>
               <ul className="exp-bullets">
                 <li>multi-tenant SaaS inventory platform with org isolation, invite-code team management, image uploads, and automated item matching.</li>
               </ul>
-            </div>
+            </a>
 
-            <div className="exp-item">
+            <a href="https://github.com/ColeSlad/KryptoNotes" target="_blank" rel="noopener noreferrer" className="project-card">
               <div className="exp-head">
-                <a href="https://github.com/ColeSlad/KryptoNotes" target="_blank" rel="noopener noreferrer" className="exp-role exp-link">kryptonotes</a>
+                <span className="exp-role">kryptonotes</span>
               </div>
               <div className="exp-company">React Native · Expo · TypeScript · Express.js · Firebase</div>
               <ul className="exp-bullets">
                 <li>secure note-taking app with Argon2id encryption, Firebase backend, and native biometric auth (FaceID, TouchID, Iris).</li>
               </ul>
-            </div>
+            </a>
 
-            <div className="exp-item">
+            <a href="https://github.com/ColeSlad/hackathon" target="_blank" rel="noopener noreferrer" className="project-card">
               <div className="exp-head">
-                <a href="https://github.com/ColeSlad/hackathon" target="_blank" rel="noopener noreferrer" className="exp-role exp-link">trojan hacks — 2nd place</a>
+                <span className="exp-role">trojan hacks — 2nd place</span>
               </div>
               <div className="exp-company">React · OpenAI API · Google Maps API</div>
               <ul className="exp-bullets">
                 <li>hackathon project integrating OpenAI and Google Maps APIs. built with a 3-person team under a 24-hour deadline, placing 2nd among 50+ teams.</li>
               </ul>
-            </div>
+            </a>
 
           </div>
         </section>
