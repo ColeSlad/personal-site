@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Cole Sladowsky",
-  description: "CS student at the University of Maryland — building full-stack apps, ML tools, and mobile software. Software engineer intern at MITRE.",
+  description: "CS student at the University of Maryland — building full-stack apps, ML tools, and mobile software. Software engineer intern at Visa.",
   authors: [{ name: "Cole Sladowsky" }],
   openGraph: {
     title: "Cole Sladowsky",
