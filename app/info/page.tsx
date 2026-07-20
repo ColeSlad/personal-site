@@ -24,8 +24,10 @@ export default function Info() {
           <p className="info-body">
             i love to learn by doing, and i&apos;m always working on projects
             to explore new ideas and sharpen my skills. when i&apos;m not
-            coding, you can find me at the gym, watching basketball,
-            or spending time with friends and family. feel free to reach me at{' '}
+            coding, you can find me at the gym, watching basketball, hiking,
+            or listening to music (Lil Uzi Vert is my favorite). i also love
+            meeting new people and spending time with friends and family.
+            feel free to reach me at{' '}
             <a href="mailto:coleslad31@gmail.com">coleslad31@gmail.com</a>.
           </p>
         </section>
