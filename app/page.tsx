@@ -17,9 +17,9 @@ export default function Home() {
         <nav className="nav">
           <ul>
             <li><a href="/info">about</a></li>
-            <li><a href="/info#experience">experience</a></li>
-            <li><a href="/info#projects">projects</a></li>
-            <li><a href="/info#skills">skills</a></li>
+            <li><a href="/experience">experience</a></li>
+            <li><a href="/projects">projects</a></li>
+            <li><a href="/projects#skills">skills</a></li>
             <li><a href="/contact">contact</a></li>
             <li><a href="/about-site">this site</a></li>
           </ul>
