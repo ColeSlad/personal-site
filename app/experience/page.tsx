@@ -36,7 +36,7 @@ export default function Experience() {
               </div>
               <div className="exp-company">MITRE Corporation (via App Dev Club, UMD)</div>
               <ul className="exp-bullets">
-                <li>building a NIST compliance search platform at MITRE</li>
+                <li>built a NIST compliance search platform at MITRE</li>
               </ul>
             </div>
 
@@ -47,7 +47,7 @@ export default function Experience() {
               </div>
               <div className="exp-company">Children&apos;s National Hospital</div>
               <ul className="exp-bullets">
-                <li>building an AI brain MRI segmentation platform at Children&apos;s National</li>
+                <li>built an AI brain MRI segmentation platform at Children&apos;s National</li>
               </ul>
             </div>
 
@@ -58,7 +58,7 @@ export default function Experience() {
               </div>
               <div className="exp-company">RU Residence</div>
               <ul className="exp-bullets">
-                <li>building a finance tracking system at RU Residence</li>
+                <li>built a finance tracking system at RU Residence</li>
               </ul>
             </div>
 
@@ -69,7 +69,7 @@ export default function Experience() {
               </div>
               <div className="exp-company">Ingredion Idea Lab</div>
               <ul className="exp-bullets">
-                <li>researching CNNs at Ingredion to predict popcorn pop times</li>
+                <li>researched CNNs at Ingredion to predict popcorn pop times</li>
               </ul>
             </div>
 
@@ -80,7 +80,7 @@ export default function Experience() {
               </div>
               <div className="exp-company">Game-U</div>
               <ul className="exp-bullets">
-                <li>teaching game development and coding at Game-U</li>
+                <li>taught game development and coding at Game-U</li>
               </ul>
             </div>
 
