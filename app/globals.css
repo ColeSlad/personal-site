@@ -148,73 +148,28 @@ html, body {
 
 /* ── INFO PAGE ── */
 
-.info-page {
-  background: #fff;
-}
-
-.info-page .datetime {
-  color: #000;
-}
-
-.info-page .info-heading {
-  color: #000;
-  border-bottom: none;
-}
-
-.info-page .info-body {
-  color: #333;
-}
-
-.info-page .info-body a {
-  color: #000;
-}
-
-.info-page .exp-role {
-  color: #000;
-}
-
-.info-page a.exp-link {
-  color: #000;
-}
-
 .info-page .exp-date {
-  color: #666;
-}
-
-.info-page .exp-company {
-  color: #666;
-}
-
-.info-page .exp-bullets li {
-  color: #444;
-}
-
-.info-page .exp-bullets li::before {
   color: #999;
 }
 
-.info-page .exp-bullets li.coming-soon {
-  color: #aaa;
+.info-page .exp-company {
+  color: #999;
 }
 
-.info-page .exp-bullets li.coming-soon::before {
-  color: #bbb;
-}
-
-.info-page .skill-label {
+.info-page .exp-bullets li::before {
   color: #666;
 }
 
-.info-page .skill-vals {
+.info-page .exp-bullets li.coming-soon {
+  color: #555;
+}
+
+.info-page .exp-bullets li.coming-soon::before {
   color: #444;
 }
 
-.info-page .contact-list a {
-  color: #444;
-}
-
-.info-page .contact-list a:hover {
-  color: #000;
+.info-page .skill-label {
+  color: #999;
 }
 
 .info-content {
@@ -359,7 +314,7 @@ a.exp-link:hover {
 .contact-title {
   font-size: 12px;
   font-weight: 400;
-  color: #000;
+  color: #fff;
   text-transform: lowercase;
   margin-bottom: 20px;
   padding-bottom: 6px;
@@ -382,9 +337,9 @@ a.exp-link:hover {
 .contact-textarea {
   font-family: 'Courier New', Courier, monospace;
   font-size: 12px;
-  color: #000;
+  color: #fff;
   background: transparent;
-  border: 1px solid #ccc;
+  border: 1px solid #444;
   padding: 14px 12px;
   outline: none;
   width: 100%;
@@ -393,7 +348,7 @@ a.exp-link:hover {
 
 .contact-input::placeholder,
 .contact-textarea::placeholder {
-  color: #aaa;
+  color: #666;
   text-transform: lowercase;
 }
 
@@ -456,7 +411,7 @@ a.exp-link:hover {
 
 .contact-sent {
   font-size: 12px;
-  color: #333;
+  color: #ccc;
 }
 
 /* ── CONTACT LIST (info page) ── */
