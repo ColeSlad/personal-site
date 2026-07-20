@@ -33,27 +33,39 @@ export default function Info() {
 
           <div className="about-grid">
             <div className="about-grid-item">
-              <div className="about-grid-img" />
+              <div className="about-grid-img">
+                <Image src="/about/IMG_2012.JPG" alt="caption" fill className="about-grid-photo" />
+              </div>
               <p className="about-grid-caption">caption</p>
             </div>
             <div className="about-grid-item">
-              <div className="about-grid-img" />
+              <div className="about-grid-img">
+                <Image src="/about/IMG_0494.JPG" alt="caption" fill className="about-grid-photo" />
+              </div>
               <p className="about-grid-caption">caption</p>
             </div>
             <div className="about-grid-item">
-              <div className="about-grid-img" />
+              <div className="about-grid-img">
+                <Image src="/about/IMG_2270.jpg" alt="caption" fill className="about-grid-photo" />
+              </div>
               <p className="about-grid-caption">caption</p>
             </div>
             <div className="about-grid-item">
-              <div className="about-grid-img" />
+              <div className="about-grid-img">
+                <Image src="/about/tech_events.webp" alt="caption" fill className="about-grid-photo" />
+              </div>
               <p className="about-grid-caption">caption</p>
             </div>
             <div className="about-grid-item">
-              <div className="about-grid-img" />
+              <div className="about-grid-img">
+                <Image src="/about/8628123b-dd6a-43c9-85e2-2ba1d3735d15.jpg" alt="caption" fill className="about-grid-photo" />
+              </div>
               <p className="about-grid-caption">caption</p>
             </div>
             <div className="about-grid-item">
-              <div className="about-grid-img" />
+              <div className="about-grid-img">
+                <Image src="/about/IMG_2268.jpg" alt="caption" fill className="about-grid-photo" />
+              </div>
               <p className="about-grid-caption">caption</p>
             </div>
           </div>

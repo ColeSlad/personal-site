@@ -219,12 +219,14 @@ html, body {
 }
 
 .about-grid-img {
+  position: relative;
   aspect-ratio: 4 / 3;
-  border: 1px dashed #333;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #444;
+  overflow: hidden;
+  border: 1px solid #222;
+}
+
+.about-grid-photo {
+  object-fit: cover;
 }
 
 .about-grid-caption {
