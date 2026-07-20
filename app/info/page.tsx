@@ -30,6 +30,33 @@ export default function Info() {
             feel free to reach me at{' '}
             <a href="mailto:coleslad31@gmail.com">coleslad31@gmail.com</a>.
           </p>
+
+          <div className="about-grid">
+            <div className="about-grid-item">
+              <div className="about-grid-img" />
+              <p className="about-grid-caption">caption</p>
+            </div>
+            <div className="about-grid-item">
+              <div className="about-grid-img" />
+              <p className="about-grid-caption">caption</p>
+            </div>
+            <div className="about-grid-item">
+              <div className="about-grid-img" />
+              <p className="about-grid-caption">caption</p>
+            </div>
+            <div className="about-grid-item">
+              <div className="about-grid-img" />
+              <p className="about-grid-caption">caption</p>
+            </div>
+            <div className="about-grid-item">
+              <div className="about-grid-img" />
+              <p className="about-grid-caption">caption</p>
+            </div>
+            <div className="about-grid-item">
+              <div className="about-grid-img" />
+              <p className="about-grid-caption">caption</p>
+            </div>
+          </div>
         </section>
 
       </div>

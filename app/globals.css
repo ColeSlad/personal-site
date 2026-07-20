@@ -206,6 +206,35 @@ html, body {
   text-underline-offset: 2px;
 }
 
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 12px;
+  margin-top: 24px;
+}
+
+.about-grid-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-grid-img {
+  aspect-ratio: 4 / 3;
+  border: 1px dashed #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #444;
+}
+
+.about-grid-caption {
+  font-size: 11px;
+  color: #888;
+  text-align: center;
+  text-transform: lowercase;
+  margin-top: 8px;
+}
+
 .exp-list {
   display: flex;
   flex-direction: column;
