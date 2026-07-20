@@ -69,6 +69,10 @@ export default function AboutSite() {
             spend their whole existence chasing.
           </p>
           <p className="info-body">
+            these days my collection has grown to over 20 pieces of supreme, plus
+            just as many stickers.
+          </p>
+          <p className="info-body">
             at this point supreme is more than a brand to me. it&apos;s a case study in
             how to build something people genuinely love. that&apos;s the energy i
             wanted this site to carry.
@@ -78,9 +82,8 @@ export default function AboutSite() {
         <section className="info-section">
           <h2 className="info-heading">the design</h2>
           <p className="info-body">
-            the homepage is pure black with the logo and a live nyc clock — a direct
-            nod to supreme&apos;s layout. the info pages flip to white, borrowing
-            their interior page aesthetic. the font is courier new throughout. no custom
+            the whole site is pure black with the logo and a live nyc clock — a direct
+            nod to supreme&apos;s layout. the font is courier new throughout. no custom
             typeface, no google font. just the system default.
           </p>
           <p className="info-body">
