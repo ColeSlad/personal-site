@@ -18,6 +18,23 @@ export default function Projects() {
           <h2 className="info-heading">projects</h2>
           <div className="project-grid">
 
+            <a href="https://github.com/ColeSlad/inference-lab" target="_blank" rel="noopener noreferrer" className="project-card">
+              <div className="exp-head">
+                <span className="exp-role">inference-lab</span>
+              </div>
+              <div className="exp-company">Python · FastAPI · PyTorch · vLLM · Docker</div>
+              <ul className="exp-bullets">
+                <li>benchmarking platform for LLM inference across 3 serving backends</li>
+              </ul>
+              {/*
+              <ul className="exp-bullets">
+                <li>built a common serving and benchmarking layer for three model backends, backed by 50 GPU-free streaming tests</li>
+                <li>executed 4,320 requests with zero failures across 36 trials, showing vLLM throughput scaled 25x to 32 concurrent</li>
+                <li>automated a qualification gate that rejected a backend passing all 5 performance targets, catching output instability</li>
+              </ul>
+              */}
+            </a>
+
             <a href="https://github.com/ColeSlad/GRCUT" target="_blank" rel="noopener noreferrer" className="project-card">
               <div className="exp-head">
                 <span className="exp-role">GRCUT</span>
@@ -138,7 +155,7 @@ export default function Projects() {
           <div className="skills-table">
             <div className="skill-row">
               <span className="skill-label">languages</span>
-              <span className="skill-vals">Python · JavaScript · TypeScript · Java · C · C++ · SQL · x86 Assembly · HTML/CSS</span>
+              <span className="skill-vals">Python · JavaScript · TypeScript · Java · C · C++ · C# · SQL · x86 Assembly · HTML/CSS</span>
             </div>
             <div className="skill-row">
               <span className="skill-label">frameworks</span>
@@ -146,7 +163,7 @@ export default function Projects() {
             </div>
             <div className="skill-row">
               <span className="skill-label">tools</span>
-              <span className="skill-vals">AWS · Firebase · Docker · Git · PostgreSQL · MongoDB · Modal · LangChain · LangGraph · Playwright · WebAssembly</span>
+              <span className="skill-vals">AWS · Firebase · Docker · Git · PostgreSQL · Redis · MongoDB · Modal · LangChain · LangGraph · Playwright · vLLM · Prometheus · WebAssembly</span>
             </div>
             <div className="skill-row">
               <span className="skill-label">other</span>
