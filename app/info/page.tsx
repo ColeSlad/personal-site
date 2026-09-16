@@ -1,5 +1,6 @@
 import Image from "next/image";
 import DateTime from "../components/DateTime";
+import Lookbook from "../components/Lookbook";
 
 export default function Info() {
   return (
@@ -31,44 +32,7 @@ export default function Info() {
             <a href="mailto:coleslad31@gmail.com">coleslad31@gmail.com</a>.
           </p>
 
-          <div className="about-grid">
-            <div className="about-grid-item">
-              <div className="about-grid-img">
-                <Image src="/about/IMG_2012.JPG" alt="caption" fill className="about-grid-photo" style={{ objectPosition: '50% 35%' }} />
-              </div>
-              <p className="about-grid-caption">Bunny Cafe in SF (i need a pet bunny)</p>
-            </div>
-            <div className="about-grid-item">
-              <div className="about-grid-img">
-                <Image src="/about/IMG_0494.JPG" alt="caption" fill className="about-grid-photo" style={{ objectPosition: '75% 50%' }} />
-              </div>
-              <p className="about-grid-caption">13 mile hike at Mt Tam</p>
-            </div>
-            <div className="about-grid-item">
-              <div className="about-grid-img">
-                <Image src="/about/IMG_2270.jpg" alt="caption" fill className="about-grid-photo" />
-              </div>
-              <p className="about-grid-caption">childrens national hospital hq in dc</p>
-            </div>
-            <div className="about-grid-item">
-              <div className="about-grid-img">
-                <Image src="/about/tech_events.webp" alt="caption" fill className="about-grid-photo" />
-              </div>
-              <p className="about-grid-caption">tech events on campus</p>
-            </div>
-            <div className="about-grid-item">
-              <div className="about-grid-img">
-                <Image src="/about/8628123b-dd6a-43c9-85e2-2ba1d3735d15.jpg" alt="caption" fill className="about-grid-photo" />
-              </div>
-              <p className="about-grid-caption">first hackathon win in highschool</p>
-            </div>
-            <div className="about-grid-item">
-              <div className="about-grid-img">
-                <Image src="/about/IMG_2268.jpg" alt="caption" fill className="about-grid-photo" />
-              </div>
-              <p className="about-grid-caption">me writing my first pr (jk)</p>
-            </div>
-          </div>
+          <Lookbook />
         </section>
 
       </div>
