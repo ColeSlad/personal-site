@@ -37,6 +37,7 @@ const photos = [
 ];
 
 const pageNumber = (index: number) => String(index + 1).padStart(2, "0");
+const photoIndex = (index: number) => (index % photos.length + photos.length) % photos.length;
 // Repeated sets let either end continue in the same scroll direction.
 const loopingPhotos = [...photos, ...photos, ...photos];
 
@@ -44,6 +45,7 @@ export default function Lookbook() {
   const [activeIndex, setActiveIndex] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
   const activeIndexRef = useRef(0);
+  const pendingIndexRef = useRef<number | null>(null);
   const widthRef = useRef(0);
 
   useLayoutEffect(() => {
@@ -53,6 +55,7 @@ export default function Lookbook() {
     function alignPhoto() {
       if (!track || track.clientWidth === widthRef.current) return;
       widthRef.current = track.clientWidth;
+      pendingIndexRef.current = null;
       track.scrollTo({
         left: (photos.length + activeIndexRef.current) * track.clientWidth,
         behavior: "instant",
@@ -68,24 +71,39 @@ export default function Lookbook() {
   function scrollToSlide(index: number) {
     const track = trackRef.current;
     if (!track) return;
+    pendingIndexRef.current = photoIndex(index);
     track.scrollTo({ left: index * track.clientWidth });
   }
 
   function move(direction: number) {
     const track = trackRef.current;
     if (!track || !track.clientWidth) return;
-    scrollToSlide(Math.round(track.scrollLeft / track.clientWidth) + direction);
+
+    const currentIndex = pendingIndexRef.current ?? activeIndexRef.current;
+    const middleSlide = photos.length + currentIndex;
+
+    // Finish an interrupted move in the middle set before starting the next one.
+    // This also keeps repeated clicks from reaching either physical scroll limit.
+    if (Math.abs(track.scrollLeft - middleSlide * track.clientWidth) > 1) {
+      track.scrollTo({
+        left: middleSlide * track.clientWidth,
+        behavior: "instant",
+      });
+    }
+    scrollToSlide(middleSlide + direction);
   }
 
   function recenter() {
     const track = trackRef.current;
-    if (!track || !track.clientWidth) return;
+    if (!track || !track.clientWidth || pendingIndexRef.current !== null) return;
 
     const slide = Math.round(track.scrollLeft / track.clientWidth);
+    if (Math.abs(track.scrollLeft - slide * track.clientWidth) > 1) return;
+
     if (slide < photos.length || slide >= photos.length * 2) {
-      // Jump to the identical middle copy only after scrolling has finished.
+      // Rebase only on a snapped photo, so swiping never jumps mid-image.
       track.scrollTo({
-        left: (photos.length + slide % photos.length) * track.clientWidth,
+        left: (photos.length + photoIndex(slide)) * track.clientWidth,
         behavior: "instant",
       });
     }
@@ -143,11 +161,22 @@ export default function Lookbook() {
         onScroll={(event) => {
           const track = event.currentTarget;
           if (!track.clientWidth || track.clientWidth !== widthRef.current) return;
-          const index = Math.round(track.scrollLeft / track.clientWidth) % photos.length;
+          const slide = Math.round(track.scrollLeft / track.clientWidth);
+          const index = photoIndex(slide);
+          if (
+            pendingIndexRef.current === index &&
+            Math.abs(track.scrollLeft - slide * track.clientWidth) <= 1
+          ) {
+            pendingIndexRef.current = null;
+          }
           activeIndexRef.current = index;
           setActiveIndex(index);
+          // Scroll events also keep the loop working without a scrollend event.
+          recenter();
         }}
         onScrollEnd={recenter}
+        onPointerDown={() => { pendingIndexRef.current = null; }}
+        onWheel={() => { pendingIndexRef.current = null; }}
       >
         {loopingPhotos.map((photo, index) => (
           <div
