@@ -21,11 +21,11 @@ export default function Experience() {
             <div className="exp-item">
               <div className="exp-head">
                 <span className="exp-role">Software Engineer Intern</span>
-                <span className="exp-date">may 2026 – present</span>
+                <span className="exp-date">may 2026 – aug 2026</span>
               </div>
               <div className="exp-company">Visa</div>
               <ul className="exp-bullets">
-                <li>building collaborative agentic tools at Visa for fraud detection</li>
+                <li>built an ai researcher to surface $3 million in fraud and counting</li>
               </ul>
             </div>
 
