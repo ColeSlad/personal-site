@@ -298,45 +298,9 @@ html, body {
   transition: color 0.15s, border-color 0.15s;
 }
 
-.lookbook-arrow:hover:not(:disabled) {
+.lookbook-arrow:hover {
   color: #fff;
   border-color: #888;
-}
-
-.lookbook-arrow:disabled {
-  color: #333;
-  border-color: #161616;
-  cursor: default;
-}
-
-.lookbook-pages {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.lookbook-page {
-  min-height: 44px;
-  border: 0;
-  border-top: 1px solid #333;
-  background: transparent;
-  color: #888;
-  font-family: inherit;
-  font-size: 10px;
-  text-align: left;
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
-}
-
-.lookbook-page:hover {
-  color: #fff;
-  border-color: #888;
-}
-
-.lookbook-page[aria-current="true"] {
-  color: #fff;
-  border-color: #ed1c24;
 }
 
 .lookbook-track:focus-visible,

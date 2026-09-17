@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState, type KeyboardEvent } from "react";
+import { useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
 
 const photos = [
   {
@@ -37,17 +37,58 @@ const photos = [
 ];
 
 const pageNumber = (index: number) => String(index + 1).padStart(2, "0");
+// Repeated sets let either end continue in the same scroll direction.
+const loopingPhotos = [...photos, ...photos, ...photos];
 
 export default function Lookbook() {
   const [activeIndex, setActiveIndex] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
+  const activeIndexRef = useRef(0);
+  const widthRef = useRef(0);
 
-  function goTo(index: number) {
+  useLayoutEffect(() => {
     const track = trackRef.current;
     if (!track) return;
 
-    const nextIndex = Math.max(0, Math.min(index, photos.length - 1));
-    track.scrollTo({ left: nextIndex * track.clientWidth });
+    function alignPhoto() {
+      if (!track || track.clientWidth === widthRef.current) return;
+      widthRef.current = track.clientWidth;
+      track.scrollTo({
+        left: (photos.length + activeIndexRef.current) * track.clientWidth,
+        behavior: "instant",
+      });
+    }
+
+    alignPhoto();
+    const observer = new ResizeObserver(alignPhoto);
+    observer.observe(track);
+    return () => observer.disconnect();
+  }, []);
+
+  function scrollToSlide(index: number) {
+    const track = trackRef.current;
+    if (!track) return;
+    track.scrollTo({ left: index * track.clientWidth });
+  }
+
+  function move(direction: number) {
+    const track = trackRef.current;
+    if (!track || !track.clientWidth) return;
+    scrollToSlide(Math.round(track.scrollLeft / track.clientWidth) + direction);
+  }
+
+  function recenter() {
+    const track = trackRef.current;
+    if (!track || !track.clientWidth) return;
+
+    const slide = Math.round(track.scrollLeft / track.clientWidth);
+    if (slide < photos.length || slide >= photos.length * 2) {
+      // Jump to the identical middle copy only after scrolling has finished.
+      track.scrollTo({
+        left: (photos.length + slide % photos.length) * track.clientWidth,
+        behavior: "instant",
+      });
+    }
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLElement>) {
@@ -56,19 +97,19 @@ export default function Lookbook() {
     switch (event.key) {
       case "ArrowLeft":
         event.preventDefault();
-        goTo(activeIndex - 1);
+        move(-1);
         break;
       case "ArrowRight":
         event.preventDefault();
-        goTo(activeIndex + 1);
+        move(1);
         break;
       case "Home":
         event.preventDefault();
-        goTo(0);
+        scrollToSlide(photos.length);
         break;
       case "End":
         event.preventDefault();
-        goTo(photos.length - 1);
+        scrollToSlide(photos.length * 2 - 1);
         break;
     }
   }
@@ -101,19 +142,21 @@ export default function Lookbook() {
         aria-describedby="lookbook-instructions"
         onScroll={(event) => {
           const track = event.currentTarget;
-          if (!track.clientWidth) return;
-          const index = Math.round(track.scrollLeft / track.clientWidth);
-          setActiveIndex(Math.max(0, Math.min(index, photos.length - 1)));
+          if (!track.clientWidth || track.clientWidth !== widthRef.current) return;
+          const index = Math.round(track.scrollLeft / track.clientWidth) % photos.length;
+          activeIndexRef.current = index;
+          setActiveIndex(index);
         }}
+        onScrollEnd={recenter}
       >
-        {photos.map((photo, index) => (
+        {loopingPhotos.map((photo, index) => (
           <div
-            key={photo.src}
+            key={`${photo.src}-${index}`}
             className="lookbook-slide"
             role="group"
             aria-roledescription="slide"
-            aria-label={`${index + 1} of ${photos.length}`}
-            aria-hidden={index !== activeIndex}
+            aria-label={`${index % photos.length + 1} of ${photos.length}`}
+            aria-hidden={index !== photos.length + activeIndex}
           >
             <Image
               src={photo.src}
@@ -138,8 +181,7 @@ export default function Lookbook() {
             className="lookbook-arrow"
             aria-label="Previous photo"
             aria-controls="lookbook-photos"
-            disabled={activeIndex === 0}
-            onClick={() => goTo(activeIndex - 1)}
+            onClick={() => move(-1)}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
               <path d="m10 5-7 7 7 7M3 12h18" />
@@ -150,30 +192,13 @@ export default function Lookbook() {
             className="lookbook-arrow"
             aria-label="Next photo"
             aria-controls="lookbook-photos"
-            disabled={activeIndex === photos.length - 1}
-            onClick={() => goTo(activeIndex + 1)}
+            onClick={() => move(1)}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
               <path d="m14 5 7 7-7 7M21 12H3" />
             </svg>
           </button>
         </div>
-      </div>
-
-      <div className="lookbook-pages" role="group" aria-label="Choose a photo">
-        {photos.map((photo, index) => (
-          <button
-            key={photo.src}
-            type="button"
-            className="lookbook-page"
-            aria-label={`View photo ${index + 1}: ${photo.caption}`}
-            aria-current={index === activeIndex ? "true" : undefined}
-            aria-controls="lookbook-photos"
-            onClick={() => goTo(index)}
-          >
-            {pageNumber(index)}
-          </button>
-        ))}
       </div>
     </section>
   );
