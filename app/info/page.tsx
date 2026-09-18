@@ -1,6 +1,8 @@
 import Image from "next/image";
+import { Suspense } from "react";
 import DateTime from "../components/DateTime";
 import Lookbook from "../components/Lookbook";
+import GitHubContributions from "../components/GitHubContributions";
 
 export default function Info() {
   return (
@@ -13,7 +15,7 @@ export default function Info() {
         </div>
       </header>
 
-      <div className="info-content">
+      <div className="info-content about-content">
 
         <section id="about" className="info-section">
           <h2 className="info-heading">about</h2>
@@ -33,6 +35,9 @@ export default function Info() {
           </p>
 
           <Lookbook />
+          <Suspense fallback={<p className="github-loading" role="status">loading github contributions…</p>}>
+            <GitHubContributions />
+          </Suspense>
         </section>
 
       </div>
