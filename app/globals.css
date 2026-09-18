@@ -183,7 +183,8 @@ html, body {
   margin-bottom: 56px;
 }
 
-.about-content {
+.about-content,
+.lookbook-content {
   width: 100%;
   min-width: 0;
 }
@@ -213,7 +214,6 @@ html, body {
 
 .lookbook {
   min-width: 0;
-  margin-top: 36px;
 }
 
 .lookbook-heading {
@@ -223,7 +223,7 @@ html, body {
   margin-bottom: 12px;
 }
 
-.lookbook-heading h3 {
+.lookbook-heading h1 {
   font-size: 12px;
   font-weight: 400;
 }

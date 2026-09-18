@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { Suspense } from "react";
 import DateTime from "../components/DateTime";
-import Lookbook from "../components/Lookbook";
 import GitHubContributions from "../components/GitHubContributions";
 
 export default function Info() {
@@ -34,7 +33,6 @@ export default function Info() {
             <a href="mailto:coleslad31@gmail.com">coleslad31@gmail.com</a>.
           </p>
 
-          <Lookbook />
           <Suspense fallback={<p className="github-loading" role="status">loading github contributions…</p>}>
             <GitHubContributions />
           </Suspense>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import DateTime from "./components/DateTime";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
         <nav className="nav">
           <ul>
             <li><a href="/info">about</a></li>
+            <li><Link href="/lookbook">lookbook</Link></li>
             <li><a href="/experience">experience</a></li>
             <li><a href="/projects">projects</a></li>
             <li><a href="/projects#skills">skills</a></li>

@@ -140,7 +140,7 @@ export default function Lookbook() {
       onKeyDown={handleKeyDown}
     >
       <div className="lookbook-heading">
-        <h3>lookbook</h3>
+        <h1>lookbook</h1>
         <span className="lookbook-count" aria-hidden="true">
           <span>{pageNumber(activeIndex)}</span> / {pageNumber(photos.length - 1)}
         </span>
