@@ -20,6 +20,16 @@ export default function Experience() {
 
             <div className="exp-item">
               <div className="exp-head">
+                <span className="exp-role">Student Software Engineer</span>
+              </div>
+              <div className="exp-company">Amazon Leo</div>
+              <ul className="exp-bullets">
+                <li className="coming-soon">more info coming soon</li>
+              </ul>
+            </div>
+
+            <div className="exp-item">
+              <div className="exp-head">
                 <span className="exp-role">Software Engineer Intern</span>
                 <span className="exp-date">may 2026 – aug 2026</span>
               </div>
