@@ -69,7 +69,7 @@ export default function Projects() {
               */}
             </a>
 
-            <a href="https://github.com/ColeSlad/entrain" target="_blank" rel="noopener noreferrer" className="project-card">
+            <a href="https://entrain-rouge.vercel.app/" target="_blank" rel="noopener noreferrer" className="project-card">
               <div className="exp-head">
                 <span className="exp-role">Entrain</span>
               </div>
