@@ -18,6 +18,23 @@ export default function Projects() {
           <h2 className="info-heading">projects</h2>
           <div className="project-grid">
 
+            <a href="https://flowstate-web-ten.vercel.app/" target="_blank" rel="noopener noreferrer" className="project-card">
+              <div className="exp-head">
+                <span className="exp-role">Flowstate</span>
+              </div>
+              <div className="exp-company">C++ · CUDA · AVX2</div>
+              <ul className="exp-bullets">
+                <li>vector search engine that schedules queries across CPU and GPU</li>
+              </ul>
+              {/*
+              <ul className="exp-bullets">
+                <li>built a vector similarity search engine that dynamically schedules queries across CPU and GPU engines</li>
+                <li>increased GPU throughput 8.5x to 57K searches per second by batching requests to amortize GPU overhead</li>
+                <li>searched 100K vectors at 1,000 queries per second, with 99% of responses under 15 milliseconds</li>
+              </ul>
+              */}
+            </a>
+
             <a href="https://github.com/ColeSlad/inference-lab" target="_blank" rel="noopener noreferrer" className="project-card">
               <div className="exp-head">
                 <span className="exp-role">inference-lab</span>
