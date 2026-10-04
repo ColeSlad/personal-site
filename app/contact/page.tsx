@@ -1,22 +1,7 @@
-"use client";
-
 import Image from "next/image";
 import DateTime from "../components/DateTime";
-import { useState, FormEvent } from "react";
 
 export default function Contact() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [sent, setSent] = useState(false);
-
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
-    window.location.href = `mailto:coleslad31@gmail.com?subject=Message from ${name}&body=${body}`;
-    setSent(true);
-  }
-
   return (
     <main className="main info-page">
 
@@ -28,39 +13,9 @@ export default function Contact() {
       </header>
 
       <div className="contact-wrap">
-        {sent ? (
-          <p className="contact-sent">message sent.</p>
-        ) : (
-          <form className="contact-form" onSubmit={handleSubmit}>
-            <h2 className="contact-title">contact</h2>
-            <div className="contact-row">
-              <input
-                className="contact-input"
-                type="text"
-                placeholder="your name"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                required
-              />
-              <input
-                className="contact-input"
-                type="email"
-                placeholder="your email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <textarea
-              className="contact-textarea"
-              placeholder="message"
-              value={message}
-              onChange={e => setMessage(e.target.value)}
-              required
-            />
-            <button className="contact-btn" type="submit">send</button>
-          </form>
-        )}
+        <p className="contact-intro">
+          if you&apos;re curious, contact me at <a href="mailto:coleslad31@gmail.com">coleslad31@gmail.com</a>
+        </p>
         <div className="contact-list">
           <a href="mailto:coleslad31@gmail.com">coleslad31@gmail.com</a>
           <a href="https://linkedin.com/in/cole-sladowsky" target="_blank" rel="noopener noreferrer">linkedin</a>
