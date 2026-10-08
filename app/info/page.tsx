@@ -19,14 +19,14 @@ export default function Info() {
         <section id="about" className="info-section">
           <h2 className="info-heading">about</h2>
           <p className="info-body">
-            i&apos;m a cs student at the university of maryland. I&apos;m
-            passionate about learning new technologies and building things
-            important to me.
+            i&apos;m a cs student and presidential scholar at the university of maryland. i&apos;m
+            extremely passionate about learning new technologies. i&apos;m obsessed with efficiency, low-level
+            systems, and making things run well.
           </p>
           <p className="info-body">
-            i love to learn by doing, and i&apos;m always working on projects
-            to explore new ideas and sharpen my skills. when i&apos;m not
-            coding, you can find me at the gym, watching basketball, hiking,
+            i&apos;m always working on and researching for projects
+            to explore new ideas. when i&apos;m not
+            coding, you can find me at the gym, making instapot recipes, watching basketball, hiking,
             or listening to music (Lil Uzi Vert is my favorite). i also love
             meeting new people and spending time with friends and family.
             feel free to reach me at{' '}
