@@ -20,7 +20,7 @@ export default function Experience() {
 
             <div className="exp-item">
               <div className="exp-head">
-                <span className="exp-role">Student Software Engineer</span>
+                <span className="exp-role">Software Engineer (Contract)</span>
               </div>
               <div className="exp-company">Amazon Leo</div>
               <ul className="exp-bullets">
@@ -41,7 +41,7 @@ export default function Experience() {
 
             <div className="exp-item">
               <div className="exp-head">
-                <span className="exp-role">Software Engineer</span>
+                <span className="exp-role">Software Engineer (Contract)</span>
                 <span className="exp-date">jan 2026 – may 2026</span>
               </div>
               <div className="exp-company">MITRE Corporation (via App Dev Club, UMD)</div>
