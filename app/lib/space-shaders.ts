@@ -7,7 +7,7 @@ void main() { gl_Position = vec4(aPosition, 0.0, 1.0); }
 export const spaceFragmentShader = `
 precision highp float;
 uniform vec2 uResolution;
-uniform vec2 uPointer;
+uniform vec3 uCamera;
 uniform vec2 uFocus;
 uniform float uTime;
 uniform sampler2D uSurfaceMap;
@@ -74,12 +74,13 @@ void main() {
   vec2 screen = (uv - uFocus) * vec2(aspect, 1.0);
   float mobile = 1.0 - step(0.86, aspect);
   float arrival = smoothstep(0.0, 7.0, uTime);
-  float angle = -0.95 + 1.48 * arrival + uTime * 0.010 + uPointer.x * 0.12;
+  float angle = -0.95 + 1.48 * arrival + uTime * 0.010 + uCamera.x;
   // Open in a close-up, then drift back into the established orbital framing.
   float distanceToIo = mix(3.0, 3.8, arrival) * mix(1.0, 1.80, mobile);
-  vec3 camera = vec3(sin(angle) * distanceToIo,
-    mix(0.55, 0.65, arrival) + sin(uTime * 0.045) * 0.12 + uPointer.y * 0.10,
-    cos(angle) * distanceToIo);
+  float cameraHeight = mix(0.55, 0.65, arrival) + sin(uTime * 0.045) * 0.12;
+  float elevation = clamp(atan(cameraHeight, distanceToIo) + uCamera.y, -1.35, 1.35);
+  float radius = length(vec2(distanceToIo, cameraHeight)) * uCamera.z;
+  vec3 camera = vec3(sin(angle) * cos(elevation), sin(elevation), cos(angle) * cos(elevation)) * radius;
   vec3 forward = normalize(-camera);
   vec3 right = normalize(cross(forward, vec3(0.0, 1.0, 0.0)));
   vec3 up = cross(right, forward);

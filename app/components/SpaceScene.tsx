@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useId, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { spaceFragmentShader, spaceVertexShader } from "../lib/space-shaders";
 import { createSpaceBloom } from "../lib/space-bloom";
 
@@ -13,6 +13,10 @@ function subscribeToMotion(callback: () => void) {
 
 export default function SpaceScene() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const interactionRef = useRef<HTMLDivElement>(null);
+  const camera = useRef({ azimuth: 0, elevation: 0, zoom: 1 });
+  const cameraAction = useRef<((action: "in" | "out" | "reset") => void) | null>(null);
+  const instructionsId = useId();
   const elapsed = useRef(0);
   const [paused, setPaused] = useState(false);
   const [rendererRevision, setRendererRevision] = useState(0);
@@ -48,7 +52,8 @@ export default function SpaceScene() {
 
   useLayoutEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const interaction = interactionRef.current;
+    if (!canvas || !interaction) return;
     const gl = canvas.getContext("webgl", { alpha: true, antialias: false, depth: false, stencil: false, powerPreference: "high-performance" });
     if (!gl) return;
 
@@ -86,7 +91,7 @@ export default function SpaceScene() {
     gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
     const resolution = gl.getUniformLocation(program, "uResolution");
     const time = gl.getUniformLocation(program, "uTime");
-    const pointer = gl.getUniformLocation(program, "uPointer");
+    const cameraUniform = gl.getUniformLocation(program, "uCamera");
     const focus = gl.getUniformLocation(program, "uFocus");
     const hardwareTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE) as number;
     const maxTexture = Math.min(hardwareTextureSize, canvas.clientWidth < 700 ? 4096 : 8192);
@@ -160,9 +165,9 @@ export default function SpaceScene() {
 
     let frame = 0;
     let lastFrame = 0;
+    let needsDraw = false;
     let arriving = document.documentElement.dataset.themeSwap === "alternate";
-    const targetPointer = { x: 0, y: 0 };
-    const currentPointer = { x: 0, y: 0 };
+    const pointers = new Map<number, { x: number; y: number }>();
 
     function renderScene() {
       if (!gl || !canvas) return;
@@ -176,15 +181,13 @@ export default function SpaceScene() {
       gl.bindTexture(gl.TEXTURE_2D, textures[1] ?? null);
       gl.uniform2f(resolution, canvas.width, canvas.height);
       gl.uniform1f(time, playback.current.reducedMotion ? 8 : elapsed.current);
-      gl.uniform2f(pointer, currentPointer.x, currentPointer.y);
+      gl.uniform3f(cameraUniform, camera.current.azimuth, camera.current.elevation, camera.current.zoom);
       gl.uniform2f(focus, 0.5, 0.5);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
 
     function draw() {
       if (!gl || !canvas) return;
-      currentPointer.x += (targetPointer.x - currentPointer.x) * 0.035;
-      currentPointer.y += (targetPointer.y - currentPointer.y) * 0.035;
       if (bloom) bloom.render(renderScene);
       else renderScene();
     }
@@ -194,17 +197,45 @@ export default function SpaceScene() {
       // Aim for smooth desktop motion; never catch up after a hidden tab.
       const frameInterval = canvas && canvas.clientWidth < 700 ? 1000 / 30 : 1000 / 60;
       if (now - lastFrame >= frameInterval - 0.5) {
-        if (!arriving && lastFrame) elapsed.current += Math.min((now - lastFrame) / 1000, 0.08);
+        if (!arriving && playback.current.moving && pointers.size === 0 && lastFrame) {
+          elapsed.current += Math.min((now - lastFrame) / 1000, 0.08);
+        }
         lastFrame = now;
+        needsDraw = false;
         draw();
       }
-      if (playback.current.moving && !document.hidden && !gl?.isContextLost()) frame = requestAnimationFrame(render);
+      if ((playback.current.moving || needsDraw) && !document.hidden && !gl?.isContextLost()) frame = requestAnimationFrame(render);
     }
 
     function start() {
-      lastFrame = 0;
-      if (playback.current.moving && !document.hidden && !frame) frame = requestAnimationFrame(render);
+      if ((playback.current.moving || needsDraw) && !document.hidden && !frame && !gl?.isContextLost()) {
+        lastFrame = 0;
+        frame = requestAnimationFrame(render);
+      }
     }
+
+    function invalidate() {
+      needsDraw = true;
+      start();
+    }
+
+    function zoomBy(factor: number) {
+      camera.current.zoom = Math.max(0.55, Math.min(1.85, camera.current.zoom * factor));
+      invalidate();
+    }
+
+    function orbitBy(x: number, y: number) {
+      camera.current.azimuth = (camera.current.azimuth - x) % (Math.PI * 2);
+      camera.current.elevation = Math.max(-1.2, Math.min(1.2, camera.current.elevation + y));
+      invalidate();
+    }
+
+    cameraAction.current = (action) => {
+      if (action === "reset") {
+        camera.current = { azimuth: 0, elevation: 0, zoom: 1 };
+        invalidate();
+      } else zoomBy(action === "in" ? 1 / 1.18 : 1.18);
+    };
 
     function resize() {
       if (!canvas || !gl) return;
@@ -224,21 +255,77 @@ export default function SpaceScene() {
 
     const arrive = () => { arriving = false; lastFrame = 0; };
     const visibility = () => {
-      if (document.hidden) { cancelAnimationFrame(frame); frame = 0; }
+      if (document.hidden) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        pointers.clear();
+        delete interaction.dataset.dragging;
+      }
       else start();
     };
-    const move = (event: PointerEvent) => {
-      if (event.pointerType !== "mouse" || !playback.current.moving) return;
-      targetPointer.x = event.clientX / window.innerWidth - 0.5;
-      targetPointer.y = event.clientY / window.innerHeight - 0.5;
+    const down = (event: PointerEvent) => {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      interaction.focus({ preventScroll: true });
+      interaction.setPointerCapture(event.pointerId);
+      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      interaction.dataset.dragging = "true";
     };
-    const leave = () => { targetPointer.x = 0; targetPointer.y = 0; };
+    const pinchDistance = () => {
+      const [a, b] = [...pointers.values()];
+      return a && b ? Math.hypot(a.x - b.x, a.y - b.y) : 0;
+    };
+    const move = (event: PointerEvent) => {
+      const previous = pointers.get(event.pointerId);
+      if (!previous) return;
+      const previousDistance = pinchDistance();
+      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      if (pointers.size > 1) {
+        const nextDistance = pinchDistance();
+        if (previousDistance > 0 && nextDistance > 0) zoomBy(previousDistance / nextDistance);
+      } else {
+        const scale = Math.PI * 2 / Math.max(320, Math.min(interaction.clientWidth, interaction.clientHeight));
+        orbitBy((event.clientX - previous.x) * scale, (event.clientY - previous.y) * scale);
+      }
+    };
+    const up = (event: PointerEvent) => {
+      pointers.delete(event.pointerId);
+      if (interaction.hasPointerCapture(event.pointerId)) interaction.releasePointerCapture(event.pointerId);
+      if (pointers.size === 0) {
+        delete interaction.dataset.dragging;
+        lastFrame = 0;
+      }
+    };
+    const wheel = (event: WheelEvent) => {
+      event.preventDefault();
+      const pixels = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? interaction.clientHeight : 1);
+      zoomBy(Math.exp(Math.max(-120, Math.min(120, pixels)) * 0.003));
+    };
+    const key = (event: KeyboardEvent) => {
+      const step = event.shiftKey ? 0.16 : 0.06;
+      switch (event.key) {
+        case "ArrowLeft": orbitBy(-step, 0); break;
+        case "ArrowRight": orbitBy(step, 0); break;
+        case "ArrowUp": orbitBy(0, -step); break;
+        case "ArrowDown": orbitBy(0, step); break;
+        case "+": case "=": cameraAction.current?.("in"); break;
+        case "-": case "_": cameraAction.current?.("out"); break;
+        case "Home": cameraAction.current?.("reset"); break;
+        default: return;
+      }
+      event.preventDefault();
+    };
     const observer = new ResizeObserver(resize);
     observer.observe(canvas);
     window.addEventListener("theme-arrived", arrive);
     document.addEventListener("visibilitychange", visibility);
-    page?.addEventListener("pointermove", move);
-    page?.addEventListener("pointerleave", leave);
+    interaction.addEventListener("pointerdown", down);
+    interaction.addEventListener("pointermove", move);
+    interaction.addEventListener("pointerup", up);
+    interaction.addEventListener("pointercancel", up);
+    interaction.addEventListener("lostpointercapture", up);
+    interaction.addEventListener("wheel", wheel, { passive: false });
+    interaction.addEventListener("keydown", key);
     updatePlayback.current = () => {
       cancelAnimationFrame(frame);
       frame = 0;
@@ -254,12 +341,22 @@ export default function SpaceScene() {
     return () => {
       disposed = true;
       updatePlayback.current = null;
+      cameraAction.current = null;
       cancelAnimationFrame(frame);
       observer.disconnect();
       window.removeEventListener("theme-arrived", arrive);
       document.removeEventListener("visibilitychange", visibility);
-      page?.removeEventListener("pointermove", move);
-      page?.removeEventListener("pointerleave", leave);
+      for (const pointerId of pointers.keys()) {
+        if (interaction.hasPointerCapture(pointerId)) interaction.releasePointerCapture(pointerId);
+      }
+      delete interaction.dataset.dragging;
+      interaction.removeEventListener("pointerdown", down);
+      interaction.removeEventListener("pointermove", move);
+      interaction.removeEventListener("pointerup", up);
+      interaction.removeEventListener("pointercancel", up);
+      interaction.removeEventListener("lostpointercapture", up);
+      interaction.removeEventListener("wheel", wheel);
+      interaction.removeEventListener("keydown", key);
       images.forEach((image) => { image.onload = null; });
       bloom?.dispose();
       textures.forEach((texture) => gl.deleteTexture(texture));
@@ -278,12 +375,20 @@ export default function SpaceScene() {
         </div>
         <canvas ref={canvasRef} className="space-canvas" />
       </div>
+      <div ref={interactionRef} className="space-interaction" tabIndex={0} role="region" aria-label="Explore Io" aria-describedby={instructionsId} />
+      <p id={instructionsId} className="sr-only">Drag to orbit Io. Scroll or pinch to zoom. With the scene focused, use arrow keys to orbit, plus and minus to zoom, and Home to reset the view.</p>
       <div className="space-controls">
-        {!reducedMotion && (
-          <button type="button" onClick={() => setPaused((value) => !value)}>
-            <span aria-hidden="true">{paused ? "▷" : "Ⅱ"}</span> {paused ? "resume orbit" : "pause orbit"}
-          </button>
-        )}
+        <span className="space-camera-hint" aria-hidden="true">drag to orbit · scroll / pinch to zoom</span>
+        <div className="space-control-buttons">
+          <button type="button" aria-label="Zoom out" onClick={() => cameraAction.current?.("out")}>−</button>
+          <button type="button" aria-label="Zoom in" onClick={() => cameraAction.current?.("in")}>+</button>
+          <button type="button" onClick={() => cameraAction.current?.("reset")}>reset view</button>
+          {!reducedMotion && (
+            <button type="button" onClick={() => setPaused((value) => !value)}>
+              <span aria-hidden="true">{paused ? "▷" : "Ⅱ"}</span> {paused ? "resume orbit" : "pause orbit"}
+            </button>
+          )}
+        </div>
       </div>
     </>
   );

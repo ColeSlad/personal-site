@@ -254,6 +254,31 @@ html, body {
   opacity: 0;
 }
 
+.space-interaction {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.space-interaction[data-dragging] {
+  cursor: grabbing;
+}
+
+.space-interaction:focus-visible {
+  outline: 1px solid #e8bc5880;
+  outline-offset: -8px;
+}
+
+.alternate-header,
+.alternate-footer {
+  position: relative;
+  z-index: 1;
+}
+
 /* The space scene still has a celestial centerpiece when WebGL is unavailable. */
 .space-still {
   background:
@@ -293,15 +318,27 @@ html, body {
 
 .space-controls {
   position: absolute;
+  z-index: 1;
   right: clamp(24px, 6vw, 96px);
   bottom: 25px;
   display: flex;
-  align-items: center;
-  gap: 24px;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 10px;
   font-size: 10px;
   color: #a7bad2;
   font-family: var(--font-alternate), Arial, sans-serif;
   letter-spacing: 0.06em;
+}
+
+.space-control-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.space-camera-hint {
+  font-size: 9px;
+  text-shadow: 0 1px 8px #030611;
 }
 
 .space-controls button {
@@ -310,6 +347,7 @@ html, body {
   justify-content: center;
   gap: 8px;
   min-height: 44px;
+  min-width: 44px;
   padding: 0 12px;
   border: 1px solid #a7bad238;
   border-radius: 24px;
@@ -413,6 +451,7 @@ html, body {
 
 .alternate-footer {
   margin-top: auto;
+  max-width: calc(100% - 350px);
   color: var(--alternate-accent);
   font-size: 14px;
   letter-spacing: 0.02em;
@@ -488,7 +527,11 @@ html, body {
 
   .space-controls {
     right: 24px;
-    bottom: 77px;
+    bottom: 110px;
+  }
+
+  .alternate-footer {
+    max-width: 100%;
   }
 
   .space-still-planet {
