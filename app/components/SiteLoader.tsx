@@ -22,6 +22,21 @@ export default function SiteLoader({ children }: { children: ReactNode }) {
   const [completed, setCompleted] = useState(0);
   const cancelLoading = useRef<(() => void) | null>(null);
   const ready = status === "ready";
+  const [orbitHint, setOrbitHint] = useState<{
+    pathname: string;
+    status: "unseen" | "showing" | "seen";
+  }>({ pathname, status: "unseen" });
+
+  // Keep the hint's history above the pages that remount during navigation.
+  // About never consumes it; leaving the first Orbit visit retires it.
+  if (orbitHint.pathname !== pathname || (ready && pathname === "/alternate" && orbitHint.status === "unseen")) {
+    setOrbitHint({
+      pathname,
+      status: orbitHint.status === "unseen"
+        ? ready && pathname === "/alternate" ? "showing" : "unseen"
+        : "seen",
+    });
+  }
 
   useEffect(() => {
     let active = true;
@@ -62,7 +77,7 @@ export default function SiteLoader({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <div className="site-shell" data-ready={ready} data-space-active={spaceActive} inert={!ready} aria-hidden={!ready} aria-busy={!ready}>
+      <div className="site-shell" data-ready={ready} data-space-active={spaceActive} data-orbit-hint={orbitHint.status === "showing"} inert={!ready} aria-hidden={!ready} aria-busy={!ready}>
         {children}
       </div>
       <SpaceScene active={ready && spaceActive} reading={pathname.startsWith("/alternate/")} onPrepared={rendererPreparation.resolve} />

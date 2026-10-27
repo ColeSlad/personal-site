@@ -289,6 +289,14 @@ html, body {
   animation: themeSwitchHighlight 1s ease-out;
 }
 
+.theme-switch-return::before {
+  animation: var(--orbit-hint-animation, none);
+}
+
+.site-shell[data-orbit-hint="true"] {
+  --orbit-hint-animation: themeSwitchHighlight 1s ease-out;
+}
+
 html[data-theme-swap] .theme-switch::before,
 .site-shell[data-ready="false"] .theme-switch::before {
   animation: none;
