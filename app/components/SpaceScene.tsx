@@ -26,7 +26,7 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
     () => window.matchMedia(motionQuery).matches,
     () => false,
   );
-  const moving = active && !reading && !paused && !reducedMotion;
+  const moving = active && !paused && !reducedMotion;
   const playback = useRef({ moving, reducedMotion, active });
   const updatePlayback = useRef<(() => void) | null>(null);
 
