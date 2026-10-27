@@ -259,7 +259,6 @@ export default function SpaceScene() {
         <canvas ref={canvasRef} className="space-canvas" />
       </div>
       <div className="space-controls">
-        <span className="space-coordinate">io · jupiter system</span>
         {!reducedMotion && (
           <button type="button" onClick={() => setPaused((value) => !value)}>
             <span aria-hidden="true">{paused ? "▷" : "Ⅱ"}</span> {paused ? "resume orbit" : "pause orbit"}

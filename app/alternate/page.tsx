@@ -31,12 +31,10 @@ export default function Alternate() {
       <h1 className="sr-only">Cole Sladowsky</h1>
       <header className="alternate-header">
         <span className="alternate-name">cole sladowsky</span>
-        <p className="alternate-eyebrow">in orbit around io</p>
         <ThemeTransitionLink href="/" className="alternate-back">← back to the original</ThemeTransitionLink>
       </header>
 
       <footer className="alternate-footer">
-        <span>a work in orbit.</span>
         <span className="space-credit">
           Io: <a href="https://astrogeology.usgs.gov/search/map/io_galileo_ssi_voyager_color_merged_global_mosaic_1km" target="_blank" rel="noopener noreferrer">NASA/JPL/USGS</a>
           {" · Jupiter: "}<a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener noreferrer">Solar System Scope</a>
