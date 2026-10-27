@@ -26,6 +26,103 @@ html, body {
   white-space: nowrap;
 }
 
+.site-shell {
+  min-height: 100%;
+}
+
+.site-shell[data-ready="false"] {
+  visibility: hidden;
+}
+
+.site-loader {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: #080808;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 240ms ease, visibility 0s;
+}
+
+.site-loader[data-ready="true"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 240ms ease, visibility 0s 240ms;
+}
+
+.site-loader-content {
+  width: min(240px, 100%);
+  text-align: center;
+}
+
+.site-loader-name {
+  margin-bottom: 24px;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+}
+
+.site-loader-progress {
+  display: block;
+  width: 100%;
+  height: 2px;
+  appearance: none;
+  border: 0;
+  background: #252525;
+  color: #ed1c24;
+}
+
+.site-loader-progress::-webkit-progress-bar {
+  background: #252525;
+}
+
+.site-loader-progress::-webkit-progress-value {
+  background: linear-gradient(90deg, #ed1c24, #e8bc58);
+}
+
+.site-loader-progress::-moz-progress-bar {
+  background: linear-gradient(90deg, #ed1c24, #e8bc58);
+}
+
+.site-loader-status {
+  margin-top: 16px;
+  color: #999;
+  font-size: 11px;
+}
+
+.site-loader-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.site-loader-actions button {
+  min-height: 44px;
+  border: 0;
+  background: none;
+  color: #fff;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.site-loader-actions button:focus-visible {
+  outline: 1px solid #fff;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-loader,
+  .site-loader[data-ready="true"] {
+    transition: none;
+  }
+}
+
 /* ── ANIMATIONS ── */
 
 @keyframes fadeIn {
@@ -186,7 +283,8 @@ html, body {
   animation: themeSwitchHighlight 1s ease-out;
 }
 
-html[data-theme-swap] .theme-switch::before {
+html[data-theme-swap] .theme-switch::before,
+.site-shell[data-ready="false"] .theme-switch::before {
   animation: none;
 }
 

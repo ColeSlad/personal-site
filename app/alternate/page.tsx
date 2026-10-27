@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import ThemeSwitch from "../components/ThemeSwitch";
 import SpaceScene from "../components/SpaceScene";
-
-const kumbhSans = localFont({
-  src: "./fonts/KumbhSans-Latin.woff2",
-  variable: "--font-alternate",
-  weight: "600 700",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Another side — Cole Sladowsky",
@@ -17,9 +9,7 @@ export const metadata: Metadata = {
 
 export default function Alternate() {
   return (
-    <main className={`alternate-page ${kumbhSans.variable}`} data-space-ready="false">
-      <link rel="preload" as="image" href="/space/io-8k.webp" fetchPriority="high" />
-      <link rel="preload" as="image" href="/space/jupiter-4k.webp" />
+    <main className="alternate-page" data-space-ready="false">
       <ThemeSwitch returnToMain />
       <SpaceScene />
       <h1 className="sr-only">Cole Sladowsky</h1>

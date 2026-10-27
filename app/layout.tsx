@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { ThemeTransitionProvider } from "./components/ThemeTransition";
+import SiteLoader from "./components/SiteLoader";
+import { kumbhSans } from "./lib/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -30,8 +32,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <ThemeTransitionProvider>{children}</ThemeTransitionProvider>
+      <head>
+        <link rel="preload" as="image" href="/space/io-8k.webp" fetchPriority="high" />
+        <link rel="preload" as="image" href="/space/jupiter-4k.webp" fetchPriority="high" />
+      </head>
+      <body className={kumbhSans.variable}>
+        <SiteLoader>
+          <ThemeTransitionProvider>{children}</ThemeTransitionProvider>
+        </SiteLoader>
         <Analytics />
       </body>
     </html>

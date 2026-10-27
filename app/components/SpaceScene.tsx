@@ -3,6 +3,8 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { spaceFragmentShader, spaceVertexShader } from "../lib/space-shaders";
 import { createSpaceBloom } from "../lib/space-bloom";
+import { loadSiteImage } from "../lib/site-assets";
+import { useSiteReady } from "./SiteLoader";
 
 const motionQuery = "(prefers-reduced-motion: reduce)";
 function subscribeToMotion(callback: () => void) {
@@ -12,6 +14,7 @@ function subscribeToMotion(callback: () => void) {
 }
 
 export default function SpaceScene() {
+  const siteReady = useSiteReady();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const interactionRef = useRef<HTMLDivElement>(null);
   const camera = useRef({ azimuth: 0, elevation: 0, zoom: 1 });
@@ -53,6 +56,7 @@ export default function SpaceScene() {
   }, []);
 
   useEffect(() => {
+    if (!siteReady) return;
     const canvas = canvasRef.current;
     const interaction = interactionRef.current;
     if (!canvas || !interaction) return;
@@ -145,7 +149,6 @@ export default function SpaceScene() {
       const anisotropy = gl.getExtension("EXT_texture_filter_anisotropic");
       const anisotropyLevel = anisotropy ? Math.min(8, gl.getParameter(anisotropy.MAX_TEXTURE_MAX_ANISOTROPY_EXT) as number) : 1;
       const textures: WebGLTexture[] = [];
-      const images: HTMLImageElement[] = [];
       const bloom = createSpaceBloom(gl);
       if (page) page.dataset.spaceReady = "false";
       canvas.dataset.surface = "loading";
@@ -177,9 +180,7 @@ export default function SpaceScene() {
         gl.useProgram(program);
         gl.uniform1i(gl.getUniformLocation(program, uniform), unit);
 
-        const image = new Image();
-        images.push(image);
-        image.onload = () => {
+        void loadSiteImage(url).then((image) => {
           if (disposed || gl.isContextLost()) return;
           let source: TexImageSource = image;
           let width = image.naturalWidth;
@@ -218,9 +219,7 @@ export default function SpaceScene() {
             window.dispatchEvent(new Event("space-ready"));
             start();
           }
-        };
-        image.onerror = () => textureFailed(key);
-        image.src = url;
+        }).catch(() => textureFailed(key));
       }
 
       let frame = 0;
@@ -416,7 +415,6 @@ export default function SpaceScene() {
         interaction.removeEventListener("lostpointercapture", up);
         interaction.removeEventListener("wheel", wheel);
         interaction.removeEventListener("keydown", key);
-        images.forEach((image) => { image.onload = null; image.onerror = null; });
         bloom?.dispose();
         textures.forEach((texture) => gl.deleteTexture(texture));
         shaders.forEach((shader) => gl.deleteShader(shader));
@@ -424,7 +422,7 @@ export default function SpaceScene() {
         gl.deleteProgram(program);
       };
     }
-  }, [rendererRevision]);
+  }, [rendererRevision, siteReady]);
 
   return (
     <>
