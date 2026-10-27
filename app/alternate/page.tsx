@@ -35,13 +35,6 @@ export default function Alternate() {
         <ThemeTransitionLink href="/" className="alternate-back">← back to the original</ThemeTransitionLink>
       </header>
 
-      <div className="alternate-content">
-        <p className="alternate-description">
-          <span className="alternate-lead">same person. a different universe.</span>
-          <br /><span className="alternate-note">the rest of this world is coming soon.</span>
-        </p>
-      </div>
-
       <footer className="alternate-footer">
         <span>a work in orbit.</span>
         <span className="space-credit">

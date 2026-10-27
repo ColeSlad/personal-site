@@ -419,6 +419,7 @@ html, body {
 }
 
 .alternate-footer {
+  margin-top: auto;
   color: var(--alternate-accent);
   font-size: 14px;
   letter-spacing: 0.02em;
