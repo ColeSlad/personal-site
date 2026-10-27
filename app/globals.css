@@ -149,11 +149,11 @@ html, body {
 /* ── ALTERNATE VERSION ── */
 
 :root {
-  --alternate-surface: #efeaff;
-  --alternate-ink: #292443;
-  --alternate-accent: #655297;
+  --alternate-surface: #050916;
+  --alternate-ink: #edf1ff;
+  --alternate-accent: #a7bad2;
   --alternate-lilac: #a99af2;
-  --alternate-mint: #bdebdc;
+  --alternate-mint: #7cdccc;
 }
 
 .theme-switch {
@@ -212,37 +212,144 @@ html, body {
 }
 
 .alternate-page {
+  position: relative;
+  isolation: isolate;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   padding: 32px clamp(24px, 6vw, 96px);
-  background:
-    radial-gradient(ellipse at 90% 10%, var(--alternate-mint), transparent 55%),
-    radial-gradient(ellipse at 0% 100%, #d8c4f3, transparent 55%),
-    var(--alternate-surface);
+  overflow: hidden;
+  background: var(--alternate-surface);
   color: var(--alternate-ink);
 }
 
-.alternate-header {
+.alternate-page::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, #03061155, transparent 20%, transparent 67%, #030611d9 90%);
+}
+
+.space-scene,
+.space-canvas,
+.space-still {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.space-scene {
+  z-index: -2;
+}
+
+.space-canvas {
+  opacity: 0;
+}
+
+/* The space scene still has a celestial centerpiece when WebGL is unavailable. */
+.space-still {
+  background:
+    radial-gradient(ellipse at 70% 40%, #35234f55, transparent 55%),
+    radial-gradient(1px 1px at 20% 30%, #fff, transparent),
+    radial-gradient(1px 1px at 65% 15%, #aabaff, transparent),
+    radial-gradient(1px 1px at 85% 65%, #fff, transparent),
+    #050916;
+}
+
+.space-still-planet {
+  position: absolute;
+  width: min(66svh, 60vw);
+  aspect-ratio: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 28% 25%, transparent 15%, #171a2588 45%, #070912 85%),
+    url("/space/saturn-4k.jpg") center / cover;
+  box-shadow: 0 0 12px #b8c8dc22, inset 0 0 12px #b8c8dc33;
+}
+
+.space-still-planet::before {
+  content: "";
+  position: absolute;
+  inset: -24% -75%;
+  border: 20px solid #c5b99e88;
+  border-radius: 50%;
+  transform: rotate(-25deg) scaleY(0.3);
+  box-shadow: 0 0 10px #c5b99e22;
+}
+
+.space-controls {
+  position: absolute;
+  right: clamp(24px, 6vw, 96px);
+  bottom: 25px;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  font-size: 10px;
+  color: #a7bad2;
+}
+
+.space-controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid #a7bad238;
+  border-radius: 24px;
+  background: #05091699;
+  color: #d8e2f4;
+  cursor: pointer;
+  font: inherit;
+}
+
+.space-controls button:hover {
+  background: #253047;
+  border-color: #a7bad288;
+}
+
+.space-controls button:focus-visible {
+  outline: 2px solid var(--alternate-mint);
+  outline-offset: 4px;
+}
+
+.alternate-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
   gap: 24px;
   font-size: 11px;
 }
 
+.alternate-header .alternate-back {
+  justify-self: end;
+}
+
 .alternate-content {
-  margin: auto 0;
-  padding: 88px 0;
+  margin: auto auto 24px;
+  padding: 0;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  text-shadow: 0 2px 20px #030611, 0 1px 5px #030611;
 }
 
 .alternate-eyebrow {
-  margin-bottom: 24px;
+  margin-bottom: 0;
+  font-size: 10px;
   color: var(--alternate-accent);
 }
 
 .alternate-content h1 {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(56px, 10vw, 144px);
+  font-size: clamp(36px, 4vw, 52px);
   font-weight: 400;
   line-height: 1.05;
   letter-spacing: -0.06em;
@@ -250,7 +357,8 @@ html, body {
 
 .alternate-description {
   max-width: 340px;
-  margin-top: 28px;
+  margin: 12px auto 0;
+  font-size: 11px;
   line-height: 1.8;
 }
 
@@ -258,7 +366,7 @@ html, body {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  margin-top: 28px;
+  margin-top: 0;
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 5px;
@@ -277,6 +385,82 @@ html, body {
   color: var(--alternate-accent);
   font-size: 10px;
   line-height: 1.6;
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+}
+
+.space-credit {
+  font-size: 9px;
+  color: #93a2b9;
+}
+
+.space-credit a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.space-credit a:hover {
+  color: #fff;
+}
+
+.space-credit a:focus-visible {
+  outline: 1px solid #fff;
+  outline-offset: 3px;
+}
+
+@media (max-width: 699px) {
+  .alternate-page {
+    min-height: max(100svh, 760px);
+    padding: 24px;
+  }
+
+  .alternate-page::before {
+    background: linear-gradient(0deg, #030611f5, #03061155 22%, transparent 43%);
+  }
+
+  .alternate-content {
+    max-width: 100%;
+    padding: 0;
+    margin: auto auto 28px;
+  }
+
+  .alternate-header {
+    grid-template-columns: 1fr auto;
+  }
+
+  .alternate-content h1 {
+    font-size: clamp(36px, 10vw, 44px);
+  }
+
+  .alternate-eyebrow {
+    display: none;
+  }
+
+  .alternate-description {
+    margin-top: 10px;
+  }
+
+  .alternate-back {
+    margin-top: 0;
+    font-size: 10px;
+  }
+
+  .space-controls {
+    right: 24px;
+    bottom: 77px;
+  }
+
+  .space-coordinate {
+    display: none;
+  }
+
+  .space-still-planet {
+    width: 82vw;
+  }
 }
 
 /* An expanding color field bridges the palettes of the two page snapshots. */
@@ -289,7 +473,7 @@ html, body {
 html[data-theme-swap] {
   --bloom-core: var(--alternate-surface);
   --bloom-lilac: var(--alternate-lilac);
-  --bloom-mint: #7cdccc;
+  --bloom-mint: var(--alternate-mint);
   --bloom-pink: #e8aadf;
   --bloom-coral: #ff8d75;
   --bloom-edge: #ed1c24;

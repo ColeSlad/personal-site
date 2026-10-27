@@ -22,9 +22,25 @@ export function ThemeTransitionProvider({ children }: { children: ReactNode }) {
   const routeCommitted = useRef<(() => void) | null>(null);
 
   useLayoutEffect(() => {
-    // Capture the new screen only after Next has committed the destination.
-    routeCommitted.current?.();
-    routeCommitted.current = null;
+    // Capture the destination with its detailed textures, rather than the
+    // temporary material shown while the local images decode.
+    let timeout: number | undefined;
+    const release = () => {
+      window.clearTimeout(timeout);
+      window.removeEventListener("space-ready", release);
+      routeCommitted.current?.();
+      routeCommitted.current = null;
+    };
+    const scene = document.querySelector("[data-space-ready]");
+    if (pathname === "/alternate" && scene?.getAttribute("data-space-ready") === "false") {
+      window.addEventListener("space-ready", release, { once: true });
+      timeout = window.setTimeout(release, 1200);
+    } else release();
+
+    return () => {
+      window.clearTimeout(timeout);
+      window.removeEventListener("space-ready", release);
+    };
   }, [pathname]);
 
   useLayoutEffect(() => () => {
@@ -64,6 +80,7 @@ export function ThemeTransitionProvider({ children }: { children: ReactNode }) {
       delete root.dataset.themeSwap;
       root.style.removeProperty("--theme-origin-x");
       root.style.removeProperty("--theme-origin-y");
+      if (href === "/alternate") window.dispatchEvent(new Event("theme-arrived"));
     });
   }, [router]);
 
