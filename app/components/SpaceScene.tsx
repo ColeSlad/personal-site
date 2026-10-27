@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { spaceFragmentShader, spaceVertexShader } from "../lib/space-shaders";
+import { createSpaceBloom } from "../lib/space-bloom";
 
 const motionQuery = "(prefers-reduced-motion: reduce)";
 function subscribeToMotion(callback: () => void) {
@@ -48,7 +49,7 @@ export default function SpaceScene() {
   useLayoutEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const gl = canvas.getContext("webgl", { alpha: true, antialias: false, powerPreference: "high-performance" });
+    const gl = canvas.getContext("webgl", { alpha: true, antialias: false, depth: false, stencil: false, powerPreference: "high-performance" });
     if (!gl) return;
 
     const shaders: WebGLShader[] = [];
@@ -87,12 +88,14 @@ export default function SpaceScene() {
     const time = gl.getUniformLocation(program, "uTime");
     const pointer = gl.getUniformLocation(program, "uPointer");
     const focus = gl.getUniformLocation(program, "uFocus");
-    const maxTexture = Math.min(gl.getParameter(gl.MAX_TEXTURE_SIZE) as number, canvas.clientWidth < 700 ? 4096 : 8192);
-    const maxRenderSize = gl.getParameter(gl.MAX_RENDERBUFFER_SIZE) as number;
+    const hardwareTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE) as number;
+    const maxTexture = Math.min(hardwareTextureSize, canvas.clientWidth < 700 ? 4096 : 8192);
+    const maxRenderSize = Math.min(gl.getParameter(gl.MAX_RENDERBUFFER_SIZE) as number, hardwareTextureSize);
     const anisotropy = gl.getExtension("EXT_texture_filter_anisotropic");
     const anisotropyLevel = anisotropy ? Math.min(8, gl.getParameter(anisotropy.MAX_TEXTURE_MAX_ANISOTROPY_EXT) as number) : 1;
     const textures: WebGLTexture[] = [];
     const images: HTMLImageElement[] = [];
+    const bloom = createSpaceBloom(gl);
     const page = canvas.closest("main");
     if (page) page.dataset.spaceReady = "false";
     canvas.dataset.surface = "loading";
@@ -111,6 +114,7 @@ export default function SpaceScene() {
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.useProgram(program);
       gl.uniform1i(gl.getUniformLocation(program, uniform), unit);
 
       const image = new Image();
@@ -160,15 +164,29 @@ export default function SpaceScene() {
     const targetPointer = { x: 0, y: 0 };
     const currentPointer = { x: 0, y: 0 };
 
-    function draw() {
+    function renderScene() {
       if (!gl || !canvas) return;
-      currentPointer.x += (targetPointer.x - currentPointer.x) * 0.035;
-      currentPointer.y += (targetPointer.y - currentPointer.y) * 0.035;
+      gl.useProgram(program);
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.enableVertexAttribArray(position);
+      gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, textures[0] ?? null);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, textures[1] ?? null);
       gl.uniform2f(resolution, canvas.width, canvas.height);
       gl.uniform1f(time, playback.current.reducedMotion ? 8 : elapsed.current);
       gl.uniform2f(pointer, currentPointer.x, currentPointer.y);
       gl.uniform2f(focus, 0.5, 0.5);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+
+    function draw() {
+      if (!gl || !canvas) return;
+      currentPointer.x += (targetPointer.x - currentPointer.x) * 0.035;
+      currentPointer.y += (targetPointer.y - currentPointer.y) * 0.035;
+      if (bloom) bloom.render(renderScene);
+      else renderScene();
     }
 
     function render(now: number) {
@@ -200,6 +218,7 @@ export default function SpaceScene() {
       canvas.width = Math.max(1, Math.round(canvas.clientWidth * ratio));
       canvas.height = Math.max(1, Math.round(canvas.clientHeight * ratio));
       gl.viewport(0, 0, canvas.width, canvas.height);
+      bloom?.resize(canvas.width, canvas.height);
       draw();
     }
 
@@ -242,6 +261,7 @@ export default function SpaceScene() {
       page?.removeEventListener("pointermove", move);
       page?.removeEventListener("pointerleave", leave);
       images.forEach((image) => { image.onload = null; });
+      bloom?.dispose();
       textures.forEach((texture) => gl.deleteTexture(texture));
       shaders.forEach((shader) => gl.deleteShader(shader));
       gl.deleteBuffer(buffer);

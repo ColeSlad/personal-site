@@ -40,9 +40,13 @@ vec3 sky(vec3 direction) {
     vec3 cell = floor(direction * scale);
     vec3 local = fract(direction * scale) - 0.5;
     float seed = hash(cell);
-    float star = exp(-dot(local, local) * 420.0) * step(0.974, seed);
+    float distanceSquared = dot(local, local);
+    float core = exp(-distanceSquared * 210.0);
+    float halo = exp(-distanceSquared * 24.0) * 0.12;
+    halo += exp(-distanceSquared * 6.0) * 0.018;
+    float star = (core + halo) * step(0.974, seed);
     vec3 tint = mix(vec3(0.67, 0.79, 1.0), vec3(1.0, 0.83, 0.66), seed);
-    color += tint * star * (0.35 + 1.8 * pow(fract(seed * 431.0), 6.0));
+    color += tint * star * (0.45 + 3.0 * pow(fract(seed * 431.0), 6.0));
   }
   return color;
 }
