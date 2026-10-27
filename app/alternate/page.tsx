@@ -6,14 +6,14 @@ import SpaceScene from "../components/SpaceScene";
 const cinzel = localFont({
   src: "./fonts/Cinzel-Latin.woff2",
   variable: "--font-alternate-display",
-  weight: "400",
+  weight: "600 700",
   display: "swap",
 });
 
 const cormorant = localFont({
   src: [
-    { path: "./fonts/CormorantGaramond-Latin.woff2", weight: "400", style: "normal" },
-    { path: "./fonts/CormorantGaramond-Italic-Latin.woff2", weight: "400", style: "italic" },
+    { path: "./fonts/CormorantGaramond-Latin.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/CormorantGaramond-Italic-Latin.woff2", weight: "600", style: "italic" },
   ],
   variable: "--font-alternate-serif",
   display: "swap",

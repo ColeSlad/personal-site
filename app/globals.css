@@ -223,7 +223,7 @@ html, body {
   color: var(--alternate-ink);
   font-family: var(--font-alternate-serif), Georgia, serif;
   font-size: 18px;
-  font-weight: 400;
+  font-weight: 600;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -341,6 +341,7 @@ html, body {
 
 .alternate-name {
   font-size: clamp(18px, 1.7vw, 28px);
+  font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -363,7 +364,7 @@ html, body {
 .alternate-content h1 {
   font-family: var(--font-alternate-display), Georgia, serif;
   font-size: clamp(36px, 4vw, 52px);
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1.05;
   letter-spacing: 0.04em;
 }

@@ -1,6 +1,8 @@
 # Alternate-page fonts
 
-Cinzel Regular and Cormorant Garamond Regular/Italic, Latin WOFF2 subsets.
+Cinzel variable (600–700) and Cormorant Garamond Semibold/Semibold Italic,
+Latin WOFF2 subsets. The name uses Cinzel Bold (700); links and supporting
+text use Semibold (600).
 Self-hosted via `next/font/local` and scoped to the alternate page.
 
 Sources:
