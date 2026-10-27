@@ -41,3 +41,60 @@ export function parseContributions(data: unknown): Contribution[] {
 
   return contributions;
 }
+
+export function parseGitHubCalendar(html: string): Contribution[] {
+  // GitHub renders cells in weekday order and associates counts by tooltip ID.
+  const counts = new Map<string, number>();
+  for (const tooltip of html.matchAll(/<tool-tip\b([^>]*)>([\s\S]*?)<\/tool-tip>/g)) {
+    const id = tooltip[1].match(/\bfor="([^"]+)"/)?.[1];
+    const count = tooltip[2].trim().match(/^(No|[\d,]+) contributions? on\b/);
+    if (id && count) {
+      counts.set(id, count[1] === "No" ? 0 : Number(count[1].replaceAll(",", "")));
+    }
+  }
+
+  const contributions = [];
+  for (const cell of html.matchAll(/<td\b([^>]*)>/g)) {
+    const date = cell[1].match(/\bdata-date="([^"]+)"/)?.[1];
+    if (!date) continue;
+    const id = cell[1].match(/\bid="([^"]+)"/)?.[1];
+    const level = cell[1].match(/\bdata-level="([^"]+)"/)?.[1];
+    contributions.push({
+      date,
+      count: id ? counts.get(id) : undefined,
+      level: level === undefined ? undefined : Number(level),
+    });
+  }
+
+  // Reuse the API validation; incomplete or changed markup must not show false data.
+  return parseContributions({ contributions });
+}
+
+export async function getGitHubContributions(): Promise<Contribution[] | null> {
+  const sources = [
+    {
+      url: "https://github-contributions-api.jogruber.de/v4/ColeSlad?y=last",
+      parse: async (response: Response) => parseContributions(await response.json()),
+    },
+    {
+      url: "https://github.com/users/ColeSlad/contributions",
+      parse: async (response: Response) => parseGitHubCalendar(await response.text()),
+    },
+  ];
+
+  for (const source of sources) {
+    try {
+      const response = await fetch(source.url, {
+        next: { revalidate: 3600 },
+        signal: AbortSignal.timeout(8000),
+        headers: { "Accept-Language": "en-US" },
+      });
+      if (!response.ok) throw new Error(`Contribution request failed: ${response.status}`);
+      return await source.parse(response);
+    } catch (error) {
+      console.warn(`Could not load GitHub contributions from ${source.url}`, error);
+    }
+  }
+
+  return null;
+}

@@ -1,10 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import DateTime from "./components/DateTime";
+import ThemeSwitch from "./components/ThemeSwitch";
 
 export default function Home() {
   return (
     <main className="main">
+      <ThemeSwitch />
 
       <header className="header">
         <div className="logo-wrap">
