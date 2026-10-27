@@ -3,19 +3,10 @@ import localFont from "next/font/local";
 import { ThemeTransitionLink } from "../components/ThemeTransition";
 import SpaceScene from "../components/SpaceScene";
 
-const cinzel = localFont({
-  src: "./fonts/Cinzel-Latin.woff2",
-  variable: "--font-alternate-display",
+const kumbhSans = localFont({
+  src: "./fonts/KumbhSans-Latin.woff2",
+  variable: "--font-alternate",
   weight: "600 700",
-  display: "swap",
-});
-
-const cormorant = localFont({
-  src: [
-    { path: "./fonts/CormorantGaramond-Latin.woff2", weight: "600", style: "normal" },
-    { path: "./fonts/CormorantGaramond-Italic-Latin.woff2", weight: "600", style: "italic" },
-  ],
-  variable: "--font-alternate-serif",
   display: "swap",
 });
 
@@ -26,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function Alternate() {
   return (
-    <main className={`alternate-page ${cinzel.variable} ${cormorant.variable}`}>
+    <main className={`alternate-page ${kumbhSans.variable}`}>
       <SpaceScene />
       <h1 className="sr-only">Cole Sladowsky</h1>
       <header className="alternate-header">
