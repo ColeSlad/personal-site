@@ -888,22 +888,22 @@ html[data-theme-swap] .theme-switch::before,
 }
 
 .about-photo-heading h2 {
-  font-size: clamp(20px, 2vw, 26px);
+  font-size: clamp(26px, 3vw, 40px);
   font-weight: 600;
   letter-spacing: -0.035em;
 }
 
 .about-photos {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: center;
-  gap: 28px;
-  padding: 40px 10px 20px;
+  gap: 40px;
+  padding: 40px 8px 20px;
 }
 
 .about-photo {
-  --photo-tilt: -4deg;
-  --photo-lift: 12px;
+  --photo-tilt: -0.8deg;
+  --photo-lift: 0px;
   min-width: 0;
   padding: 9px;
   border: 1px solid #ffffff33;
@@ -925,22 +925,20 @@ html[data-theme-swap] .theme-switch::before,
   border-radius: 15px;
 }
 
-.about-photo figcaption {
-  padding: 16px 9px 10px;
-  color: var(--about-secondary);
-  font-size: 12px;
-  line-height: 1.6;
+.about-photo-landscape {
+  grid-column: 1 / -1;
+  margin-bottom: 12px;
 }
 
-.about-photo-bunny {
-  --photo-tilt: 3deg;
-  --photo-lift: -8px;
+.about-photo-food {
+  --photo-tilt: 1deg;
+  --photo-lift: 6px;
   animation-delay: -3s;
 }
 
-.about-photo-childhood {
-  --photo-tilt: -2deg;
-  --photo-lift: 28px;
+.about-photo-overlook {
+  --photo-tilt: -1deg;
+  --photo-lift: 20px;
   animation-delay: -5s;
 }
 
@@ -1035,11 +1033,11 @@ html[data-theme-swap] .theme-switch::before,
   .about-photos {
     grid-template-columns: minmax(0, 1fr);
     gap: 42px;
-    padding-inline: 12px;
+    padding-inline: 4px;
   }
 
   .about-photo {
-    width: min(360px, 94%);
+    width: 100%;
     margin-inline: auto;
   }
 

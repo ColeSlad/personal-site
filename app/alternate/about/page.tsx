@@ -17,9 +17,9 @@ const experience = [
 ];
 
 const photos = [
-  { src: "/about/IMG_0494.JPG", alt: "Cole and friends on a wooded hike at Mount Tamalpais", caption: "13 miles at Mount Tam.", width: 1824, height: 1368, className: "about-photo-hike" },
-  { src: "/about/IMG_2012.JPG", alt: "Cole petting a rabbit at a bunny café in San Francisco", caption: "Still thinking about getting a bunny.", width: 1368, height: 1824, className: "about-photo-bunny" },
-  { src: "/about/IMG_2268.jpg", alt: "A childhood photo of Cole at a laptop", caption: "Started early.", width: 1206, height: 898, className: "about-photo-childhood" },
+  { src: "/about/IMG_2367.webp", alt: "Pine trees framing a lake and mountains at sunset", width: 2400, height: 1800, className: "about-photo-landscape" },
+  { src: "/about/IMG_4269.webp", alt: "A platter of marbled beef at a restaurant", width: 1800, height: 2400, className: "about-photo-food" },
+  { src: "/about/IMG_4756.webp", alt: "A river winding through forested hills below a rocky overlook", width: 1170, height: 1560, className: "about-photo-overlook" },
 ];
 
 export default function AlternateAbout() {
@@ -82,8 +82,7 @@ export default function AlternateAbout() {
           <div className="about-photos">
             {photos.map((photo) => (
               <figure key={photo.src} className={`about-photo ${photo.className}`}>
-                <Image src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} sizes="(max-width: 700px) 80vw, (max-width: 1100px) 40vw, 360px" />
-                <figcaption>{photo.caption}</figcaption>
+                <Image src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} sizes={photo.className === "about-photo-landscape" ? "(max-width: 1000px) 85vw, 1120px" : "(max-width: 699px) 85vw, (max-width: 1000px) 42vw, 550px"} />
               </figure>
             ))}
           </div>
