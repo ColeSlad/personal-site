@@ -314,10 +314,6 @@ html[data-theme-swap] .theme-switch::before,
   letter-spacing: 0.12em;
 }
 
-.theme-switch-arrow {
-  font-size: 22px;
-}
-
 .theme-switch:hover,
 .theme-switch:focus-visible {
   background: var(--switch-highlight);
