@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import ThemeSwitch from "../components/ThemeSwitch";
-import SpaceScene from "../components/SpaceScene";
 
 export const metadata: Metadata = {
   title: "Another side — Cole Sladowsky",
@@ -9,9 +8,8 @@ export const metadata: Metadata = {
 
 export default function Alternate() {
   return (
-    <main className="alternate-page" data-space-ready="false">
+    <main className="alternate-page">
       <ThemeSwitch returnToMain />
-      <SpaceScene />
       <h1 className="sr-only">Cole Sladowsky</h1>
       <header className="alternate-header">
         <span className="alternate-name">cole sladowsky</span>

@@ -4,7 +4,6 @@ import { useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalSto
 import { spaceFragmentShader, spaceVertexShader } from "../lib/space-shaders";
 import { createSpaceBloom } from "../lib/space-bloom";
 import { loadSiteImage } from "../lib/site-assets";
-import { useSiteReady } from "./SiteLoader";
 
 const motionQuery = "(prefers-reduced-motion: reduce)";
 function subscribeToMotion(callback: () => void) {
@@ -13,8 +12,7 @@ function subscribeToMotion(callback: () => void) {
   return () => query.removeEventListener("change", callback);
 }
 
-export default function SpaceScene() {
-  const siteReady = useSiteReady();
+export default function SpaceScene({ active, onPrepared }: { active: boolean; onPrepared: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const interactionRef = useRef<HTMLDivElement>(null);
   const camera = useRef({ azimuth: 0, elevation: 0, zoom: 1 });
@@ -28,14 +26,14 @@ export default function SpaceScene() {
     () => window.matchMedia(motionQuery).matches,
     () => false,
   );
-  const moving = !paused && !reducedMotion;
-  const playback = useRef({ moving, reducedMotion });
+  const moving = active && !paused && !reducedMotion;
+  const playback = useRef({ moving, reducedMotion, active });
   const updatePlayback = useRef<(() => void) | null>(null);
 
   useLayoutEffect(() => {
-    playback.current = { moving, reducedMotion };
+    playback.current = { moving, reducedMotion, active };
     updatePlayback.current?.();
-  }, [moving, reducedMotion]);
+  }, [active, moving, reducedMotion]);
 
   useLayoutEffect(() => {
     const canvas = canvasRef.current;
@@ -43,7 +41,7 @@ export default function SpaceScene() {
     const lost = (event: Event) => {
       event.preventDefault();
       canvas.style.opacity = "0";
-      const page = canvas.closest("main");
+      const page = canvas.closest<HTMLElement>(".space-runtime");
       if (page) page.dataset.spaceReady = "fallback";
     };
     const restored = () => setRendererRevision((revision) => revision + 1);
@@ -56,48 +54,18 @@ export default function SpaceScene() {
   }, []);
 
   useEffect(() => {
-    if (!siteReady) return;
     const canvas = canvasRef.current;
     const interaction = interactionRef.current;
     if (!canvas || !interaction) return;
-    let cleanup: (() => void) | undefined;
-    let initialized = false;
-    let setupFrame = 0;
-    const initialize = () => {
-      if (initialized) return;
-      initialized = true;
-      cleanup = initializeRenderer(canvas, interaction);
-    };
-    const queueSetup = () => {
-      if (initialized || setupFrame) return;
-      // Give the color sweep a painted frame before starting GPU work.
-      setupFrame = requestAnimationFrame(() => {
-        setupFrame = requestAnimationFrame(() => { setupFrame = 0; initialize(); });
-      });
-    };
-
-    const root = document.documentElement;
-    if (root.dataset.themeSwap === "alternate") {
-      // Native view transitions freeze rendering until their snapshot is ready.
-      // Avoid doing shader compilation and texture allocation in that pause.
-      if (root.dataset.themePhase === "revealing") queueSetup();
-      else window.addEventListener("theme-revealing", queueSetup, { once: true });
-      window.addEventListener("theme-arrived", queueSetup, { once: true });
-    } else initialize();
-
-    return () => {
-      cancelAnimationFrame(setupFrame);
-      window.removeEventListener("theme-revealing", queueSetup);
-      window.removeEventListener("theme-arrived", queueSetup);
-      cleanup?.();
-    };
+    return initializeRenderer(canvas, interaction);
 
     function initializeRenderer(canvas: HTMLCanvasElement, interaction: HTMLDivElement) {
-      const page = canvas.closest("main");
+      const page = canvas.closest<HTMLElement>(".space-runtime");
       const showStill = () => {
         canvas.style.opacity = "0";
         if (page) page.dataset.spaceReady = "fallback";
         window.dispatchEvent(new Event("space-ready"));
+        onPrepared();
       };
       const gl = canvas.getContext("webgl", { alpha: true, antialias: false, depth: false, stencil: false, powerPreference: "high-performance" });
       if (!gl) { showStill(); return; }
@@ -163,6 +131,7 @@ export default function SpaceScene() {
         // Keep the still scene visible and release any pending route transition.
         if (page) page.dataset.spaceReady = "error";
         window.dispatchEvent(new Event("space-ready"));
+        onPrepared();
       }
 
       function loadTexture(url: string, unit: number, uniform: string, key: "surface" | "jupiter") {
@@ -214,9 +183,13 @@ export default function SpaceScene() {
             texturesReady = true;
             lastFrame = 0;
             draw();
+            // Complete the first GPU draw while the startup screen is still up.
+            // This fence runs once during preparation, never in the frame loop.
+            gl.finish();
             canvas.style.opacity = "1";
             if (page) page.dataset.spaceReady = "true";
             window.dispatchEvent(new Event("space-ready"));
+            onPrepared();
             start();
           }
         }).catch(() => textureFailed(key));
@@ -226,6 +199,7 @@ export default function SpaceScene() {
       let lastFrame = 0;
       let needsDraw = false;
       let arriving = document.documentElement.dataset.themeSwap === "alternate";
+      let wasActive = playback.current.active;
       const pointers = new Map<number, { x: number; y: number }>();
 
       function renderScene() {
@@ -263,11 +237,11 @@ export default function SpaceScene() {
           needsDraw = false;
           draw();
         }
-        if ((playback.current.moving || needsDraw) && !document.hidden && !gl?.isContextLost()) frame = requestAnimationFrame(render);
+        if (playback.current.active && (playback.current.moving || needsDraw) && !document.hidden && !gl?.isContextLost()) frame = requestAnimationFrame(render);
       }
 
       function start() {
-        if (texturesReady && !arriving && (playback.current.moving || needsDraw) && !document.hidden && !frame && !gl?.isContextLost()) {
+        if (playback.current.active && texturesReady && !arriving && (playback.current.moving || needsDraw) && !document.hidden && !frame && !gl?.isContextLost()) {
           lastFrame = 0;
           frame = requestAnimationFrame(render);
         }
@@ -305,8 +279,11 @@ export default function SpaceScene() {
           Math.sqrt(8_294_400 / Math.max(pixels, 1)),
           maxRenderSize / Math.max(canvas.clientWidth, canvas.clientHeight, 1),
         );
-        canvas.width = Math.max(1, Math.round(canvas.clientWidth * ratio));
-        canvas.height = Math.max(1, Math.round(canvas.clientHeight * ratio));
+        const width = Math.max(1, Math.round(canvas.clientWidth * ratio));
+        const height = Math.max(1, Math.round(canvas.clientHeight * ratio));
+        if (canvas.width === width && canvas.height === height) return;
+        canvas.width = width;
+        canvas.height = height;
         gl.viewport(0, 0, canvas.width, canvas.height);
         bloom?.resize(canvas.width, canvas.height);
         draw();
@@ -388,7 +365,13 @@ export default function SpaceScene() {
       updatePlayback.current = () => {
         cancelAnimationFrame(frame);
         frame = 0;
-        draw();
+        if (playback.current.active && !wasActive) {
+          elapsed.current = playback.current.moving ? 0 : 8;
+          camera.current = { azimuth: 0, elevation: 0, zoom: 1 };
+          arriving = document.documentElement.dataset.themeSwap === "alternate";
+        }
+        wasActive = playback.current.active;
+        if (playback.current.active) draw();
         start();
       };
       loadTexture("/space/io-8k.webp", 0, "uSurfaceMap", "surface");
@@ -422,10 +405,10 @@ export default function SpaceScene() {
         gl.deleteProgram(program);
       };
     }
-  }, [rendererRevision, siteReady]);
+  }, [rendererRevision, onPrepared]);
 
   return (
-    <>
+    <div className="space-runtime" data-active={active} data-space-ready="false" aria-hidden={!active} inert={!active}>
       <div className="space-scene" aria-hidden="true">
         <div className="space-still">
           <div className="space-still-jupiter" />
@@ -446,6 +429,6 @@ export default function SpaceScene() {
           </button>
         )}
       </div>
-    </>
+    </div>
   );
 }

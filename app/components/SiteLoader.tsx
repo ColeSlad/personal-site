@@ -1,21 +1,24 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { loadSiteImage } from "../lib/site-assets";
+import SpaceScene from "./SpaceScene";
 
-const SiteReady = createContext(false);
 const assetCount = 5;
 
-export function useSiteReady() {
-  return useContext(SiteReady);
+function createRendererPreparation() {
+  let resolve!: () => void;
+  const ready = new Promise<void>((done) => { resolve = done; });
+  return { ready, resolve };
 }
 
 export default function SiteLoader({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const [rendererPreparation, setRendererPreparation] = useState(createRendererPreparation);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [completed, setCompleted] = useState(0);
-  const [attempt, setAttempt] = useState(0);
   const cancelLoading = useRef<(() => void) | null>(null);
   const ready = status === "ready";
 
@@ -28,7 +31,7 @@ export default function SiteLoader({ children }: { children: ReactNode }) {
       loadSiteImage("/logo.png"),
       loadSiteImage("/space/io-8k.webp"),
       loadSiteImage("/space/jupiter-4k.webp"),
-      import("./SpaceScene"),
+      rendererPreparation.ready,
       Promise.all([600, 700].map((weight) => document.fonts.load(`${weight} 16px ${family}`))),
     ];
     const timeout = setTimeout(() => { if (active) setStatus("error"); }, 30000);
@@ -47,7 +50,7 @@ export default function SiteLoader({ children }: { children: ReactNode }) {
       cancel();
       if (cancelLoading.current === cancel) cancelLoading.current = null;
     };
-  }, [attempt, router]);
+  }, [router, rendererPreparation]);
 
   useEffect(() => {
     if (ready) return;
@@ -57,10 +60,11 @@ export default function SiteLoader({ children }: { children: ReactNode }) {
   }, [ready]);
 
   return (
-    <SiteReady.Provider value={ready}>
-      <div className="site-shell" data-ready={ready} inert={!ready} aria-hidden={!ready} aria-busy={!ready}>
+    <>
+      <div className="site-shell" data-ready={ready} data-space-active={pathname === "/alternate"} inert={!ready} aria-hidden={!ready} aria-busy={!ready}>
         {children}
       </div>
+      <SpaceScene active={ready && pathname === "/alternate"} onPrepared={rendererPreparation.resolve} />
       <div className="site-loader" data-ready={ready} aria-hidden={ready}>
         <div className="site-loader-content">
           <p className="site-loader-name">cole sladowsky</p>
@@ -68,12 +72,17 @@ export default function SiteLoader({ children }: { children: ReactNode }) {
           <p className="site-loader-status" role="status">{status === "error" ? "couldn’t finish loading" : "loading"}</p>
           {status === "error" && (
             <div className="site-loader-actions">
-              <button type="button" onClick={() => { setCompleted(0); setStatus("loading"); setAttempt((value) => value + 1); }}>try again</button>
+              <button type="button" onClick={() => {
+                cancelLoading.current?.();
+                setCompleted(0);
+                setStatus("loading");
+                setRendererPreparation(createRendererPreparation());
+              }}>try again</button>
               <button type="button" onClick={() => { cancelLoading.current?.(); setStatus("ready"); }}>enter site</button>
             </div>
           )}
         </div>
       </div>
-    </SiteReady.Provider>
+    </>
   );
 }

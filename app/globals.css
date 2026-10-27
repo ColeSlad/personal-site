@@ -27,11 +27,17 @@ html, body {
 }
 
 .site-shell {
+  position: relative;
+  z-index: 1;
   min-height: 100%;
 }
 
 .site-shell[data-ready="false"] {
   visibility: hidden;
+}
+
+.site-shell[data-space-active="true"] {
+  pointer-events: none;
 }
 
 .site-loader {
@@ -333,12 +339,35 @@ html[data-theme-swap] .theme-switch::before,
   padding: 32px clamp(24px, 6vw, 96px);
   padding-left: calc(clamp(56px, 7vw, 104px) + clamp(24px, 3vw, 48px));
   overflow: hidden;
-  background: var(--alternate-surface);
+  background: transparent;
+  pointer-events: none;
   color: var(--alternate-ink);
   font-family: var(--font-alternate), Arial, sans-serif;
   font-size: 18px;
   font-weight: 600;
   -webkit-font-smoothing: antialiased;
+}
+
+.space-runtime {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  color: var(--alternate-ink);
+  font-family: var(--font-alternate), Arial, sans-serif;
+  font-weight: 600;
+}
+
+.space-runtime[data-active="false"] {
+  visibility: hidden;
+}
+
+.alternate-page .theme-switch,
+.alternate-header,
+.alternate-footer,
+.space-interaction,
+.space-controls {
+  pointer-events: auto;
 }
 
 .alternate-page::before {
@@ -430,8 +459,8 @@ html[data-theme-swap] .theme-switch::before,
     url("/space/jupiter-4k.webp") center / cover;
 }
 
-.alternate-page[data-space-ready="false"] .space-still-planet,
-.alternate-page[data-space-ready="false"] .space-still-jupiter {
+.space-runtime[data-space-ready="false"] .space-still-planet,
+.space-runtime[data-space-ready="false"] .space-still-jupiter {
   visibility: hidden;
 }
 
