@@ -12,7 +12,7 @@ function subscribeToMotion(callback: () => void) {
   return () => query.removeEventListener("change", callback);
 }
 
-export default function SpaceScene({ active, onPrepared }: { active: boolean; onPrepared: () => void }) {
+export default function SpaceScene({ active, reading, onPrepared }: { active: boolean; reading: boolean; onPrepared: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const interactionRef = useRef<HTMLDivElement>(null);
   const camera = useRef({ azimuth: 0, elevation: 0, zoom: 1 });
@@ -26,7 +26,7 @@ export default function SpaceScene({ active, onPrepared }: { active: boolean; on
     () => window.matchMedia(motionQuery).matches,
     () => false,
   );
-  const moving = active && !paused && !reducedMotion;
+  const moving = active && !reading && !paused && !reducedMotion;
   const playback = useRef({ moving, reducedMotion, active });
   const updatePlayback = useRef<(() => void) | null>(null);
 
@@ -408,7 +408,7 @@ export default function SpaceScene({ active, onPrepared }: { active: boolean; on
   }, [rendererRevision, onPrepared]);
 
   return (
-    <div className="space-runtime" data-active={active} data-space-ready="false" aria-hidden={!active} inert={!active}>
+    <div className="space-runtime" data-active={active} data-reading={reading} data-space-ready="false" aria-hidden={!active || reading} inert={!active || reading}>
       <div className="space-scene" aria-hidden="true">
         <div className="space-still">
           <div className="space-still-jupiter" />

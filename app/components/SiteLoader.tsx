@@ -16,6 +16,7 @@ function createRendererPreparation() {
 export default function SiteLoader({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  const spaceActive = pathname === "/alternate" || pathname.startsWith("/alternate/");
   const [rendererPreparation, setRendererPreparation] = useState(createRendererPreparation);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [completed, setCompleted] = useState(0);
@@ -61,10 +62,10 @@ export default function SiteLoader({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <div className="site-shell" data-ready={ready} data-space-active={pathname === "/alternate"} inert={!ready} aria-hidden={!ready} aria-busy={!ready}>
+      <div className="site-shell" data-ready={ready} data-space-active={spaceActive} inert={!ready} aria-hidden={!ready} aria-busy={!ready}>
         {children}
       </div>
-      <SpaceScene active={ready && pathname === "/alternate"} onPrepared={rendererPreparation.resolve} />
+      <SpaceScene active={ready && spaceActive} reading={pathname.startsWith("/alternate/")} onPrepared={rendererPreparation.resolve} />
       <div className="site-loader" data-ready={ready} aria-hidden={ready}>
         <div className="site-loader-content">
           <p className="site-loader-name">cole sladowsky</p>
