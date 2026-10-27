@@ -22,25 +22,10 @@ export function ThemeTransitionProvider({ children }: { children: ReactNode }) {
   const routeCommitted = useRef<(() => void) | null>(null);
 
   useLayoutEffect(() => {
-    // Capture the destination with its detailed textures, rather than the
-    // temporary material shown while the local images decode.
-    let timeout: number | undefined;
-    const release = () => {
-      window.clearTimeout(timeout);
-      window.removeEventListener("space-ready", release);
-      routeCommitted.current?.();
-      routeCommitted.current = null;
-    };
-    const scene = document.querySelector("[data-space-ready]");
-    if (pathname === "/alternate" && scene?.getAttribute("data-space-ready") === "false") {
-      window.addEventListener("space-ready", release, { once: true });
-      timeout = window.setTimeout(release, 1200);
-    } else release();
-
-    return () => {
-      window.clearTimeout(timeout);
-      window.removeEventListener("space-ready", release);
-    };
+    // Start the transition as soon as the route commits. The scene keeps its
+    // planets hidden until their textures are ready, independently of navigation.
+    routeCommitted.current?.();
+    routeCommitted.current = null;
   }, [pathname]);
 
   useLayoutEffect(() => () => {
@@ -58,6 +43,7 @@ export function ThemeTransitionProvider({ children }: { children: ReactNode }) {
 
     const root = document.documentElement;
     root.dataset.themeSwap = href === "/alternate" ? "alternate" : "original";
+    root.dataset.themePhase = "capturing";
     root.style.setProperty("--theme-origin-x", `${origin?.x ?? window.innerWidth}px`);
     root.style.setProperty("--theme-origin-y", `${origin?.y ?? window.innerHeight / 2}px`);
     const transition = document.startViewTransition(() => new Promise<void>((resolve) => {
@@ -71,6 +57,15 @@ export function ThemeTransitionProvider({ children }: { children: ReactNode }) {
     }));
     activeTransition.current = transition;
 
+    void transition.ready.then(() => {
+      // GPU setup can begin after the browser has captured the new page, so it
+      // cannot hold up the first frame of the color transition.
+      root.dataset.themePhase = "revealing";
+      if (href === "/alternate") window.dispatchEvent(new Event("theme-revealing"));
+    }).catch(() => {
+      // The finished handler still releases scene setup if animation is skipped.
+    });
+
     void transition.finished.catch(() => {
       // A skipped browser animation should not interfere with navigation.
     }).finally(() => {
@@ -78,6 +73,7 @@ export function ThemeTransitionProvider({ children }: { children: ReactNode }) {
       routeCommitted.current = null;
       activeTransition.current = null;
       delete root.dataset.themeSwap;
+      delete root.dataset.themePhase;
       root.style.removeProperty("--theme-origin-x");
       root.style.removeProperty("--theme-origin-y");
       if (href === "/alternate") window.dispatchEvent(new Event("theme-arrived"));
