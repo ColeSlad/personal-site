@@ -540,9 +540,9 @@ html[data-theme-swap] .theme-switch::before,
   padding: 5px;
   border: 1px solid #ffffff29;
   border-radius: 999px;
-  background: linear-gradient(140deg, #ffffff0d, transparent 65%), #101a2bd1;
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-  backdrop-filter: blur(18px) saturate(1.4);
+  background: linear-gradient(140deg, #ffffff0d, transparent 65%), #0808089c;
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
   box-shadow: 0 12px 36px #0004, inset 0 1px 0 #ffffff24;
 }
 
@@ -555,7 +555,7 @@ html[data-theme-swap] .theme-switch::before,
   min-height: 44px;
   padding: 0 16px;
   border-radius: 999px;
-  color: #dce6f3;
+  color: #e3e3e3;
   font-size: 13px;
   font-weight: 600;
   text-decoration: none;
@@ -701,20 +701,17 @@ html[data-theme-swap] .theme-switch::before,
 
 /* The about page keeps the orbit in the background and lets the content float. */
 .alternate-page.alternate-about-page {
-  --about-text: #eff4fd;
-  --about-secondary: #b7c4d8;
-  --about-muted: #96a8c3;
-  --about-surface: #101a2bd6;
+  --about-text: #f4f4f4;
+  --about-secondary: #c4c4c4;
+  --about-muted: #a8a8a8;
+  --about-surface: #0707078f;
   pointer-events: auto;
   color: var(--about-text);
   font-size: 17px;
 }
 
 .alternate-about-page::before {
-  background:
-    radial-gradient(ellipse at 14% 18%, #86b8f018, transparent 48%),
-    radial-gradient(ellipse at 86% 46%, #e8bc5812, transparent 45%),
-    linear-gradient(180deg, #060a1226, #0509119e 75%);
+  background: linear-gradient(180deg, #00000026, #0000009e 75%);
 }
 
 .orbital-about {
@@ -733,11 +730,11 @@ html[data-theme-swap] .theme-switch::before,
 .about-panel {
   min-width: 0;
   padding: clamp(26px, 3vw, 40px);
-  border: 1px solid #d9e9ff24;
+  border: 1px solid #ffffff24;
   border-radius: 30px;
   background: linear-gradient(135deg, #ffffff08, transparent 55%), var(--about-surface);
-  -webkit-backdrop-filter: blur(18px) saturate(1.2);
-  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
   box-shadow: 0 30px 80px -24px #0009, inset 0 1px 0 #ffffff29, inset 0 -1px 0 #ffffff08;
 }
 
@@ -786,7 +783,7 @@ html[data-theme-swap] .theme-switch::before,
 }
 
 .about-interests li::marker {
-  color: #9bacc7;
+  color: #aaa;
 }
 
 .about-email {
@@ -905,9 +902,9 @@ html[data-theme-swap] .theme-switch::before,
   --photo-lift: 12px;
   min-width: 0;
   padding: 9px;
-  border: 1px solid #e5f0ff33;
+  border: 1px solid #ffffff33;
   border-radius: 23px;
-  background: linear-gradient(140deg, #e5f0ff21, #e5f0ff0a), #101a2bba;
+  background: linear-gradient(140deg, #ffffff21, #ffffff0a), #08080880;
   box-shadow: 0 24px 50px -18px #000b, inset 0 1px 0 #ffffff3b;
   transform: translateY(var(--photo-lift)) rotate(var(--photo-tilt));
   animation: photoDrift 8s ease-in-out infinite alternate;
@@ -1060,10 +1057,10 @@ html[data-theme-swap] .theme-switch::before,
   .alternate-navigation,
   .about-panel,
   .about-photo {
-    background: #101a2b;
+    background: #0a0a0a;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    border-color: #b7c4d8;
+    border-color: #c4c4c4;
   }
 }
 
