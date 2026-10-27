@@ -404,17 +404,15 @@ export default function SpaceScene() {
       <div ref={interactionRef} className="space-interaction" tabIndex={0} role="region" aria-label="Explore Io" aria-describedby={instructionsId} />
       <p id={instructionsId} className="sr-only">Drag to orbit Io. Scroll or pinch to zoom. With the scene focused, use arrow keys to orbit, plus and minus to zoom, and Home to reset the view.</p>
       <div className="space-controls">
-        <span className="space-camera-hint" aria-hidden="true">drag to orbit · scroll / pinch to zoom</span>
-        <div className="space-control-buttons">
-          <button type="button" aria-label="Zoom out" onClick={() => cameraAction.current?.("out")}>−</button>
-          <button type="button" aria-label="Zoom in" onClick={() => cameraAction.current?.("in")}>+</button>
-          <button type="button" onClick={() => cameraAction.current?.("reset")}>reset view</button>
-          {!reducedMotion && (
-            <button type="button" onClick={() => setPaused((value) => !value)}>
-              <span aria-hidden="true">{paused ? "▷" : "Ⅱ"}</span> {paused ? "resume orbit" : "pause orbit"}
-            </button>
-          )}
-        </div>
+        {!reducedMotion && (
+          <button type="button" aria-label={paused ? "Resume orbit" : "Pause orbit"} onClick={() => setPaused((value) => !value)}>
+            <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              {paused
+                ? <path d="M5 3.5 12 8l-7 4.5Z" fill="currentColor" />
+                : <path d="M5 3.5v9m6-9v9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />}
+            </svg>
+          </button>
+        )}
       </div>
     </>
   );
