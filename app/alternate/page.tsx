@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { ThemeTransitionLink } from "../components/ThemeTransition";
+import ThemeSwitch from "../components/ThemeSwitch";
 import SpaceScene from "../components/SpaceScene";
 
 const kumbhSans = localFont({
@@ -20,11 +20,11 @@ export default function Alternate() {
     <main className={`alternate-page ${kumbhSans.variable}`} data-space-ready="false">
       <link rel="preload" as="image" href="/space/io-8k.webp" fetchPriority="high" />
       <link rel="preload" as="image" href="/space/jupiter-4k.webp" />
+      <ThemeSwitch returnToMain />
       <SpaceScene />
       <h1 className="sr-only">Cole Sladowsky</h1>
       <header className="alternate-header">
         <span className="alternate-name">cole sladowsky</span>
-        <ThemeTransitionLink href="/" className="alternate-back">← back to the original</ThemeTransitionLink>
       </header>
 
       <footer className="alternate-footer">
