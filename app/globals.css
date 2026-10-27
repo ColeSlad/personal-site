@@ -316,6 +316,11 @@ html, body {
     url("/space/jupiter-4k.webp") center / cover;
 }
 
+.alternate-page[data-space-ready="false"] .space-still-planet,
+.alternate-page[data-space-ready="false"] .space-still-jupiter {
+  visibility: hidden;
+}
+
 .space-controls {
   position: absolute;
   z-index: 1;

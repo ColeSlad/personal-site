@@ -40,6 +40,8 @@ export default function SpaceScene() {
     const lost = (event: Event) => {
       event.preventDefault();
       canvas.style.opacity = "0";
+      const page = canvas.closest("main");
+      if (page) page.dataset.spaceReady = "fallback";
     };
     const restored = () => setRendererRevision((revision) => revision + 1);
     canvas.addEventListener("webglcontextlost", lost);
@@ -54,13 +56,24 @@ export default function SpaceScene() {
     const canvas = canvasRef.current;
     const interaction = interactionRef.current;
     if (!canvas || !interaction) return;
+    const page = canvas.closest("main");
+    const showStill = () => {
+      canvas.style.opacity = "0";
+      if (page) page.dataset.spaceReady = "fallback";
+      window.dispatchEvent(new Event("space-ready"));
+    };
     const gl = canvas.getContext("webgl", { alpha: true, antialias: false, depth: false, stencil: false, powerPreference: "high-performance" });
-    if (!gl) return;
+    if (!gl) { showStill(); return; }
 
     const shaders: WebGLShader[] = [];
     const program = gl.createProgram();
     const buffer = gl.createBuffer();
-    if (!program || !buffer) return;
+    if (!program || !buffer) {
+      gl.deleteProgram(program);
+      gl.deleteBuffer(buffer);
+      showStill();
+      return;
+    }
 
     try {
       for (const [type, source] of [[gl.VERTEX_SHADER, spaceVertexShader], [gl.FRAGMENT_SHADER, spaceFragmentShader]] as const) {
@@ -76,7 +89,7 @@ export default function SpaceScene() {
       if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error("Could not link space scene");
     } catch (error) {
       console.warn("Using the still space scene", error);
-      canvas.style.opacity = "0";
+      showStill();
       shaders.forEach((shader) => gl.deleteShader(shader));
       gl.deleteBuffer(buffer);
       gl.deleteProgram(program);
@@ -101,16 +114,25 @@ export default function SpaceScene() {
     const textures: WebGLTexture[] = [];
     const images: HTMLImageElement[] = [];
     const bloom = createSpaceBloom(gl);
-    const page = canvas.closest("main");
     if (page) page.dataset.spaceReady = "false";
     canvas.dataset.surface = "loading";
     canvas.dataset.jupiter = "loading";
+    canvas.style.opacity = "0";
     let disposed = false;
+    let texturesReady = false;
+
+    function textureFailed(key: "surface" | "jupiter") {
+      if (disposed || !canvas) return;
+      canvas.dataset[key] = "error";
+      // Keep the still scene visible and release any pending route transition.
+      if (page) page.dataset.spaceReady = "error";
+      window.dispatchEvent(new Event("space-ready"));
+    }
 
     function loadTexture(url: string, unit: number, uniform: string, key: "surface" | "jupiter") {
       if (!gl) return;
       const texture = gl.createTexture();
-      if (!texture) return;
+      if (!texture) { textureFailed(key); return; }
       textures.push(texture);
       gl.activeTexture(gl.TEXTURE0 + unit);
       gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -136,7 +158,7 @@ export default function SpaceScene() {
           upload.width = Math.max(1, Math.round(width * scale));
           upload.height = Math.max(1, Math.round(height * scale));
           const context = upload.getContext("2d");
-          if (!context) return;
+          if (!context) { textureFailed(key); return; }
           context.drawImage(image, 0, 0, width, height, 0, 0, upload.width, upload.height);
           source = upload;
           width = upload.width;
@@ -154,12 +176,17 @@ export default function SpaceScene() {
           if (anisotropy) gl.texParameterf(gl.TEXTURE_2D, anisotropy.TEXTURE_MAX_ANISOTROPY_EXT, anisotropyLevel);
         }
         if (canvas) canvas.dataset[key] = "ready";
-        draw();
         if (canvas?.dataset.surface === "ready" && canvas.dataset.jupiter === "ready") {
+          texturesReady = true;
+          lastFrame = 0;
+          draw();
+          canvas.style.opacity = "1";
           if (page) page.dataset.spaceReady = "true";
           window.dispatchEvent(new Event("space-ready"));
+          start();
         }
       };
+      image.onerror = () => textureFailed(key);
       image.src = url;
     }
 
@@ -187,7 +214,7 @@ export default function SpaceScene() {
     }
 
     function draw() {
-      if (!gl || !canvas) return;
+      if (!gl || !canvas || !texturesReady) return;
       if (bloom) bloom.render(renderScene);
       else renderScene();
     }
@@ -208,7 +235,7 @@ export default function SpaceScene() {
     }
 
     function start() {
-      if ((playback.current.moving || needsDraw) && !document.hidden && !frame && !gl?.isContextLost()) {
+      if (texturesReady && !arriving && (playback.current.moving || needsDraw) && !document.hidden && !frame && !gl?.isContextLost()) {
         lastFrame = 0;
         frame = requestAnimationFrame(render);
       }
@@ -253,7 +280,7 @@ export default function SpaceScene() {
       draw();
     }
 
-    const arrive = () => { arriving = false; lastFrame = 0; };
+    const arrive = () => { arriving = false; lastFrame = 0; start(); };
     const visibility = () => {
       if (document.hidden) {
         cancelAnimationFrame(frame);
@@ -335,7 +362,6 @@ export default function SpaceScene() {
     loadTexture("/space/io-8k.webp", 0, "uSurfaceMap", "surface");
     loadTexture("/space/jupiter-4k.webp", 1, "uJupiterMap", "jupiter");
     resize();
-    canvas.style.opacity = "1";
     start();
 
     return () => {
@@ -357,7 +383,7 @@ export default function SpaceScene() {
       interaction.removeEventListener("lostpointercapture", up);
       interaction.removeEventListener("wheel", wheel);
       interaction.removeEventListener("keydown", key);
-      images.forEach((image) => { image.onload = null; });
+      images.forEach((image) => { image.onload = null; image.onerror = null; });
       bloom?.dispose();
       textures.forEach((texture) => gl.deleteTexture(texture));
       shaders.forEach((shader) => gl.deleteShader(shader));

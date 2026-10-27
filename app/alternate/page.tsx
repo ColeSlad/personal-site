@@ -17,7 +17,9 @@ export const metadata: Metadata = {
 
 export default function Alternate() {
   return (
-    <main className={`alternate-page ${kumbhSans.variable}`}>
+    <main className={`alternate-page ${kumbhSans.variable}`} data-space-ready="false">
+      <link rel="preload" as="image" href="/space/io-8k.webp" fetchPriority="high" />
+      <link rel="preload" as="image" href="/space/jupiter-4k.webp" />
       <SpaceScene />
       <h1 className="sr-only">Cole Sladowsky</h1>
       <header className="alternate-header">
