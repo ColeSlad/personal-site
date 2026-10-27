@@ -17,6 +17,7 @@ import {
 
 type BloomOrigin = { x: number; y: number };
 type ThemeSwap = BloomOrigin & { href: string; scale: number; phase: "covering" | "waiting" | "revealing" };
+const bloomSize = 768;
 const ThemeNavigation = createContext<((href: string, origin: BloomOrigin | null) => void) | null>(null);
 
 export function ThemeTransitionProvider({ children }: { children: ReactNode }) {
@@ -95,12 +96,12 @@ export function ThemeTransitionProvider({ children }: { children: ReactNode }) {
     const x = Math.max(0, Math.min(window.innerWidth, origin?.x ?? (href === "/alternate" ? window.innerWidth : 0)));
     const y = Math.max(0, Math.min(window.innerHeight, origin?.y ?? window.innerHeight / 2));
     const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
-    const transition: ThemeSwap = { href, x, y, scale: radius * 1.35 / 80, phase: "covering" };
+    const transition: ThemeSwap = { href, x, y, scale: radius * 1.35 / (bloomSize / 2), phase: "covering" };
     activeTransition.current = transition;
     // Animate first. Route rendering begins only once the color field covers
     // the page, without asking Chrome to capture old/new page screenshots.
     setSwap(transition);
-    timers.current.push(window.setTimeout(navigateUnderCover, 600));
+    timers.current.push(window.setTimeout(navigateUnderCover, 700));
   }, [router, pathname, navigateUnderCover]);
 
   return (
@@ -111,12 +112,11 @@ export function ThemeTransitionProvider({ children }: { children: ReactNode }) {
           "--curtain-x": `${swap.x}px`,
           "--curtain-y": `${swap.y}px`,
           "--curtain-scale": swap.scale,
-        } as CSSProperties}>
-          <div className="theme-curtain-orb" onAnimationEnd={(event) => {
-            if (event.target !== event.currentTarget) return;
-            if (event.animationName === "themeCurtainCover") navigateUnderCover();
-            if (event.animationName === "themeCurtainReveal") finish();
-          }} />
+          "--curtain-size": `${bloomSize}px`,
+        } as CSSProperties} onAnimationEnd={(event) => {
+          if (event.target === event.currentTarget && event.animationName === "themeCurtainReveal") finish();
+        }}>
+          <div className="theme-curtain-orb" />
         </div>
       )}
     </ThemeNavigation.Provider>
