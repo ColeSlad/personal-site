@@ -149,11 +149,11 @@ html, body {
 /* ── ALTERNATE VERSION ── */
 
 :root {
-  --alternate-surface: #050916;
-  --alternate-ink: #edf1ff;
-  --alternate-accent: #a7bad2;
-  --alternate-lilac: #a99af2;
-  --alternate-mint: #7cdccc;
+  --alternate-surface: #08090e;
+  --alternate-ink: #fff4df;
+  --alternate-accent: #cbbfa7;
+  --alternate-gold: #e8bc58;
+  --alternate-sulfur: #e4d187;
 }
 
 .theme-switch {
@@ -221,6 +221,10 @@ html, body {
   overflow: hidden;
   background: var(--alternate-surface);
   color: var(--alternate-ink);
+  font-family: var(--font-alternate-serif), Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
 }
 
 .alternate-page::before {
@@ -229,7 +233,7 @@ html, body {
   z-index: -1;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(180deg, #03061155, transparent 20%, transparent 67%, #030611d9 90%);
+  background: linear-gradient(180deg, #030611aa, transparent 20%, transparent 67%, #030611d9 90%);
 }
 
 .space-scene,
@@ -253,11 +257,11 @@ html, body {
 /* The space scene still has a celestial centerpiece when WebGL is unavailable. */
 .space-still {
   background:
-    radial-gradient(ellipse at 70% 40%, #35234f55, transparent 55%),
+    radial-gradient(ellipse at 70% 40%, #4d2f1355, transparent 55%),
     radial-gradient(1px 1px at 20% 30%, #fff, transparent),
     radial-gradient(1px 1px at 65% 15%, #aabaff, transparent),
     radial-gradient(1px 1px at 85% 65%, #fff, transparent),
-    #050916;
+    #08090e;
 }
 
 .space-still-planet {
@@ -270,18 +274,21 @@ html, body {
   border-radius: 50%;
   background:
     radial-gradient(circle at 28% 25%, transparent 15%, #171a2588 45%, #070912 85%),
-    url("/space/saturn-4k.jpg") center / cover;
+    url("/space/io-8k.webp") center / cover;
   box-shadow: 0 0 12px #b8c8dc22, inset 0 0 12px #b8c8dc33;
 }
 
-.space-still-planet::before {
-  content: "";
+.space-still-jupiter {
   position: absolute;
-  inset: -24% -75%;
-  border: 20px solid #c5b99e88;
+  width: 35svh;
+  aspect-ratio: 1;
+  top: 23%;
+  left: 80%;
+  transform: translate(-50%, -50%);
   border-radius: 50%;
-  transform: rotate(-25deg) scaleY(0.3);
-  box-shadow: 0 0 10px #c5b99e22;
+  background:
+    radial-gradient(circle at 25% 30%, transparent, #04050bcc 80%),
+    url("/space/jupiter-4k.webp") center / cover;
 }
 
 .space-controls {
@@ -293,6 +300,8 @@ html, body {
   gap: 24px;
   font-size: 10px;
   color: #a7bad2;
+  font-family: var(--font-alternate-display), Georgia, serif;
+  letter-spacing: 0.06em;
 }
 
 .space-controls button {
@@ -316,7 +325,7 @@ html, body {
 }
 
 .space-controls button:focus-visible {
-  outline: 2px solid var(--alternate-mint);
+  outline: 2px solid var(--alternate-gold);
   outline-offset: 4px;
 }
 
@@ -326,6 +335,16 @@ html, body {
   align-items: center;
   gap: 24px;
   font-size: 11px;
+  text-shadow: 0 1px 5px #030611, 0 1px 12px #030611;
+  font-family: var(--font-alternate-display), Georgia, serif;
+}
+
+.alternate-name {
+  font-size: clamp(18px, 1.7vw, 28px);
+  line-height: 1.2;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .alternate-header .alternate-back {
@@ -345,21 +364,35 @@ html, body {
   margin-bottom: 0;
   font-size: 10px;
   color: var(--alternate-accent);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 .alternate-content h1 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-alternate-display), Georgia, serif;
   font-size: clamp(36px, 4vw, 52px);
   font-weight: 400;
   line-height: 1.05;
-  letter-spacing: -0.06em;
+  letter-spacing: 0.04em;
 }
 
 .alternate-description {
-  max-width: 340px;
+  max-width: 520px;
   margin: 12px auto 0;
-  font-size: 11px;
-  line-height: 1.8;
+  font-size: 22px;
+  line-height: 1.5;
+}
+
+.alternate-lead {
+  font-size: clamp(26px, 2.3vw, 34px);
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.alternate-note {
+  font-size: 17px;
+  letter-spacing: 0.02em;
+  color: var(--alternate-accent);
 }
 
 .alternate-back {
@@ -370,6 +403,10 @@ html, body {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 5px;
+  font-family: var(--font-alternate-display), Georgia, serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .alternate-back:hover {
@@ -383,7 +420,8 @@ html, body {
 
 .alternate-footer {
   color: var(--alternate-accent);
-  font-size: 10px;
+  font-size: 14px;
+  letter-spacing: 0.02em;
   line-height: 1.6;
   padding: 12px 0;
   display: flex;
@@ -393,8 +431,10 @@ html, body {
 }
 
 .space-credit {
-  font-size: 9px;
+  font-size: 12px;
+  letter-spacing: 0.01em;
   color: #93a2b9;
+  max-width: 500px;
 }
 
 .space-credit a {
@@ -430,6 +470,12 @@ html, body {
 
   .alternate-header {
     grid-template-columns: 1fr auto;
+    gap: 16px;
+  }
+
+  .alternate-name {
+    font-size: clamp(13px, 3.8vw, 16px);
+    letter-spacing: 0.06em;
   }
 
   .alternate-content h1 {
@@ -446,7 +492,8 @@ html, body {
 
   .alternate-back {
     margin-top: 0;
-    font-size: 10px;
+    font-size: 8px;
+    letter-spacing: 0.06em;
   }
 
   .space-controls {
@@ -472,20 +519,20 @@ html, body {
 
 html[data-theme-swap] {
   --bloom-core: var(--alternate-surface);
-  --bloom-lilac: var(--alternate-lilac);
-  --bloom-mint: var(--alternate-mint);
-  --bloom-pink: #e8aadf;
+  --bloom-inner: var(--alternate-gold);
+  --bloom-middle: var(--alternate-sulfur);
+  --bloom-pink: #e89d72;
   --bloom-coral: #ff8d75;
   --bloom-edge: #ed1c24;
 }
 
 html[data-theme-swap="original"] {
   --bloom-core: #080808;
-  --bloom-lilac: #a31c39;
-  --bloom-mint: #ed1c24;
+  --bloom-inner: #a31c39;
+  --bloom-middle: #ed1c24;
   --bloom-pink: #ff8d75;
-  --bloom-coral: #b6e9d7;
-  --bloom-edge: var(--alternate-lilac);
+  --bloom-coral: var(--alternate-sulfur);
+  --bloom-edge: var(--alternate-gold);
 }
 
 html[data-theme-swap]::view-transition-group(root) {
@@ -493,8 +540,8 @@ html[data-theme-swap]::view-transition-group(root) {
   background: radial-gradient(
     circle at var(--theme-origin-x) var(--theme-origin-y),
     var(--bloom-core) max(0px, calc(var(--theme-bloom-radius) - 24vmax)),
-    var(--bloom-lilac) max(0px, calc(var(--theme-bloom-radius) - 19vmax)),
-    var(--bloom-mint) max(0px, calc(var(--theme-bloom-radius) - 14vmax)),
+    var(--bloom-inner) max(0px, calc(var(--theme-bloom-radius) - 19vmax)),
+    var(--bloom-middle) max(0px, calc(var(--theme-bloom-radius) - 14vmax)),
     var(--bloom-pink) max(0px, calc(var(--theme-bloom-radius) - 9vmax)),
     var(--bloom-coral) max(0px, calc(var(--theme-bloom-radius) - 4vmax)),
     var(--bloom-edge) var(--theme-bloom-radius)

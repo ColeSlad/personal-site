@@ -87,7 +87,7 @@ export default function SpaceScene() {
     const time = gl.getUniformLocation(program, "uTime");
     const pointer = gl.getUniformLocation(program, "uPointer");
     const focus = gl.getUniformLocation(program, "uFocus");
-    const maxTexture = gl.getParameter(gl.MAX_TEXTURE_SIZE) as number;
+    const maxTexture = Math.min(gl.getParameter(gl.MAX_TEXTURE_SIZE) as number, canvas.clientWidth < 700 ? 4096 : 8192);
     const maxRenderSize = gl.getParameter(gl.MAX_RENDERBUFFER_SIZE) as number;
     const anisotropy = gl.getExtension("EXT_texture_filter_anisotropic");
     const anisotropyLevel = anisotropy ? Math.min(8, gl.getParameter(anisotropy.MAX_TEXTURE_MAX_ANISOTROPY_EXT) as number) : 1;
@@ -96,10 +96,10 @@ export default function SpaceScene() {
     const page = canvas.closest("main");
     if (page) page.dataset.spaceReady = "false";
     canvas.dataset.surface = "loading";
-    canvas.dataset.rings = "loading";
+    canvas.dataset.jupiter = "loading";
     let disposed = false;
 
-    function loadTexture(url: string, unit: number, uniform: string, radialStrip = false) {
+    function loadTexture(url: string, unit: number, uniform: string, key: "surface" | "jupiter") {
       if (!gl) return;
       const texture = gl.createTexture();
       if (!texture) return;
@@ -120,16 +120,15 @@ export default function SpaceScene() {
         let source: TexImageSource = image;
         let width = image.naturalWidth;
         let height = image.naturalHeight;
-        // The ring map repeats vertically. Preserve all radial detail in a single
-        // row so WebGL 1 can mipmap it without altering the original asset.
-        if (radialStrip || width > maxTexture || height > maxTexture) {
+        // Keep full desktop detail and fit the texture budget on smaller devices.
+        if (width > maxTexture || height > maxTexture) {
           const upload = document.createElement("canvas");
           const scale = Math.min(1, maxTexture / Math.max(width, height));
           upload.width = Math.max(1, Math.round(width * scale));
-          upload.height = radialStrip ? 1 : Math.max(1, Math.round(height * scale));
+          upload.height = Math.max(1, Math.round(height * scale));
           const context = upload.getContext("2d");
           if (!context) return;
-          context.drawImage(image, 0, radialStrip ? Math.floor(height / 2) : 0, width, radialStrip ? 1 : height, 0, 0, upload.width, upload.height);
+          context.drawImage(image, 0, 0, width, height, 0, 0, upload.width, upload.height);
           source = upload;
           width = upload.width;
           height = upload.height;
@@ -142,11 +141,12 @@ export default function SpaceScene() {
         if ((width & (width - 1)) === 0 && (height & (height - 1)) === 0) {
           gl.generateMipmap(gl.TEXTURE_2D);
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
           if (anisotropy) gl.texParameterf(gl.TEXTURE_2D, anisotropy.TEXTURE_MAX_ANISOTROPY_EXT, anisotropyLevel);
         }
-        if (canvas) canvas.dataset[radialStrip ? "rings" : "surface"] = "ready";
+        if (canvas) canvas.dataset[key] = "ready";
         draw();
-        if (canvas?.dataset.surface === "ready" && canvas.dataset.rings === "ready") {
+        if (canvas?.dataset.surface === "ready" && canvas.dataset.jupiter === "ready") {
           if (page) page.dataset.spaceReady = "true";
           window.dispatchEvent(new Event("space-ready"));
         }
@@ -226,8 +226,8 @@ export default function SpaceScene() {
       draw();
       start();
     };
-    loadTexture("/space/saturn-4k.jpg", 0, "uSurfaceMap");
-    loadTexture("/space/saturn-rings-8k.png", 1, "uRingMap", true);
+    loadTexture("/space/io-8k.webp", 0, "uSurfaceMap", "surface");
+    loadTexture("/space/jupiter-4k.webp", 1, "uJupiterMap", "jupiter");
     resize();
     canvas.style.opacity = "1";
     start();
@@ -252,11 +252,14 @@ export default function SpaceScene() {
   return (
     <>
       <div className="space-scene" aria-hidden="true">
-        <div className="space-still"><div className="space-still-planet" /></div>
+        <div className="space-still">
+          <div className="space-still-jupiter" />
+          <div className="space-still-planet" />
+        </div>
         <canvas ref={canvasRef} className="space-canvas" />
       </div>
       <div className="space-controls">
-        <span className="space-coordinate">somewhere, out there</span>
+        <span className="space-coordinate">io · jupiter system</span>
         {!reducedMotion && (
           <button type="button" onClick={() => setPaused((value) => !value)}>
             <span aria-hidden="true">{paused ? "▷" : "Ⅱ"}</span> {paused ? "resume orbit" : "pause orbit"}
