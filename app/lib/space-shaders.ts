@@ -71,9 +71,10 @@ void main() {
   float mobile = 1.0 - step(0.86, aspect);
   float arrival = smoothstep(0.0, 7.0, uTime);
   float angle = -0.95 + 1.48 * arrival + uTime * 0.010 + uPointer.x * 0.12;
-  float distanceToIo = mix(6.8, 3.8, arrival) * mix(1.0, 1.80, mobile);
+  // Open in a close-up, then drift back into the established orbital framing.
+  float distanceToIo = mix(3.0, 3.8, arrival) * mix(1.0, 1.80, mobile);
   vec3 camera = vec3(sin(angle) * distanceToIo,
-    mix(2.6, 0.65, arrival) + sin(uTime * 0.045) * 0.12 + uPointer.y * 0.10,
+    mix(0.55, 0.65, arrival) + sin(uTime * 0.045) * 0.12 + uPointer.y * 0.10,
     cos(angle) * distanceToIo);
   vec3 forward = normalize(-camera);
   vec3 right = normalize(cross(forward, vec3(0.0, 1.0, 0.0)));
@@ -127,7 +128,10 @@ void main() {
     color = mix(color, surface, 1.0 - smoothstep(1.0 - pixel, 1.0, impact));
   }
 
-  color = pow(filmic(color), vec3(1.0 / 2.2));
+  // Exposure rises with the orbital clock after the entrance reveal completes.
+  // Reduced-motion rendering uses the settled time and skips this introduction.
+  float exposure = mix(0.035, 1.0, smoothstep(0.15, 4.8, uTime));
+  color = pow(filmic(color * exposure), vec3(1.0 / 2.2));
   float vignette = 1.0 - smoothstep(0.4, 1.0, length(uv - 0.5)) * 0.14;
   color += (hash(vec3(gl_FragCoord.xy, 1.0)) - 0.5) / 255.0;
   gl_FragColor = vec4(color * vignette, 1.0);
