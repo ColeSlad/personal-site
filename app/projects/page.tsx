@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import DateTime from "../components/DateTime";
 
@@ -7,7 +8,7 @@ export default function Projects() {
 
       <header className="header">
         <div className="logo-wrap">
-          <a href="/"><Image src="/logo.png" alt="Cole Sladowsky" width={180} height={54} priority /></a>
+          <Link href="/"><Image src="/logo.png" alt="Cole Sladowsky" width={180} height={54} priority /></Link>
           <DateTime />
         </div>
       </header>

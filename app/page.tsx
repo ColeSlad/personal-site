@@ -19,13 +19,13 @@ export default function Home() {
         <h1 className="sr-only">Cole Sladowsky</h1>
         <nav className="nav">
           <ul>
-            <li><a href="/info">about</a></li>
+            <li><Link href="/info">about</Link></li>
             <li><Link href="/lookbook">lookbook</Link></li>
-            <li><a href="/experience">experience</a></li>
-            <li><a href="/projects">projects</a></li>
-            <li><a href="/projects#skills">skills</a></li>
-            <li><a href="/contact">contact</a></li>
-            <li><a href="/about-site">this site</a></li>
+            <li><Link href="/experience">experience</Link></li>
+            <li><Link href="/projects">projects</Link></li>
+            <li><Link href="/projects#skills">skills</Link></li>
+            <li><Link href="/contact">contact</Link></li>
+            <li><Link href="/about-site">this site</Link></li>
           </ul>
         </nav>
       </div>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import DateTime from "../components/DateTime";
 
@@ -7,7 +8,7 @@ export default function Contact() {
 
       <header className="header">
         <div className="logo-wrap">
-          <a href="/"><Image src="/logo.png" alt="Cole Sladowsky" width={180} height={54} priority /></a>
+          <Link href="/"><Image src="/logo.png" alt="Cole Sladowsky" width={180} height={54} priority /></Link>
           <DateTime />
         </div>
       </header>
@@ -24,12 +25,12 @@ export default function Contact() {
       </div>
 
       <footer className="contact-footer">
-        <a href="/">home</a>
+        <Link href="/">home</Link>
         <div className="contact-footer-links">
-          <a href="/info">about</a>
-          <a href="/experience">experience</a>
-          <a href="/projects">projects</a>
-          <a href="/projects#skills">skills</a>
+          <Link href="/info">about</Link>
+          <Link href="/experience">experience</Link>
+          <Link href="/projects">projects</Link>
+          <Link href="/projects#skills">skills</Link>
         </div>
       </footer>
 
