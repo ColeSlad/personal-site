@@ -5,6 +5,7 @@ import { ThemeTransitionLink } from "./ThemeTransition";
 
 export default function ThemeSwitch({ returnToMain = false }: { returnToMain?: boolean }) {
   const activeLink = useRef<HTMLAnchorElement | null>(null);
+  const cursor = useRef<HTMLSpanElement>(null);
   const frame = useRef(0);
   const pointer = useRef({ x: 0, y: 0 });
 
@@ -26,28 +27,36 @@ export default function ThemeSwitch({ returnToMain = false }: { returnToMain?: b
     const link = event.currentTarget;
     const bounds = link.getBoundingClientRect();
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const direction = returnToMain ? -1 : 1;
     pointer.current = { x: event.clientX, y: event.clientY };
     activeLink.current = link;
     link.dataset.auraActive = "true";
     let x = event.clientX;
     let y = event.clientY;
     let previous = 0;
+    let pull = 0;
+    if (cursor.current) cursor.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
     link.style.setProperty("--aura-y", `${y - bounds.top}px`);
     link.style.setProperty("--aura-x", `${x - bounds.left}px`);
+    link.style.setProperty("--aura-pull", "0");
 
     function follow(now: number) {
       if (!activeLink.current || motion.matches) { stopAura(); return; }
       const dt = previous ? Math.min((now - previous) / 1000, 0.05) : 1 / 60;
       previous = now;
       const ease = 1 - Math.exp(-8 * dt);
-      x += (pointer.current.x - x) * ease;
+      pull += (1 - pull) * (1 - Math.exp(-3.5 * dt));
+      const targetX = Math.max(5, Math.min(window.innerWidth - 5, pointer.current.x + direction * 28 * pull));
+      x += (targetX - x) * ease;
       y += (pointer.current.y - y) * ease;
+      if (cursor.current) cursor.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       link.style.setProperty("--aura-y", `${y - bounds.top}px`);
       link.style.setProperty("--aura-x", `${x - bounds.left}px`);
+      link.style.setProperty("--aura-pull", `${pull}`);
       window.dispatchEvent(new CustomEvent("gravity-warp", { detail: {
         x: x / window.innerWidth,
         y: 1 - y / window.innerHeight,
-        strength: 0.22,
+        strength: 0.9 * pull,
       } }));
       frame.current = requestAnimationFrame(follow);
     }
@@ -74,6 +83,7 @@ export default function ThemeSwitch({ returnToMain = false }: { returnToMain?: b
           <span className="switch-aura-layer switch-aura-warm" />
         </span>
       </span>
+      <span ref={cursor} className="switch-aura-cursor" aria-hidden="true" />
     </ThemeTransitionLink>
   );
 }

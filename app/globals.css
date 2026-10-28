@@ -348,7 +348,7 @@ html[data-theme-swap] .theme-switch::before,
   color: var(--alternate-ink);
 }
 
-/* A diffuse, layered aura follows the pointer without changing its position. */
+/* Soft light stretches toward the edge as the hover's gravitational pull builds. */
 .switch-aura {
   position: absolute;
   z-index: 0;
@@ -370,8 +370,31 @@ html[data-theme-swap] .theme-switch::before,
   top: var(--aura-y, 50%);
   width: calc(var(--aura-radius) * 2);
   height: calc(var(--aura-radius) * 1.8);
-  transform: translate(-50%, -50%);
+  transform: translate(calc(-50% + var(--aura-direction) * var(--aura-pull, 0) * 22px), -50%) scale(calc(1 + var(--aura-pull, 0) * 0.14), calc(1 - var(--aura-pull, 0) * 0.12));
   mask-image: radial-gradient(ellipse, #000 12%, transparent 73%);
+}
+
+.switch-aura-cursor {
+  position: fixed;
+  z-index: 12;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.switch-aura-cursor::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff8ec;
+  box-shadow: 0 0 9px #fff0d4aa, 0 0 22px var(--aura-warm);
 }
 
 .switch-aura-layer {
@@ -401,7 +424,7 @@ html[data-theme-swap] .theme-switch::before,
 }
 
 .theme-switch[data-aura-active] {
-  cursor: pointer;
+  cursor: none;
   background: #080808;
   color: #fff4df;
 }
@@ -417,6 +440,10 @@ html[data-theme-swap] .theme-switch::before,
 
 .theme-switch[data-aura-active] .switch-aura-layer {
   animation-play-state: running;
+}
+
+.theme-switch[data-aura-active] .switch-aura-cursor {
+  opacity: 1;
 }
 
 @keyframes auraDrift {
@@ -1259,13 +1286,18 @@ html[data-theme-swap="original"] {
     transition: none;
   }
 
-  .switch-aura {
+  .switch-aura,
+  .switch-aura-cursor {
     display: none;
     transition: none;
   }
 
   .switch-aura-layer {
     animation: none;
+  }
+
+  .theme-switch[data-aura-active] {
+    cursor: pointer;
   }
 
   .theme-curtain-orb,
