@@ -264,6 +264,7 @@ html, body {
   --gravity-direction: 1;
   --gravity-light: #f2cc81;
   --gravity-aura: #a17be8;
+  --switch-border: #252525;
   position: fixed;
   z-index: 10;
   inset: 0 0 0 auto;
@@ -340,6 +341,7 @@ html[data-theme-swap] .theme-switch::before,
   --gravity-direction: -1;
   --gravity-light: #f5a68b;
   --gravity-aura: #e85376;
+  --switch-border: #e8bc5833;
   inset: 0 auto 0 0;
   border-left: 0;
   border-right: 1px solid #e8bc5833;
@@ -358,61 +360,84 @@ html[data-theme-swap] .theme-switch::before,
   z-index: 0;
   inset: 0;
   overflow: visible;
-  clip-path: inset(0 0 0 -260px);
+  clip-path: inset(0 0 0 -120px);
   transition: opacity 220ms ease-out;
 }
 
 .theme-switch-return .gravity-field {
-  clip-path: inset(0 -260px 0 0);
+  clip-path: inset(0 -120px 0 0);
+}
+
+.gravity-seam {
+  position: absolute;
+  left: -1px;
+  top: var(--gravity-y, 50%);
+  width: 64px;
+  height: 180px;
+  transform: translateY(-50%);
+  stroke: var(--gravity-light);
+  stroke-width: 1;
+  opacity: 0.3;
+  mask-image: linear-gradient(transparent, #000 25% 75%, transparent);
+}
+
+.theme-switch-return .gravity-seam {
+  left: auto;
+  right: -1px;
+  transform: translateY(-50%) scaleX(-1);
 }
 
 .gravity-well {
   position: absolute;
-  right: -124px;
+  left: var(--gravity-x, 50%);
   top: var(--gravity-y, 50%);
-  width: 240px;
-  height: 320px;
-  transform: translateY(-50%);
-}
-
-.theme-switch-return .gravity-well {
-  right: auto;
-  left: -124px;
+  width: 180px;
+  height: 180px;
+  transform: translate(-50%, -50%);
 }
 
 .gravity-halo {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: radial-gradient(ellipse, #fff8e8b3 0%, color-mix(in srgb, var(--gravity-light) 55%, transparent) 5%, color-mix(in srgb, var(--gravity-aura) 28%, transparent) 22%, transparent 65%);
+  background: radial-gradient(ellipse at 65% 50%, #fff8e82e, color-mix(in srgb, var(--gravity-aura) 12%, transparent) 25%, transparent 66%);
+  transform: scaleY(0.55);
   animation: gravityBreathe 2.6s ease-in-out infinite alternate paused;
 }
 
-.gravity-disc {
+.gravity-distortion {
   position: absolute;
-  inset: 38px 73px;
-  border: 1px solid #fff1ceaa;
-  border-radius: 50%;
-  box-shadow: 0 0 12px color-mix(in srgb, var(--gravity-light) 50%, transparent), inset 0 0 12px color-mix(in srgb, var(--gravity-aura) 45%, transparent);
-  transform: rotate(-25deg);
-  animation: gravityLens 3s ease-in-out infinite alternate paused;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  stroke: var(--gravity-light);
+  stroke-width: 0.65;
+  stroke-linecap: round;
+  opacity: 0.35;
+  mask-image: radial-gradient(ellipse, #000 10%, transparent 66%);
+  transform: scaleX(var(--gravity-direction));
+  animation: gravityShear 2.8s ease-in-out infinite alternate paused;
 }
 
-.gravity-disc-inner {
-  inset: 70px 89px;
-  border-color: var(--gravity-light);
-  animation-delay: -1.5s;
+.gravity-distortion path:nth-child(2) {
+  stroke: #fff7eb;
+  opacity: 0.5;
+}
+
+.gravity-distortion path:nth-child(3) {
+  stroke: var(--gravity-aura);
+  opacity: 0.7;
 }
 
 .gravity-particle {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 5px;
-  height: 2px;
+  width: 3px;
+  height: 1px;
   border-radius: 50%;
   background: #fff5dc;
-  box-shadow: 0 0 8px var(--gravity-light);
+  box-shadow: 0 0 4px var(--gravity-light);
   opacity: 0;
   animation: gravityInfall var(--particle-duration) linear var(--particle-delay) infinite paused;
 }
@@ -429,32 +454,30 @@ html[data-theme-swap] .theme-switch::before,
 .gravity-cursor::before {
   content: "";
   position: absolute;
-  left: -18px;
-  top: -18px;
-  width: 36px;
-  height: 36px;
-  border: 1px solid #fff5dc80;
+  left: -16px;
+  top: -6px;
+  width: 32px;
+  height: 12px;
   border-radius: 50%;
-  background: radial-gradient(circle, #fff6df40, transparent 68%);
-  box-shadow: 0 0 18px color-mix(in srgb, var(--gravity-light) 35%, transparent);
-  transform: scaleX(1.35);
+  background: radial-gradient(ellipse, #fff6df33, transparent 70%);
 }
 
 .gravity-cursor > span {
   position: absolute;
-  left: -4px;
-  top: -3px;
-  width: 8px;
-  height: 6px;
+  left: -3px;
+  top: -2px;
+  width: 6px;
+  height: 4px;
   border-radius: 50%;
   background: #fff8e8;
-  box-shadow: 0 0 8px #fff8e8, 0 0 20px var(--gravity-light), calc(var(--gravity-direction) * -10px) 0 12px var(--gravity-aura);
+  box-shadow: 0 0 5px #fff8e8, calc(var(--gravity-direction) * -7px) 0 10px var(--gravity-aura);
 }
 
 .theme-switch[data-gravity-active] {
   cursor: none;
   background: #0a090d;
   color: #fff4df;
+  border-image: linear-gradient(to bottom, var(--switch-border) calc(var(--gravity-y) - 90px), transparent calc(var(--gravity-y) - 65px), transparent calc(var(--gravity-y) + 65px), var(--switch-border) calc(var(--gravity-y) + 90px)) 1;
 }
 
 .theme-switch[data-gravity-active]::before {
@@ -472,26 +495,26 @@ html[data-theme-swap] .theme-switch::before,
 }
 
 .theme-switch[data-gravity-active] .gravity-halo,
-.theme-switch[data-gravity-active] .gravity-disc,
+.theme-switch[data-gravity-active] .gravity-distortion,
 .theme-switch[data-gravity-active] .gravity-particle {
   animation-play-state: running;
 }
 
 @keyframes gravityInfall {
-  0% { opacity: 0; transform: translate3d(calc(var(--gravity-direction) * -230px), var(--particle-y), 0) scaleX(1); }
-  18% { opacity: 0.8; }
-  65% { opacity: 1; transform: translate3d(calc(var(--gravity-direction) * -65px), calc(var(--particle-y) * 0.22), 0) scaleX(3); }
-  100% { opacity: 0; transform: translate3d(calc(var(--gravity-direction) * 20px), 0, 0) scaleX(0.3); }
+  0% { opacity: 0; transform: translate3d(calc(var(--gravity-direction) * -85px), var(--particle-y), 0) scaleX(1); }
+  18% { opacity: 0.4; }
+  65% { opacity: 0.55; transform: translate3d(calc(var(--gravity-direction) * -18px), calc(var(--particle-y) * 0.2), 0) scaleX(2.5); }
+  100% { opacity: 0; transform: translate3d(calc(var(--gravity-direction) * 35px), 0, 0) scaleX(0.3); }
 }
 
 @keyframes gravityBreathe {
-  from { opacity: 0.65; transform: scale(0.92); }
-  to { opacity: 1; transform: scale(1.08); }
+  from { opacity: 0.45; transform: scale(0.9, 0.5); }
+  to { opacity: 0.7; transform: scale(1.05, 0.62); }
 }
 
-@keyframes gravityLens {
-  from { transform: rotate(-25deg) scaleX(0.85); }
-  to { transform: rotate(-16deg) scaleX(1.05); }
+@keyframes gravityShear {
+  from { transform: scaleX(var(--gravity-direction)) skewY(-7deg) scaleY(0.7); }
+  to { transform: scaleX(var(--gravity-direction)) skewY(5deg) scaleY(0.95); }
 }
 
 .alternate-page {
@@ -1334,7 +1357,7 @@ html[data-theme-swap="original"] {
   }
 
   .gravity-halo,
-  .gravity-disc,
+  .gravity-distortion,
   .gravity-particle {
     animation: none;
   }

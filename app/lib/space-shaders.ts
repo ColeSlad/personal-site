@@ -9,6 +9,7 @@ precision highp float;
 uniform vec2 uResolution;
 uniform vec3 uCamera;
 uniform vec2 uFocus;
+uniform vec4 uGravity;
 uniform float uTime;
 uniform sampler2D uSurfaceMap;
 uniform sampler2D uJupiterMap;
@@ -71,6 +72,13 @@ vec3 filmic(vec3 color) {
 void main() {
   vec2 uv = gl_FragCoord.xy / uResolution;
   float aspect = uResolution.x / uResolution.y;
+  // Bend rays only inside the small hover lens; the rest of the scene is unchanged.
+  if (uGravity.z > 0.001) {
+    vec2 delta = (uv - uGravity.xy) * vec2(aspect, 1.0);
+    float influence = 1.0 - smoothstep(0.0, uGravity.w, length(delta));
+    vec2 bend = -delta * 0.72 + vec2(-delta.y, delta.x) * 0.24;
+    uv += bend * influence * influence * uGravity.z / vec2(aspect, 1.0);
+  }
   vec2 screen = (uv - uFocus) * vec2(aspect, 1.0);
   float mobile = 1.0 - step(0.86, aspect);
   float arrival = smoothstep(0.0, 7.0, uTime);

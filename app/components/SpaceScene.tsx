@@ -111,6 +111,7 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
       const time = gl.getUniformLocation(program, "uTime");
       const cameraUniform = gl.getUniformLocation(program, "uCamera");
       const focus = gl.getUniformLocation(program, "uFocus");
+      const gravityUniform = gl.getUniformLocation(program, "uGravity");
       const hardwareTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE) as number;
       const maxTexture = Math.min(hardwareTextureSize, canvas.clientWidth < 700 ? 4096 : 8192);
       const maxRenderSize = Math.min(gl.getParameter(gl.MAX_RENDERBUFFER_SIZE) as number, hardwareTextureSize);
@@ -200,6 +201,8 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
       let needsDraw = false;
       let arriving = document.documentElement.dataset.themeSwap === "alternate";
       let wasActive = playback.current.active;
+      const gravity = { x: 0, y: 0, strength: 0, target: 0 };
+      const gravitySettling = () => Math.abs(gravity.strength - gravity.target) > 0.001;
       const pointers = new Map<number, { x: number; y: number }>();
 
       function renderScene() {
@@ -216,6 +219,8 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
         gl.uniform1f(time, playback.current.reducedMotion ? 8 : elapsed.current);
         gl.uniform3f(cameraUniform, camera.current.azimuth, camera.current.elevation, camera.current.zoom);
         gl.uniform2f(focus, 0.5, 0.5);
+        gravity.strength += (gravity.target - gravity.strength) * 0.18;
+        gl.uniform4f(gravityUniform, gravity.x, gravity.y, playback.current.reducedMotion ? 0 : gravity.strength, 100 / Math.max(canvas.clientHeight, 1));
         gl.drawArrays(gl.TRIANGLES, 0, 6);
       }
 
@@ -237,11 +242,11 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
           needsDraw = false;
           draw();
         }
-        if (playback.current.active && (playback.current.moving || needsDraw) && !document.hidden && !gl?.isContextLost()) frame = requestAnimationFrame(render);
+        if (playback.current.active && (playback.current.moving || needsDraw || gravitySettling()) && !document.hidden && !gl?.isContextLost()) frame = requestAnimationFrame(render);
       }
 
       function start() {
-        if (playback.current.active && texturesReady && !arriving && (playback.current.moving || needsDraw) && !document.hidden && !frame && !gl?.isContextLost()) {
+        if (playback.current.active && texturesReady && !arriving && (playback.current.moving || needsDraw || gravitySettling()) && !document.hidden && !frame && !gl?.isContextLost()) {
           lastFrame = 0;
           frame = requestAnimationFrame(render);
         }
@@ -250,6 +255,16 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
       function invalidate() {
         needsDraw = true;
         start();
+      }
+
+      function warp(event: Event) {
+        const detail = (event as CustomEvent<{ x?: number; y?: number; strength: number }>).detail;
+        if (detail.x !== undefined && detail.y !== undefined) {
+          gravity.x = detail.x;
+          gravity.y = detail.y;
+        }
+        gravity.target = detail.strength;
+        invalidate();
       }
 
       function zoomBy(factor: number) {
@@ -354,6 +369,7 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
       const observer = new ResizeObserver(resize);
       observer.observe(canvas);
       window.addEventListener("theme-arrived", arrive);
+      window.addEventListener("gravity-warp", warp);
       document.addEventListener("visibilitychange", visibility);
       interaction.addEventListener("pointerdown", down);
       interaction.addEventListener("pointermove", move);
@@ -386,6 +402,7 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
         cancelAnimationFrame(frame);
         observer.disconnect();
         window.removeEventListener("theme-arrived", arrive);
+        window.removeEventListener("gravity-warp", warp);
         document.removeEventListener("visibilitychange", visibility);
         for (const pointerId of pointers.keys()) {
           if (interaction.hasPointerCapture(pointerId)) interaction.releasePointerCapture(pointerId);
