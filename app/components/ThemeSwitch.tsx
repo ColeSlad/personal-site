@@ -85,7 +85,7 @@ export default function ThemeSwitch({ returnToMain = false }: { returnToMain?: b
       onPointerCancel={stopAura}
       onClick={stopAura}
     >
-      <span className="theme-switch-label">{returnToMain ? "back to main" : "another side"}</span>
+      <span className="theme-switch-label">{returnToMain ? "back to main" : "press me"}</span>
       <span className="switch-aura" aria-hidden="true">
         <span className="switch-aura-cloud">
           <span className="switch-aura-layer switch-aura-violet" />
