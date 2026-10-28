@@ -264,7 +264,6 @@ html, body {
   --gravity-direction: 1;
   --gravity-light: #f2cc81;
   --gravity-aura: #a17be8;
-  --switch-border: #252525;
   --gravity-radius: min(260px, 28vw);
   position: fixed;
   z-index: 10;
@@ -275,7 +274,7 @@ html, body {
   align-items: center;
   justify-content: space-between;
   padding: 28px 0;
-  border-left: 1px solid #252525;
+  border: 0;
   background: #080808;
   color: #aaa;
   font-size: 12px;
@@ -342,10 +341,7 @@ html[data-theme-swap] .theme-switch::before,
   --gravity-direction: -1;
   --gravity-light: #f5a68b;
   --gravity-aura: #e85376;
-  --switch-border: #e8bc5833;
   inset: 0 auto 0 0;
-  border-left: 0;
-  border-right: 1px solid #e8bc5833;
   background: var(--alternate-surface);
   color: var(--alternate-ink);
 }
@@ -367,25 +363,6 @@ html[data-theme-swap] .theme-switch::before,
 
 .theme-switch-return .gravity-field {
   clip-path: inset(0 -320px 0 0);
-}
-
-.gravity-seam {
-  position: absolute;
-  left: -81px;
-  top: var(--gravity-y, 50%);
-  width: 160px;
-  height: 360px;
-  transform: translateY(-50%);
-  stroke: var(--gravity-light);
-  stroke-width: 1;
-  opacity: 0.45;
-  mask-image: linear-gradient(transparent, #000 25% 75%, transparent);
-}
-
-.theme-switch-return .gravity-seam {
-  left: auto;
-  right: -81px;
-  transform: translateY(-50%) scaleX(-1);
 }
 
 .gravity-well {
@@ -478,7 +455,6 @@ html[data-theme-swap] .theme-switch::before,
   cursor: none;
   background: #0a090d;
   color: #fff4df;
-  border-image: linear-gradient(to bottom, var(--switch-border) calc(var(--gravity-y) - 180px), transparent calc(var(--gravity-y) - 130px), transparent calc(var(--gravity-y) + 130px), var(--switch-border) calc(var(--gravity-y) + 180px)) 1;
 }
 
 .theme-switch[data-gravity-active]::before {

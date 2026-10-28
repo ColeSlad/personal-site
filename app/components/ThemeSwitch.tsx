@@ -75,9 +75,6 @@ export default function ThemeSwitch({ returnToMain = false }: { returnToMain?: b
     >
       <span className="theme-switch-label">{returnToMain ? "back to main" : "another side"}</span>
       <span className="gravity-field" aria-hidden="true">
-        <svg className="gravity-seam" viewBox="-80 0 160 360" fill="none">
-          <path d="M1 0C1 98-44 92-44 180S1 262 1 360" />
-        </svg>
         <span className="gravity-well">
           <span className="gravity-halo" />
           <svg className="gravity-distortion" viewBox="0 0 180 180" fill="none">
