@@ -75,8 +75,8 @@ export default function ThemeSwitch({ returnToMain = false }: { returnToMain?: b
     >
       <span className="theme-switch-label">{returnToMain ? "back to main" : "another side"}</span>
       <span className="gravity-field" aria-hidden="true">
-        <svg className="gravity-seam" viewBox="0 0 64 180" fill="none">
-          <path d="M1 0C1 50 25 58 25 90S1 130 1 180" />
+        <svg className="gravity-seam" viewBox="-80 0 160 360" fill="none">
+          <path d="M1 0C1 98-44 92-44 180S1 262 1 360" />
         </svg>
         <span className="gravity-well">
           <span className="gravity-halo" />
@@ -85,9 +85,9 @@ export default function ThemeSwitch({ returnToMain = false }: { returnToMain?: b
             <path d="M6 62C47 61 61 103 96 93S146 91 174 90" />
             <path d="M8 139C54 136 51 105 88 96S144 90 174 90" />
           </svg>
-          {Array.from({ length: 6 }, (_, index) => (
+          {Array.from({ length: 9 }, (_, index) => (
             <span key={index} className="gravity-particle" style={{
-              "--particle-y": `${(index % 2 ? 1 : -1) * (12 + index * 7)}px`,
+              "--particle-y": `${(index % 2 ? 1 : -1) * (18 + index * 12)}px`,
               "--particle-delay": `${index * -0.17}s`,
               "--particle-duration": `${1.1 + (index % 4) * 0.18}s`,
             } as CSSProperties} />

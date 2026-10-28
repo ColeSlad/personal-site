@@ -72,12 +72,12 @@ vec3 filmic(vec3 color) {
 void main() {
   vec2 uv = gl_FragCoord.xy / uResolution;
   float aspect = uResolution.x / uResolution.y;
-  // Bend rays only inside the small hover lens; the rest of the scene is unchanged.
+  // Extend the edge lens into the nearby page, with a soft, bounded falloff.
   if (uGravity.z > 0.001) {
     vec2 delta = (uv - uGravity.xy) * vec2(aspect, 1.0);
-    float influence = 1.0 - smoothstep(0.0, uGravity.w, length(delta));
-    vec2 bend = -delta * 0.72 + vec2(-delta.y, delta.x) * 0.24;
-    uv += bend * influence * influence * uGravity.z / vec2(aspect, 1.0);
+    float influence = 1.0 - smoothstep(0.0, uGravity.w, length(delta * vec2(1.0, 1.15)));
+    vec2 bend = -delta * 1.05 + vec2(-delta.y, delta.x) * 0.35;
+    uv += bend * pow(influence, 1.3) * uGravity.z / vec2(aspect, 1.0);
   }
   vec2 screen = (uv - uFocus) * vec2(aspect, 1.0);
   float mobile = 1.0 - step(0.86, aspect);

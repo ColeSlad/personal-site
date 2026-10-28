@@ -220,7 +220,7 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
         gl.uniform3f(cameraUniform, camera.current.azimuth, camera.current.elevation, camera.current.zoom);
         gl.uniform2f(focus, 0.5, 0.5);
         gravity.strength += (gravity.target - gravity.strength) * 0.18;
-        gl.uniform4f(gravityUniform, gravity.x, gravity.y, playback.current.reducedMotion ? 0 : gravity.strength, 100 / Math.max(canvas.clientHeight, 1));
+        gl.uniform4f(gravityUniform, gravity.x, gravity.y, playback.current.reducedMotion ? 0 : gravity.strength, Math.min(260, canvas.clientWidth * 0.28) / Math.max(canvas.clientHeight, 1));
         gl.drawArrays(gl.TRIANGLES, 0, 6);
       }
 

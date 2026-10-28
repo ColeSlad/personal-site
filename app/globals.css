@@ -265,6 +265,7 @@ html, body {
   --gravity-light: #f2cc81;
   --gravity-aura: #a17be8;
   --switch-border: #252525;
+  --gravity-radius: min(260px, 28vw);
   position: fixed;
   z-index: 10;
   inset: 0 0 0 auto;
@@ -360,39 +361,39 @@ html[data-theme-swap] .theme-switch::before,
   z-index: 0;
   inset: 0;
   overflow: visible;
-  clip-path: inset(0 0 0 -120px);
+  clip-path: inset(0 0 0 -320px);
   transition: opacity 220ms ease-out;
 }
 
 .theme-switch-return .gravity-field {
-  clip-path: inset(0 -120px 0 0);
+  clip-path: inset(0 -320px 0 0);
 }
 
 .gravity-seam {
   position: absolute;
-  left: -1px;
+  left: -81px;
   top: var(--gravity-y, 50%);
-  width: 64px;
-  height: 180px;
+  width: 160px;
+  height: 360px;
   transform: translateY(-50%);
   stroke: var(--gravity-light);
   stroke-width: 1;
-  opacity: 0.3;
+  opacity: 0.45;
   mask-image: linear-gradient(transparent, #000 25% 75%, transparent);
 }
 
 .theme-switch-return .gravity-seam {
   left: auto;
-  right: -1px;
+  right: -81px;
   transform: translateY(-50%) scaleX(-1);
 }
 
 .gravity-well {
   position: absolute;
-  left: var(--gravity-x, 50%);
+  left: calc(var(--gravity-x, 50%) - var(--gravity-direction) * 40px);
   top: var(--gravity-y, 50%);
-  width: 180px;
-  height: 180px;
+  width: calc(var(--gravity-radius) * 2);
+  height: calc(var(--gravity-radius) * 1.6);
   transform: translate(-50%, -50%);
 }
 
@@ -400,7 +401,7 @@ html[data-theme-swap] .theme-switch::before,
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: radial-gradient(ellipse at 65% 50%, #fff8e82e, color-mix(in srgb, var(--gravity-aura) 12%, transparent) 25%, transparent 66%);
+  background: radial-gradient(ellipse at 58% 50%, #fff8e835, color-mix(in srgb, var(--gravity-aura) 20%, transparent) 30%, transparent 72%);
   transform: scaleY(0.55);
   animation: gravityBreathe 2.6s ease-in-out infinite alternate paused;
 }
@@ -413,8 +414,8 @@ html[data-theme-swap] .theme-switch::before,
   stroke: var(--gravity-light);
   stroke-width: 0.65;
   stroke-linecap: round;
-  opacity: 0.35;
-  mask-image: radial-gradient(ellipse, #000 10%, transparent 66%);
+  opacity: 0.48;
+  mask-image: radial-gradient(ellipse, #000 18%, transparent 76%);
   transform: scaleX(var(--gravity-direction));
   animation: gravityShear 2.8s ease-in-out infinite alternate paused;
 }
@@ -477,7 +478,7 @@ html[data-theme-swap] .theme-switch::before,
   cursor: none;
   background: #0a090d;
   color: #fff4df;
-  border-image: linear-gradient(to bottom, var(--switch-border) calc(var(--gravity-y) - 90px), transparent calc(var(--gravity-y) - 65px), transparent calc(var(--gravity-y) + 65px), var(--switch-border) calc(var(--gravity-y) + 90px)) 1;
+  border-image: linear-gradient(to bottom, var(--switch-border) calc(var(--gravity-y) - 180px), transparent calc(var(--gravity-y) - 130px), transparent calc(var(--gravity-y) + 130px), var(--switch-border) calc(var(--gravity-y) + 180px)) 1;
 }
 
 .theme-switch[data-gravity-active]::before {
@@ -501,10 +502,10 @@ html[data-theme-swap] .theme-switch::before,
 }
 
 @keyframes gravityInfall {
-  0% { opacity: 0; transform: translate3d(calc(var(--gravity-direction) * -85px), var(--particle-y), 0) scaleX(1); }
-  18% { opacity: 0.4; }
-  65% { opacity: 0.55; transform: translate3d(calc(var(--gravity-direction) * -18px), calc(var(--particle-y) * 0.2), 0) scaleX(2.5); }
-  100% { opacity: 0; transform: translate3d(calc(var(--gravity-direction) * 35px), 0, 0) scaleX(0.3); }
+  0% { opacity: 0; transform: translate3d(calc(var(--gravity-direction) * var(--gravity-radius) * -0.9), var(--particle-y), 0) scaleX(1); }
+  18% { opacity: 0.45; }
+  65% { opacity: 0.65; transform: translate3d(calc(var(--gravity-direction) * -32px), calc(var(--particle-y) * 0.2), 0) scaleX(3.5); }
+  100% { opacity: 0; transform: translate3d(calc(var(--gravity-direction) * 55px), 0, 0) scaleX(0.3); }
 }
 
 @keyframes gravityBreathe {
