@@ -318,7 +318,7 @@ html[data-theme-swap] .theme-switch::before,
 
 .theme-switch-label {
   position: relative;
-  z-index: 1;
+  z-index: 0;
   margin-top: auto;
   margin-bottom: auto;
   writing-mode: vertical-rl;
@@ -407,7 +407,7 @@ html[data-theme-swap] .theme-switch::before,
 /* Refract the actual page pixels, with the starfield shader as a fallback. */
 .switch-page-lens {
   position: fixed;
-  z-index: 0;
+  z-index: 1;
   left: var(--lens-x, 50%);
   top: var(--lens-y, 50%);
   width: calc(var(--aura-radius) * 2);
