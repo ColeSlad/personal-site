@@ -261,10 +261,11 @@ html, body {
 
 .theme-switch {
   --switch-highlight: #ed1c24;
-  --gravity-direction: 1;
-  --gravity-light: #f2cc81;
-  --gravity-aura: #a17be8;
-  --gravity-radius: min(260px, 28vw);
+  --aura-direction: 1;
+  --aura-violet: #a67aee;
+  --aura-rose: #dc83bd;
+  --aura-warm: #f1bd82;
+  --aura-radius: min(290px, 32vw);
   position: fixed;
   z-index: 10;
   inset: 0 0 0 auto;
@@ -338,160 +339,94 @@ html[data-theme-swap] .theme-switch::before,
 
 .theme-switch-return {
   --switch-highlight: #6b4d1b;
-  --gravity-direction: -1;
-  --gravity-light: #f5a68b;
-  --gravity-aura: #e85376;
+  --aura-direction: -1;
+  --aura-violet: #b18af1;
+  --aura-rose: #ef8c9e;
+  --aura-warm: #f4c68d;
   inset: 0 auto 0 0;
   background: var(--alternate-surface);
   color: var(--alternate-ink);
 }
 
-.gravity-field,
-.gravity-cursor {
-  pointer-events: none;
-  opacity: 0;
-}
-
-.gravity-field {
+/* A diffuse, layered aura follows the pointer without changing its position. */
+.switch-aura {
   position: absolute;
   z-index: 0;
   inset: 0;
+  pointer-events: none;
   overflow: visible;
-  clip-path: inset(0 0 0 -320px);
-  transition: opacity 220ms ease-out;
-}
-
-.theme-switch-return .gravity-field {
-  clip-path: inset(0 -320px 0 0);
-}
-
-.gravity-well {
-  position: absolute;
-  left: calc(var(--gravity-x, 50%) - var(--gravity-direction) * 40px);
-  top: var(--gravity-y, 50%);
-  width: calc(var(--gravity-radius) * 2);
-  height: calc(var(--gravity-radius) * 1.6);
-  transform: translate(-50%, -50%);
-}
-
-.gravity-halo {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at 58% 50%, #fff8e835, color-mix(in srgb, var(--gravity-aura) 20%, transparent) 30%, transparent 72%);
-  transform: scaleY(0.55);
-  animation: gravityBreathe 2.6s ease-in-out infinite alternate paused;
-}
-
-.gravity-distortion {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  stroke: var(--gravity-light);
-  stroke-width: 0.65;
-  stroke-linecap: round;
-  opacity: 0.48;
-  mask-image: radial-gradient(ellipse, #000 18%, transparent 76%);
-  transform: scaleX(var(--gravity-direction));
-  animation: gravityShear 2.8s ease-in-out infinite alternate paused;
-}
-
-.gravity-distortion path:nth-child(2) {
-  stroke: #fff7eb;
-  opacity: 0.5;
-}
-
-.gravity-distortion path:nth-child(3) {
-  stroke: var(--gravity-aura);
-  opacity: 0.7;
-}
-
-.gravity-particle {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 3px;
-  height: 1px;
-  border-radius: 50%;
-  background: #fff5dc;
-  box-shadow: 0 0 4px var(--gravity-light);
+  clip-path: inset(0 0 0 -380px);
   opacity: 0;
-  animation: gravityInfall var(--particle-duration) linear var(--particle-delay) infinite paused;
+  transition: opacity 600ms ease-out;
 }
 
-.gravity-cursor {
-  position: fixed;
-  z-index: 12;
-  left: 0;
-  top: 0;
-  width: 0;
-  height: 0;
+.theme-switch-return .switch-aura {
+  clip-path: inset(0 -380px 0 0);
 }
 
-.gravity-cursor::before {
-  content: "";
+.switch-aura-cloud {
   position: absolute;
-  left: -16px;
-  top: -6px;
-  width: 32px;
-  height: 12px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, #fff6df33, transparent 70%);
+  left: calc(var(--aura-x, 50%) - var(--aura-direction) * 36px);
+  top: var(--aura-y, 50%);
+  width: calc(var(--aura-radius) * 2);
+  height: calc(var(--aura-radius) * 1.8);
+  transform: translate(-50%, -50%);
+  mask-image: radial-gradient(ellipse, #000 12%, transparent 73%);
 }
 
-.gravity-cursor > span {
+.switch-aura-layer {
   position: absolute;
-  left: -3px;
-  top: -2px;
-  width: 6px;
-  height: 4px;
-  border-radius: 50%;
-  background: #fff8e8;
-  box-shadow: 0 0 5px #fff8e8, calc(var(--gravity-direction) * -7px) 0 10px var(--gravity-aura);
+  inset: 0;
+  border-radius: 43% 57% 61% 39% / 46% 37% 63% 54%;
+  filter: blur(24px);
+  mix-blend-mode: screen;
+  animation-play-state: paused;
 }
 
-.theme-switch[data-gravity-active] {
-  cursor: none;
-  background: #0a090d;
+.switch-aura-violet {
+  background: radial-gradient(ellipse at 48% 46%, color-mix(in srgb, var(--aura-violet) 65%, transparent), color-mix(in srgb, var(--aura-violet) 24%, transparent) 34%, transparent 68%);
+  animation: auraDrift 8s ease-in-out infinite alternate paused;
+}
+
+.switch-aura-rose {
+  inset: 4% 10%;
+  background: radial-gradient(ellipse at 62% 62%, color-mix(in srgb, var(--aura-rose) 55%, transparent), transparent 65%);
+  animation: auraDrift 11s ease-in-out -5s infinite alternate-reverse paused;
+}
+
+.switch-aura-warm {
+  inset: 16% 15%;
+  background: radial-gradient(ellipse at 64% 36%, color-mix(in srgb, var(--aura-warm) 65%, transparent), color-mix(in srgb, var(--aura-warm) 16%, transparent) 32%, transparent 65%);
+  animation: auraBreathe 6s ease-in-out -2s infinite alternate paused;
+}
+
+.theme-switch[data-aura-active] {
+  cursor: pointer;
+  background: #080808;
   color: #fff4df;
 }
 
-.theme-switch[data-gravity-active]::before {
+.theme-switch[data-aura-active]::before {
   visibility: hidden;
 }
 
-.theme-switch[data-gravity-active] .theme-switch-label {
-  transform: translateX(calc(var(--gravity-direction) * 5px));
-  opacity: 0.65;
-}
-
-.theme-switch[data-gravity-active] .gravity-field,
-.theme-switch[data-gravity-active] .gravity-cursor {
+.theme-switch[data-aura-active] .switch-aura {
   opacity: 1;
+  transition-duration: 350ms;
 }
 
-.theme-switch[data-gravity-active] .gravity-halo,
-.theme-switch[data-gravity-active] .gravity-distortion,
-.theme-switch[data-gravity-active] .gravity-particle {
+.theme-switch[data-aura-active] .switch-aura-layer {
   animation-play-state: running;
 }
 
-@keyframes gravityInfall {
-  0% { opacity: 0; transform: translate3d(calc(var(--gravity-direction) * var(--gravity-radius) * -0.9), var(--particle-y), 0) scaleX(1); }
-  18% { opacity: 0.45; }
-  65% { opacity: 0.65; transform: translate3d(calc(var(--gravity-direction) * -32px), calc(var(--particle-y) * 0.2), 0) scaleX(3.5); }
-  100% { opacity: 0; transform: translate3d(calc(var(--gravity-direction) * 55px), 0, 0) scaleX(0.3); }
+@keyframes auraDrift {
+  from { transform: translate(-4%, 3%) rotate(-12deg) scale(0.92, 1.02); opacity: 0.75; }
+  to { transform: translate(4%, -4%) rotate(14deg) scale(1.07, 0.94); opacity: 1; }
 }
 
-@keyframes gravityBreathe {
-  from { opacity: 0.45; transform: scale(0.9, 0.5); }
-  to { opacity: 0.7; transform: scale(1.05, 0.62); }
-}
-
-@keyframes gravityShear {
-  from { transform: scaleX(var(--gravity-direction)) skewY(-7deg) scaleY(0.7); }
-  to { transform: scaleX(var(--gravity-direction)) skewY(5deg) scaleY(0.95); }
+@keyframes auraBreathe {
+  from { transform: translate(2%, -3%) scale(0.88); opacity: 0.65; }
+  to { transform: translate(-3%, 4%) scale(1.08); opacity: 0.95; }
 }
 
 .alternate-page {
@@ -1324,18 +1259,12 @@ html[data-theme-swap="original"] {
     transition: none;
   }
 
-  .theme-switch[data-gravity-active] {
-    cursor: pointer;
-  }
-
-  .gravity-field,
-  .gravity-cursor {
+  .switch-aura {
     display: none;
+    transition: none;
   }
 
-  .gravity-halo,
-  .gravity-distortion,
-  .gravity-particle {
+  .switch-aura-layer {
     animation: none;
   }
 
