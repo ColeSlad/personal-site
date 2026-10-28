@@ -286,11 +286,15 @@ html, body {
   inset: 0;
   background: var(--switch-highlight);
   opacity: 0;
-  animation: themeSwitchHighlight 1s ease-out;
+  animation: var(--home-hint-animation, none);
 }
 
 .theme-switch-return::before {
   animation: var(--orbit-hint-animation, none);
+}
+
+.site-shell[data-home-hint="true"] {
+  --home-hint-animation: themeSwitchHighlight 1s ease-out;
 }
 
 .site-shell[data-orbit-hint="true"] {

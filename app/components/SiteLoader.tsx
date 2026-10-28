@@ -13,6 +13,26 @@ function createRendererPreparation() {
   return { ready, resolve };
 }
 
+function useFirstVisitHint(pathname: string, ready: boolean, target: string) {
+  const [hint, setHint] = useState<{
+    pathname: string;
+    status: "unseen" | "showing" | "seen";
+  }>({ pathname, status: "unseen" });
+
+  // Store the history above pages that remount. Only the target page consumes
+  // the hint, and leaving its first visit retires it for this site load.
+  if (hint.pathname !== pathname || (ready && pathname === target && hint.status === "unseen")) {
+    setHint({
+      pathname,
+      status: hint.status === "unseen"
+        ? ready && pathname === target ? "showing" : "unseen"
+        : "seen",
+    });
+  }
+
+  return hint.status === "showing";
+}
+
 export default function SiteLoader({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -22,21 +42,8 @@ export default function SiteLoader({ children }: { children: ReactNode }) {
   const [completed, setCompleted] = useState(0);
   const cancelLoading = useRef<(() => void) | null>(null);
   const ready = status === "ready";
-  const [orbitHint, setOrbitHint] = useState<{
-    pathname: string;
-    status: "unseen" | "showing" | "seen";
-  }>({ pathname, status: "unseen" });
-
-  // Keep the hint's history above the pages that remount during navigation.
-  // About never consumes it; leaving the first Orbit visit retires it.
-  if (orbitHint.pathname !== pathname || (ready && pathname === "/alternate" && orbitHint.status === "unseen")) {
-    setOrbitHint({
-      pathname,
-      status: orbitHint.status === "unseen"
-        ? ready && pathname === "/alternate" ? "showing" : "unseen"
-        : "seen",
-    });
-  }
+  const homeHint = useFirstVisitHint(pathname, ready, "/");
+  const orbitHint = useFirstVisitHint(pathname, ready, "/alternate");
 
   useEffect(() => {
     let active = true;
@@ -77,7 +84,7 @@ export default function SiteLoader({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <div className="site-shell" data-ready={ready} data-space-active={spaceActive} data-orbit-hint={orbitHint.status === "showing"} inert={!ready} aria-hidden={!ready} aria-busy={!ready}>
+      <div className="site-shell" data-ready={ready} data-space-active={spaceActive} data-home-hint={homeHint} data-orbit-hint={orbitHint} inert={!ready} aria-hidden={!ready} aria-busy={!ready}>
         {children}
       </div>
       <SpaceScene active={ready && spaceActive} reading={pathname.startsWith("/alternate/")} onPrepared={rendererPreparation.resolve} />
