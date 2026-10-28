@@ -1,11 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, type PointerEvent } from "react";
+import { useCallback, useEffect, useId, useRef, type PointerEvent } from "react";
 import { ThemeTransitionLink } from "./ThemeTransition";
 
 export default function ThemeSwitch({ returnToMain = false }: { returnToMain?: boolean }) {
+  const lensFilterId = `mode-lens-${useId()}`;
   const activeLink = useRef<HTMLAnchorElement | null>(null);
   const cursor = useRef<HTMLSpanElement>(null);
+  const lensMap = useRef<SVGFEImageElement>(null);
   const frame = useRef(0);
   const pointer = useRef({ x: 0, y: 0 });
 
@@ -28,6 +30,11 @@ export default function ThemeSwitch({ returnToMain = false }: { returnToMain?: b
     const bounds = link.getBoundingClientRect();
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const direction = returnToMain ? -1 : 1;
+    // Center the lens inside the visible page rather than behind the solid rail.
+    const lensX = returnToMain ? bounds.right + 72 : bounds.left - 72;
+    const lensRadius = Math.min(290, window.innerWidth * 0.32);
+    lensMap.current?.setAttribute("width", `${lensRadius * 2}`);
+    lensMap.current?.setAttribute("height", `${lensRadius * 1.8}`);
     pointer.current = { x: event.clientX, y: event.clientY };
     activeLink.current = link;
     link.dataset.auraActive = "true";
@@ -39,6 +46,8 @@ export default function ThemeSwitch({ returnToMain = false }: { returnToMain?: b
     link.style.setProperty("--aura-y", `${y - bounds.top}px`);
     link.style.setProperty("--aura-x", `${x - bounds.left}px`);
     link.style.setProperty("--aura-pull", "0");
+    link.style.setProperty("--lens-x", `${lensX}px`);
+    link.style.setProperty("--lens-y", `${y}px`);
 
     function follow(now: number) {
       if (!activeLink.current || motion.matches) { stopAura(); return; }
@@ -53,10 +62,11 @@ export default function ThemeSwitch({ returnToMain = false }: { returnToMain?: b
       link.style.setProperty("--aura-y", `${y - bounds.top}px`);
       link.style.setProperty("--aura-x", `${x - bounds.left}px`);
       link.style.setProperty("--aura-pull", `${pull}`);
+      link.style.setProperty("--lens-y", `${y}px`);
       window.dispatchEvent(new CustomEvent("gravity-warp", { detail: {
-        x: x / window.innerWidth,
+        x: lensX / window.innerWidth,
         y: 1 - y / window.innerHeight,
-        strength: 0.9 * pull,
+        strength: pull,
       } }));
       frame.current = requestAnimationFrame(follow);
     }
@@ -83,6 +93,21 @@ export default function ThemeSwitch({ returnToMain = false }: { returnToMain?: b
           <span className="switch-aura-layer switch-aura-warm" />
         </span>
       </span>
+      <svg className="switch-lens-defs" aria-hidden="true" focusable="false">
+        <defs>
+          <filter id={lensFilterId} colorInterpolationFilters="sRGB">
+            <feComponentTransfer in="SourceGraphic" result="opaque-backdrop">
+              <feFuncA type="linear" slope="0" intercept="1" />
+            </feComponentTransfer>
+            <feImage ref={lensMap} href="/space/hover-lens-map.png" x="0" y="0" width="580" height="522" preserveAspectRatio="none" result="lens-map" />
+            <feDisplacementMap in="opaque-backdrop" in2="lens-map" scale="180" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+      </svg>
+      <span className="switch-page-lens" aria-hidden="true" style={{
+        backdropFilter: `url("#${lensFilterId}")`,
+        WebkitBackdropFilter: `url("#${lensFilterId}")`,
+      }} />
       <span ref={cursor} className="switch-aura-cursor" aria-hidden="true" />
     </ThemeTransitionLink>
   );

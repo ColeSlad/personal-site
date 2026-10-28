@@ -397,6 +397,35 @@ html[data-theme-swap] .theme-switch::before,
   box-shadow: 0 0 9px #fff0d4aa, 0 0 22px var(--aura-warm);
 }
 
+.switch-lens-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Refract the actual page pixels, with the starfield shader as a fallback. */
+.switch-page-lens {
+  position: fixed;
+  z-index: 0;
+  left: var(--lens-x, 50%);
+  top: var(--lens-y, 50%);
+  width: calc(var(--aura-radius) * 2);
+  height: calc(var(--aura-radius) * 1.8);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse, #000 62%, transparent 74%);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 500ms ease-out, visibility 0s 500ms;
+}
+
+.theme-switch[data-aura-active] .switch-page-lens {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 400ms ease-out;
+}
+
 .switch-aura-layer {
   position: absolute;
   inset: 0;
@@ -1287,7 +1316,8 @@ html[data-theme-swap="original"] {
   }
 
   .switch-aura,
-  .switch-aura-cursor {
+  .switch-aura-cursor,
+  .switch-page-lens {
     display: none;
     transition: none;
   }

@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { loadSiteImage } from "../lib/site-assets";
 import SpaceScene from "./SpaceScene";
 
-const assetCount = 5;
+const assetCount = 6;
 
 function createRendererPreparation() {
   let resolve!: () => void;
@@ -54,6 +54,7 @@ export default function SiteLoader({ children }: { children: ReactNode }) {
       loadSiteImage("/logo.png"),
       loadSiteImage("/space/io-8k.webp"),
       loadSiteImage("/space/jupiter-4k.webp"),
+      loadSiteImage("/space/hover-lens-map.png"),
       rendererPreparation.ready,
       Promise.all([600, 700].map((weight) => document.fonts.load(`${weight} 16px ${family}`))),
     ];
