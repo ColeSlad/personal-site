@@ -5,13 +5,15 @@ import SiteLoader from "./components/SiteLoader";
 import { kumbhSans } from "./lib/fonts";
 import "./globals.css";
 
+const siteDescription = "Cole Sladowsky — CS student and Presidential Scholar at the University of Maryland, obsessed with efficiency, low-level systems, and making things run well.";
+
 export const metadata: Metadata = {
   title: "Cole Sladowsky",
-  description: "CS student at the University of Maryland — building full-stack apps, ML tools, and mobile software. Software engineer intern at Visa.",
+  description: siteDescription,
   authors: [{ name: "Cole Sladowsky" }],
   openGraph: {
     title: "Cole Sladowsky",
-    description: "CS student at the University of Maryland — building full-stack apps, ML tools, and mobile software.",
+    description: siteDescription,
     url: "https://colesladowsky.com",
     siteName: "Cole Sladowsky",
     locale: "en_US",
@@ -20,7 +22,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "Cole Sladowsky",
-    description: "CS student at the University of Maryland — building full-stack apps, ML tools, and mobile software.",
+    description: siteDescription,
   },
   metadataBase: new URL("https://colesladowsky.com"),
 };
