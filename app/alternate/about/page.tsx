@@ -3,18 +3,14 @@ import Image from "next/image";
 import AlternateHeader from "../../components/AlternateHeader";
 import SpaceCredits from "../../components/SpaceCredits";
 import ThemeSwitch from "../../components/ThemeSwitch";
+import { workExperience } from "../../lib/experience";
 
 export const metadata: Metadata = {
   title: "About — Cole Sladowsky",
   description: "A little more about Cole: computer science, low-level systems, and life outside the editor.",
 };
 
-const experience = [
-  { company: "Amazon Leo", role: "Software Engineer (Contract)" },
-  { company: "Visa", role: "Software Engineer Intern", date: "May – Aug 2026" },
-  { company: "MITRE", role: "Software Engineer (Contract)", date: "Jan – May 2026" },
-  { company: "Children’s National", role: "Software Engineer Intern", date: "Sep – Dec 2025" },
-];
+const experience = workExperience.slice(0, 4);
 
 const photos = [
   { src: "/about/IMG_2367.webp", alt: "Pine trees framing a lake and mountains at sunset", width: 2400, height: 1800, className: "about-photo-landscape" },
