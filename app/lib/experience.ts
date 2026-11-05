@@ -6,7 +6,11 @@ type Experience = {
 };
 
 export const workExperience: Experience[] = [
-  { company: "Amazon Leo", role: "Software Engineer (Contract)" },
+  {
+    company: "Amazon Leo",
+    role: "Software Engineer (Contract)",
+    description: "Building 3D satellite visualizations.",
+  },
   {
     company: "Visa",
     role: "Software Engineer Intern",

@@ -25,7 +25,7 @@ export default function Experience() {
               </div>
               <div className="exp-company">Amazon Leo</div>
               <ul className="exp-bullets">
-                <li className="coming-soon">more info coming soon</li>
+                <li>building 3D satellite visualizations</li>
               </ul>
             </div>
 
