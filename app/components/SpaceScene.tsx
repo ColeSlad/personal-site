@@ -4,7 +4,7 @@ import { useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalSto
 import { spaceFragmentShader, spaceVertexShader } from "../lib/space-shaders";
 import { createSpaceBloom } from "../lib/space-bloom";
 import { loadSiteImage } from "../lib/site-assets";
-import { mixSpacePose, spacePoseAtScroll, spacePoses, type SpaceChapter, type SpaceMarker, type SpacePose } from "../lib/space-journey";
+import { createSpaceJourneySampler, mixSpacePose, spacePoseAtScroll, spacePoses, type SpaceChapter, type SpacePose } from "../lib/space-journey";
 
 const motionQuery = "(prefers-reduced-motion: reduce)";
 function subscribeToMotion(callback: () => void) {
@@ -206,14 +206,13 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
       const gravity = { x: 0, y: 0, strength: 0, target: 0 };
       const gravitySettling = () => Math.abs(gravity.strength - gravity.target) > 0.001;
       const pointers = new Map<number, { x: number; y: number }>();
-      let markers: SpaceMarker[] = [];
       let destination: SpacePose = { ...spacePoses.orbit };
       const pose: SpacePose = { ...spacePoses.orbit };
       const manual = { azimuth: 0, elevation: 0, zoom: 1 };
       const parallax = { x: 0, y: 0, targetX: 0, targetY: 0 };
       let lastCameraFrame = 0;
-      let measureFrame = 0;
       let wasReading = playback.current.reading;
+      const journeySampler = createSpaceJourneySampler(measureJourney, requestAnimationFrame, cancelAnimationFrame);
 
       function journeySettling() {
         return Object.keys(pose).some((key) => Math.abs(pose[key as keyof SpacePose] - destination[key as keyof SpacePose]) > 0.0005)
@@ -233,22 +232,25 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
         parallax.y += (parallax.targetY - parallax.y) * ease;
       }
 
-      function updateDestination() {
-        const fallback = playback.current.reading ? "intro" : "orbit";
-        destination = playback.current.reducedMotion
-          ? { ...spacePoses[fallback] }
-          : spacePoseAtScroll(markers, window.scrollY, fallback);
-        invalidate();
-      }
-
       function measureJourney() {
-        markers = Array.from(document.querySelectorAll<HTMLElement>("[data-space-chapter]"))
+        // A route commit and its scroll restoration can happen in separate
+        // lifecycle callbacks. Never combine one page's markers with the
+        // other's scroll offset, or steer through intermediate route positions.
+        const route = playback.current.reading ? ".alternate-about-page" : ".alternate-orbit-page";
+        const root = document.querySelector<HTMLElement>(route);
+        if (!root || !root.getClientRects().length) return;
+        const scrollY = window.scrollY;
+        const markers = Array.from(root.querySelectorAll<HTMLElement>("[data-space-chapter]"))
           .filter((element) => element.dataset.spaceChapter! in spacePoses)
           .map((element) => ({
             chapter: element.dataset.spaceChapter as SpaceChapter,
-            top: Math.max(0, element.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.18),
+            top: Math.max(0, element.getBoundingClientRect().top + scrollY - window.innerHeight * 0.18),
           }));
-        updateDestination();
+        const fallback = playback.current.reading ? "intro" : "orbit";
+        destination = playback.current.reducedMotion
+          ? { ...spacePoses[fallback] }
+          : spacePoseAtScroll(markers, scrollY, fallback);
+        invalidate();
       }
 
       function lookAround(event: PointerEvent) {
@@ -426,13 +428,13 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
       };
       const observer = new ResizeObserver(resize);
       observer.observe(canvas);
-      const contentObserver = new ResizeObserver(measureJourney);
+      const contentObserver = new ResizeObserver(journeySampler.schedule);
       const shell = document.querySelector(".site-shell");
       if (shell) contentObserver.observe(shell);
       window.addEventListener("theme-arrived", arrive);
       window.addEventListener("gravity-warp", warp);
-      window.addEventListener("scroll", updateDestination, { passive: true });
-      window.addEventListener("resize", measureJourney);
+      window.addEventListener("scroll", journeySampler.schedule, { passive: true });
+      window.addEventListener("resize", journeySampler.schedule);
       document.addEventListener("pointermove", lookAround, { passive: true });
       document.addEventListener("visibilitychange", visibility);
       interaction.addEventListener("pointerdown", down);
@@ -458,9 +460,7 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
         parallax.targetX = 0;
         parallax.targetY = 0;
         if (playback.current.reducedMotion) { parallax.x = 0; parallax.y = 0; }
-        cancelAnimationFrame(measureFrame);
-        measureFrame = requestAnimationFrame(measureJourney);
-        measureJourney();
+        journeySampler.schedule();
         if (playback.current.reducedMotion) stepCamera(performance.now());
         if (playback.current.active) draw();
         start();
@@ -468,7 +468,7 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
       loadTexture("/space/io-8k.webp", 0, "uSurfaceMap", "surface");
       loadTexture("/space/jupiter-4k.webp", 1, "uJupiterMap", "jupiter");
       resize();
-      measureJourney();
+      journeySampler.schedule();
       start();
 
       return () => {
@@ -476,13 +476,13 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
         updatePlayback.current = null;
         cameraAction.current = null;
         cancelAnimationFrame(frame);
-        cancelAnimationFrame(measureFrame);
+        journeySampler.cancel();
         observer.disconnect();
         contentObserver.disconnect();
         window.removeEventListener("theme-arrived", arrive);
         window.removeEventListener("gravity-warp", warp);
-        window.removeEventListener("scroll", updateDestination);
-        window.removeEventListener("resize", measureJourney);
+        window.removeEventListener("scroll", journeySampler.schedule);
+        window.removeEventListener("resize", journeySampler.schedule);
         document.removeEventListener("pointermove", lookAround);
         document.removeEventListener("visibilitychange", visibility);
         for (const pointerId of pointers.keys()) {

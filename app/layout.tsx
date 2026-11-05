@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <head>
         <link rel="preload" as="image" href="/space/io-8k.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/space/jupiter-4k.webp" fetchPriority="high" />

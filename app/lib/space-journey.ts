@@ -20,6 +20,28 @@ export const spacePoses = {
 export type SpaceChapter = keyof typeof spacePoses;
 export type SpaceMarker = { chapter: SpaceChapter; top: number };
 
+/** Read layout and scroll together after the router has restored the new page. */
+export function createSpaceJourneySampler(
+  sample: () => void,
+  requestFrame: (callback: () => void) => number,
+  cancelFrame: (frame: number) => void,
+) {
+  let frame: number | undefined;
+  return {
+    schedule() {
+      if (frame !== undefined) return;
+      frame = requestFrame(() => {
+        frame = undefined;
+        sample();
+      });
+    },
+    cancel() {
+      if (frame !== undefined) cancelFrame(frame);
+      frame = undefined;
+    },
+  };
+}
+
 export function mixSpacePose(a: SpacePose, b: SpacePose, amount: number): SpacePose {
   const t = Math.max(0, Math.min(1, amount));
   const mix = (start: number, end: number) => start + (end - start) * t;
