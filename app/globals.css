@@ -717,7 +717,7 @@ html[data-theme-swap] .theme-switch::before,
   transition: background 180ms, color 180ms;
 }
 
-.alternate-navigation a[aria-current="page"] {
+.alternate-navigation a[aria-current] {
   color: #fff;
   background: #ffffff1f;
   box-shadow: inset 0 1px 0 #ffffff2e, 0 2px 8px #0002;
