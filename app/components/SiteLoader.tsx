@@ -88,7 +88,7 @@ export default function SiteLoader({ children }: { children: ReactNode }) {
       <div className="site-shell" data-ready={ready} data-space-active={spaceActive} data-home-hint={homeHint} data-orbit-hint={orbitHint} inert={!ready} aria-hidden={!ready} aria-busy={!ready}>
         {children}
       </div>
-      <SpaceScene active={ready && spaceActive} reading={pathname.startsWith("/alternate/")} onPrepared={rendererPreparation.resolve} />
+      <SpaceScene active={ready && spaceActive} onPrepared={rendererPreparation.resolve} />
       <div className="site-loader" data-ready={ready} aria-hidden={ready}>
         <div className="site-loader-content">
           <p className="site-loader-name">cole sladowsky</p>

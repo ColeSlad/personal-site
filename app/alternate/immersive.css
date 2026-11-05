@@ -21,10 +21,6 @@ html:has(.alternate-page) {
   z-index: 3;
 }
 
-.space-runtime[data-reading="true"] {
-  opacity: 1;
-}
-
 .space-interaction {
   touch-action: pan-y;
 }
@@ -110,7 +106,6 @@ html:has(.alternate-page) {
   border-radius: 4px;
 }
 
-.orbit-approach .orbit-copy,
 .orbit-work .orbit-copy {
   position: relative;
   isolation: isolate;
@@ -118,7 +113,6 @@ html:has(.alternate-page) {
   margin-left: auto;
 }
 
-.orbit-approach .orbit-copy::before,
 .orbit-work .orbit-copy::before {
   content: "";
   position: absolute;
@@ -238,35 +232,33 @@ html:has(.alternate-page) {
   text-shadow: 0 1px 8px #000;
 }
 
-.alternate-about-page::before {
-  background: linear-gradient(90deg, #0009, #0003 55%, #0002);
+.orbital-about.alternate-about-content {
+  margin: 0 auto;
+  padding: 14vh 0 12vh;
+  scroll-margin-top: 100px;
 }
 
-.alternate-about-page .orbital-about {
-  margin-top: 12vh;
-}
-
-.alternate-about-page .about-panels {
+.alternate-about-content .about-panels {
   display: block;
 }
 
-.alternate-about-page .about-panel {
+.alternate-about-content .about-panel {
   width: min(620px, 100%);
   background: linear-gradient(135deg, #ffffff06, transparent 60%), #03030373;
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
 }
 
-.alternate-about-page .about-introduction h1 {
+.alternate-about-content .about-title {
   font-size: clamp(42px, 5.5vw, 76px);
   letter-spacing: -0.065em;
 }
 
-.alternate-about-page .about-background {
+.alternate-about-content .about-background {
   margin: 24vh 0 0 auto;
 }
 
-.alternate-about-page .about-photo-section {
+.alternate-about-content .about-photo-section {
   margin-top: 22vh;
 }
 
@@ -280,11 +272,11 @@ html:has(.alternate-page) {
     font-size: clamp(64px, 10vw, 100px);
   }
 
-  .alternate-about-page .orbital-about {
+  .alternate-about-content {
     max-width: 100%;
   }
 
-  .alternate-about-page .about-background {
+  .alternate-about-content .about-background {
     margin-top: 16vh;
   }
 }
@@ -353,15 +345,15 @@ html:has(.alternate-page) {
     font-size: 8px;
   }
 
-  .alternate-about-page .orbital-about {
-    margin-top: 7vh;
+  .alternate-about-content {
+    padding-top: 12vh;
   }
 
-  .alternate-about-page .about-introduction h1 {
+  .alternate-about-content .about-title {
     font-size: clamp(34px, 9vw, 56px);
   }
 
-  .alternate-about-page .about-photo-section {
+  .alternate-about-content .about-photo-section {
     margin-top: 12vh;
   }
 }
@@ -373,7 +365,7 @@ html:has(.alternate-page) {
 }
 
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  .alternate-about-page .about-panel {
+  .alternate-about-content .about-panel {
     background: #080808;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;

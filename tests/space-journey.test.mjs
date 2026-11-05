@@ -20,41 +20,44 @@ function assertPose(actual, expected) {
   for (const key of Object.keys(expected)) assert.ok(Math.abs(actual[key] - expected[key]) < 1e-10, key);
 }
 
-test("Work ↔ About navigation samples only the restored destination, never the intermediate offset", () => {
+test("Work ↔ About anchor navigation samples the latest scroll position on the shared camera path", () => {
   const frames = frameQueue();
-  const routes = {
-    orbit: [{ chapter: "orbit", top: 0 }, { chapter: "approach", top: 800 }, { chapter: "work", top: 1600 }],
-    about: [{ chapter: "intro", top: 0 }, { chapter: "experience", top: 800 }, { chapter: "life", top: 1600 }],
-  };
-  let route = "orbit";
+  const markers = [
+    { chapter: "orbit", top: 0 },
+    { chapter: "work", top: 1600 },
+    { chapter: "intro", top: 3200 },
+    { chapter: "education", top: 4000 },
+    { chapter: "life", top: 4800 },
+    { chapter: "contact", top: 6400 },
+  ];
   let scrollY = 1600;
   const destinations = [];
   const sampler = createSpaceJourneySampler(() => {
-    destinations.push(spacePoseAtScroll(routes[route], scrollY, route === "orbit" ? "orbit" : "intro"));
+    destinations.push(spacePoseAtScroll(markers, scrollY, "orbit"));
   }, frames.request, frames.cancel);
 
-  route = "about"; // New DOM commits while the Work scroll offset still exists.
   sampler.schedule();
-  sampler.schedule(); // Layout observer reports the new page size.
-  scrollY = 0; // Router restores About before the next paint.
+  scrollY = 2400; // Intermediate anchor scroll positions arrive within a frame.
+  sampler.schedule();
+  scrollY = 3200;
   sampler.schedule();
   assert.equal(destinations.length, 0);
   frames.flush();
-  assert.deepEqual(destinations, [spacePoses.intro]);
+  assert.equal(destinations.length, 1);
+  assertPose(destinations[0], spacePoses.intro);
 
-  route = "orbit";
   sampler.schedule();
-  scrollY = 1600; // The Work hash is applied after the Orbit page commits.
+  scrollY = 1600; // Return to Work without remounting the scene or page.
   sampler.schedule();
   frames.flush();
   assert.equal(destinations.length, 2);
   assertPose(destinations[0], spacePoses.intro);
   assertPose(destinations[1], spacePoses.work);
 
-  scrollY = 800; // Native scrolling still updates the flight after navigation.
+  scrollY = 4000; // Native scrolling continues into About's education and photos.
   sampler.schedule();
   frames.flush();
-  assertPose(destinations.at(-1), spacePoses.approach);
+  assertPose(destinations.at(-1), spacePoses.education);
 });
 
 test("disposing the renderer cancels a pending journey sample", () => {
@@ -74,7 +77,7 @@ test("scrolling is bounded before and after the authored flight path", () => {
 });
 
 test("camera flight remains continuous at a chapter boundary", () => {
-  const markers = [{ chapter: "intro", top: 0 }, { chapter: "experience", top: 800 }, { chapter: "life", top: 1600 }];
+  const markers = [{ chapter: "intro", top: 0 }, { chapter: "education", top: 800 }, { chapter: "life", top: 1600 }];
   const before = spacePoseAtScroll(markers, 799.99, "intro");
   const after = spacePoseAtScroll(markers, 800.01, "intro");
   for (const key of Object.keys(before)) assert.ok(Math.abs(before[key] - after[key]) < 0.00001, key);
@@ -90,7 +93,7 @@ test("camera destinations remain outside Io throughout every flight segment", ()
   }
 });
 
-test("a direct About visit has a defined destination before markers are measured", () => {
-  assert.deepEqual(spacePoseAtScroll([], 0, "intro"), spacePoses.intro);
-  assert.notStrictEqual(spacePoseAtScroll([], 0, "intro"), spacePoses.intro);
+test("the shared scene has a defined destination before scroll markers are measured", () => {
+  assert.deepEqual(spacePoseAtScroll([], 0, "orbit"), spacePoses.orbit);
+  assert.notStrictEqual(spacePoseAtScroll([], 0, "orbit"), spacePoses.orbit);
 });

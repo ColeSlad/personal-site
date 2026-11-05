@@ -12,7 +12,7 @@ export const spacePoses = {
   approach: { azimuth: -0.2, elevation: -0.12, distance: 1.62, focusX: 0.36, focusY: 0.44, roll: 0.08 },
   work: { azimuth: 0.35, elevation: 0.22, distance: 2.35, focusX: 0.22, focusY: 0.46, roll: 0.04 },
   intro: { azimuth: -0.58, elevation: 0.18, distance: 1.9, focusX: 0.8, focusY: 0.47, roll: -0.08 },
-  experience: { azimuth: 0.15, elevation: -0.2, distance: 1.75, focusX: 0.19, focusY: 0.42, roll: 0.09 },
+  education: { azimuth: 0.15, elevation: -0.2, distance: 1.75, focusX: 0.19, focusY: 0.42, roll: 0.09 },
   life: { azimuth: -0.18, elevation: 0.12, distance: 2.3, focusX: 0.7, focusY: 0.46, roll: -0.05 },
   contact: { azimuth: 0.45, elevation: 0.26, distance: 2.65, focusX: 0.45, focusY: 0.48, roll: 0 },
 } satisfies Record<string, SpacePose>;

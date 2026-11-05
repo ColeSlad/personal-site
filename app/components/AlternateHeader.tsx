@@ -1,11 +1,13 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import Link from "next/link";
+import { activeAlternateSection } from "../lib/alternate-navigation";
 
-function getOrbitSection() {
-  const work = document.getElementById("work");
-  return work && work.getBoundingClientRect().top <= window.innerHeight * 0.4 ? "work" : "orbit";
+function getCurrentSection() {
+  return activeAlternateSection({
+    work: document.getElementById("work")?.getBoundingClientRect().top,
+    about: document.getElementById("about")?.getBoundingClientRect().top,
+  }, window.innerHeight);
 }
 
 function subscribeToSection(onChange: () => void) {
@@ -30,22 +32,21 @@ function subscribeToSection(onChange: () => void) {
   };
 }
 
-export default function AlternateHeader({ current }: { current: "orbit" | "about" }) {
-  const orbitSection = useSyncExternalStore(subscribeToSection, getOrbitSection, () => "orbit");
-  const active = current === "about" ? "about" : orbitSection;
+export default function AlternateHeader() {
+  const active = useSyncExternalStore(subscribeToSection, getCurrentSection, () => "orbit");
 
   return (
     <header className="alternate-header">
       <nav className="alternate-navigation" aria-label="Space navigation">
-        <Link href="/alternate" aria-current={active === "orbit" ? "page" : undefined}>
+        <a href="#orbit" aria-current={active === "orbit" ? "location" : undefined}>
           <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <circle cx="10" cy="10" r="3" stroke="currentColor" />
             <ellipse cx="10" cy="10" rx="9" ry="4" stroke="currentColor" transform="rotate(-35 10 10)" />
           </svg>
           Orbit
-        </Link>
-        <Link href="/alternate#work" aria-current={active === "work" ? "location" : undefined}>Work</Link>
-        <Link href="/alternate/about" aria-current={active === "about" ? "page" : undefined}>About</Link>
+        </a>
+        <a href="#work" aria-current={active === "work" ? "location" : undefined}>Work</a>
+        <a href="#about" aria-current={active === "about" ? "location" : undefined}>About</a>
       </nav>
     </header>
   );

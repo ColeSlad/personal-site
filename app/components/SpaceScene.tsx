@@ -13,7 +13,7 @@ function subscribeToMotion(callback: () => void) {
   return () => query.removeEventListener("change", callback);
 }
 
-export default function SpaceScene({ active, reading, onPrepared }: { active: boolean; reading: boolean; onPrepared: () => void }) {
+export default function SpaceScene({ active, onPrepared }: { active: boolean; onPrepared: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const interactionRef = useRef<HTMLDivElement>(null);
   const camera = useRef({ azimuth: 0, elevation: 0, zoom: 1 });
@@ -28,13 +28,13 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
     () => false,
   );
   const moving = active && !paused && !reducedMotion;
-  const playback = useRef({ moving, reducedMotion, active, reading });
+  const playback = useRef({ moving, reducedMotion, active });
   const updatePlayback = useRef<(() => void) | null>(null);
 
   useLayoutEffect(() => {
-    playback.current = { moving, reducedMotion, active, reading };
+    playback.current = { moving, reducedMotion, active };
     updatePlayback.current?.();
-  }, [active, moving, reducedMotion, reading]);
+  }, [active, moving, reducedMotion]);
 
   useLayoutEffect(() => {
     const canvas = canvasRef.current;
@@ -211,7 +211,6 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
       const manual = { azimuth: 0, elevation: 0, zoom: 1 };
       const parallax = { x: 0, y: 0, targetX: 0, targetY: 0 };
       let lastCameraFrame = 0;
-      let wasReading = playback.current.reading;
       const journeySampler = createSpaceJourneySampler(measureJourney, requestAnimationFrame, cancelAnimationFrame);
 
       function journeySettling() {
@@ -233,11 +232,9 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
       }
 
       function measureJourney() {
-        // A route commit and its scroll restoration can happen in separate
-        // lifecycle callbacks. Never combine one page's markers with the
-        // other's scroll offset, or steer through intermediate route positions.
-        const route = playback.current.reading ? ".alternate-about-page" : ".alternate-orbit-page";
-        const root = document.querySelector<HTMLElement>(route);
+        // Read every chapter and the scroll position together, so anchor
+        // navigation follows the same continuous camera path as native scroll.
+        const root = document.querySelector<HTMLElement>(".alternate-orbit-page");
         if (!root || !root.getClientRects().length) return;
         const scrollY = window.scrollY;
         const markers = Array.from(root.querySelectorAll<HTMLElement>("[data-space-chapter]"))
@@ -246,10 +243,9 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
             chapter: element.dataset.spaceChapter as SpaceChapter,
             top: Math.max(0, element.getBoundingClientRect().top + scrollY - window.innerHeight * 0.18),
           }));
-        const fallback = playback.current.reading ? "intro" : "orbit";
         destination = playback.current.reducedMotion
-          ? { ...spacePoses[fallback] }
-          : spacePoseAtScroll(markers, scrollY, fallback);
+          ? { ...spacePoses.orbit }
+          : spacePoseAtScroll(markers, scrollY, "orbit");
         invalidate();
       }
 
@@ -447,10 +443,6 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
       updatePlayback.current = () => {
         cancelAnimationFrame(frame);
         frame = 0;
-        if (wasReading !== playback.current.reading) {
-          camera.current = { azimuth: 0, elevation: 0, zoom: 1 };
-          wasReading = playback.current.reading;
-        }
         if (playback.current.active && !wasActive) {
           elapsed.current = playback.current.moving ? 0 : 8;
           camera.current = { azimuth: 0, elevation: 0, zoom: 1 };
@@ -506,7 +498,7 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
   }, [rendererRevision, onPrepared]);
 
   return (
-    <div className="space-runtime" data-active={active} data-reading={reading} data-space-ready="false" aria-hidden={!active || reading} inert={!active || reading}>
+    <div className="space-runtime" data-active={active} data-space-ready="false" aria-hidden={!active} inert={!active}>
       <div className="space-scene" aria-hidden="true">
         <div className="space-still">
           <div className="space-still-jupiter" />

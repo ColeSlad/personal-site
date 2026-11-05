@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import ThemeSwitch from "../components/ThemeSwitch";
 import AlternateHeader from "../components/AlternateHeader";
+import AlternateAboutSection from "../components/AlternateAboutSection";
 import SpaceCredits from "../components/SpaceCredits";
-import Link from "next/link";
 import { workExperience } from "../lib/experience";
 
 export const metadata: Metadata = {
@@ -14,22 +14,14 @@ export default function Alternate() {
   return (
     <main className="alternate-page alternate-orbit-page">
       <ThemeSwitch returnToMain />
-      <AlternateHeader current="orbit" />
+      <AlternateHeader />
 
       <div className="orbital-journey">
-        <section className="orbit-chapter orbit-hero" data-space-chapter="orbit" aria-labelledby="orbit-title">
+        <section id="orbit" className="orbit-chapter orbit-hero" data-space-chapter="orbit" aria-labelledby="orbit-title">
           <div className="orbit-copy">
             <h1 id="orbit-title">Cole<br />Sladowsky<span>.</span></h1>
             <p>Efficiency. Low-level systems.<br />Making things run well.</p>
-            <a className="orbit-scroll-cue" href="#approach">Scroll to explore <span aria-hidden="true">↓</span></a>
-          </div>
-        </section>
-
-        <section id="approach" className="orbit-chapter orbit-approach" data-space-chapter="approach" aria-labelledby="approach-title">
-          <div className="orbit-copy">
-            <h2 id="approach-title">Closer to<br />the details.</h2>
-            <p>I’m a computer science student at Maryland. I like understanding what happens underneath—and finding ways to make it faster.</p>
-            <Link className="orbit-text-link" href="/alternate/about">About me <span aria-hidden="true">↗</span></Link>
+            <a className="orbit-scroll-cue" href="#work">Scroll to explore <span aria-hidden="true">↓</span></a>
           </div>
         </section>
 
@@ -66,9 +58,10 @@ export default function Alternate() {
                 </a>
               </div>
             </section>
-            <Link className="orbit-text-link" href="/alternate/about">More about me <span aria-hidden="true">↗</span></Link>
+            <a className="orbit-text-link" href="#about">More about me <span aria-hidden="true">↓</span></a>
           </div>
         </section>
+        <AlternateAboutSection />
       </div>
 
       <footer className="alternate-footer">

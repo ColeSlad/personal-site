@@ -518,15 +518,6 @@ html[data-theme-swap] .theme-switch::before,
   visibility: hidden;
 }
 
-.space-runtime[data-reading="true"] {
-  opacity: 0.38;
-}
-
-.space-runtime[data-reading="true"] .space-controls,
-.space-runtime[data-reading="true"] .space-interaction {
-  display: none;
-}
-
 .alternate-page .theme-switch,
 .alternate-header,
 .alternate-footer,
@@ -854,8 +845,8 @@ html[data-theme-swap] .theme-switch::before,
   }
 }
 
-/* The about page keeps the orbit in the background and lets the content float. */
-.alternate-page.alternate-about-page {
+/* About floats over the same continuous orbit as the rest of the page. */
+.alternate-about-content {
   --about-text: #f4f4f4;
   --about-secondary: #c4c4c4;
   --about-muted: #a8a8a8;
@@ -865,14 +856,9 @@ html[data-theme-swap] .theme-switch::before,
   font-size: 17px;
 }
 
-.alternate-about-page::before {
-  background: linear-gradient(180deg, #00000026, #0000009e 75%);
-}
-
 .orbital-about {
   width: min(1120px, 100%);
   margin: 68px auto 0;
-  animation: aboutArrive 450ms ease-out both;
 }
 
 .about-panels {
@@ -893,7 +879,7 @@ html[data-theme-swap] .theme-switch::before,
   box-shadow: 0 30px 80px -24px #0009, inset 0 1px 0 #ffffff29, inset 0 -1px 0 #ffffff08;
 }
 
-.about-introduction h1 {
+.about-introduction .about-title {
   margin-bottom: 24px;
   font-size: clamp(32px, 3.3vw, 48px);
   font-weight: 700;
@@ -901,7 +887,7 @@ html[data-theme-swap] .theme-switch::before,
   letter-spacing: -0.05em;
 }
 
-.about-introduction h1 span {
+.about-title span {
   color: #e8ce88;
 }
 
@@ -916,7 +902,7 @@ html[data-theme-swap] .theme-switch::before,
   font-weight: 700;
 }
 
-.about-panel h2 {
+.about-panel h3 {
   font-size: 17px;
   font-weight: 700;
   line-height: 1.5;
@@ -972,44 +958,12 @@ html[data-theme-swap] .theme-switch::before,
   margin-top: 42px;
 }
 
-.about-experience-list {
-  margin-top: 22px;
-  list-style: none;
-}
-
-.about-experience-list li {
-  padding: 0 0 19px;
-  margin-bottom: 19px;
-  border-bottom: 1px solid #ffffff12;
-}
-
-.about-experience-list li:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: 0;
-}
-
-.about-experience-heading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 6px 12px;
-}
-
-.about-panel h3 {
+.about-panel h4 {
   font-size: 15px;
   font-weight: 700;
   line-height: 1.6;
 }
 
-.about-experience-heading > span {
-  color: var(--about-muted);
-  font-size: 10px;
-  line-height: 1.5;
-}
-
-.about-experience-list p,
 .about-education p {
   margin-top: 5px;
   color: var(--about-secondary);
@@ -1017,13 +971,7 @@ html[data-theme-swap] .theme-switch::before,
   line-height: 1.7;
 }
 
-.about-education {
-  padding-top: 28px;
-  margin-top: 30px;
-  border-top: 1px solid #ffffff24;
-}
-
-.about-education h3 {
+.about-education h4 {
   margin-top: 18px;
 }
 
@@ -1038,7 +986,7 @@ html[data-theme-swap] .theme-switch::before,
   margin-top: 86px;
 }
 
-.about-photo-heading h2 {
+.about-photo-heading h3 {
   font-size: clamp(26px, 3vw, 40px);
   font-weight: 600;
   letter-spacing: -0.035em;
@@ -1129,17 +1077,6 @@ html[data-theme-swap] .theme-switch::before,
   outline-offset: 5px;
 }
 
-.alternate-footer.about-attribution {
-  width: min(1120px, 100%);
-  max-width: 100%;
-  margin: 12px auto 0;
-}
-
-@keyframes aboutArrive {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 @keyframes photoDrift {
   from { transform: translateY(var(--photo-lift)) rotate(var(--photo-tilt)); }
   to { transform: translateY(calc(var(--photo-lift) - 7px)) rotate(calc(var(--photo-tilt) + 0.6deg)); }
@@ -1218,7 +1155,6 @@ html[data-theme-swap] .theme-switch::before,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .orbital-about,
   .about-photo {
     animation: none;
   }
