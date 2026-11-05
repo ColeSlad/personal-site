@@ -12,6 +12,7 @@ export default function AlternateHeader({ current }: { current: "orbit" | "about
           </svg>
           Orbit
         </Link>
+        <Link href="/alternate#work">Work</Link>
         <Link href="/alternate/about" aria-current={current === "about" ? "page" : undefined}>About</Link>
       </nav>
     </header>

@@ -4,6 +4,7 @@ import { useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalSto
 import { spaceFragmentShader, spaceVertexShader } from "../lib/space-shaders";
 import { createSpaceBloom } from "../lib/space-bloom";
 import { loadSiteImage } from "../lib/site-assets";
+import { mixSpacePose, spacePoseAtScroll, spacePoses, type SpaceChapter, type SpaceMarker, type SpacePose } from "../lib/space-journey";
 
 const motionQuery = "(prefers-reduced-motion: reduce)";
 function subscribeToMotion(callback: () => void) {
@@ -27,13 +28,13 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
     () => false,
   );
   const moving = active && !paused && !reducedMotion;
-  const playback = useRef({ moving, reducedMotion, active });
+  const playback = useRef({ moving, reducedMotion, active, reading });
   const updatePlayback = useRef<(() => void) | null>(null);
 
   useLayoutEffect(() => {
-    playback.current = { moving, reducedMotion, active };
+    playback.current = { moving, reducedMotion, active, reading };
     updatePlayback.current?.();
-  }, [active, moving, reducedMotion]);
+  }, [active, moving, reducedMotion, reading]);
 
   useLayoutEffect(() => {
     const canvas = canvasRef.current;
@@ -111,6 +112,7 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
       const time = gl.getUniformLocation(program, "uTime");
       const cameraUniform = gl.getUniformLocation(program, "uCamera");
       const focus = gl.getUniformLocation(program, "uFocus");
+      const journeyUniform = gl.getUniformLocation(program, "uJourney");
       const gravityUniform = gl.getUniformLocation(program, "uGravity");
       const hardwareTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE) as number;
       const maxTexture = Math.min(hardwareTextureSize, canvas.clientWidth < 700 ? 4096 : 8192);
@@ -204,6 +206,57 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
       const gravity = { x: 0, y: 0, strength: 0, target: 0 };
       const gravitySettling = () => Math.abs(gravity.strength - gravity.target) > 0.001;
       const pointers = new Map<number, { x: number; y: number }>();
+      let markers: SpaceMarker[] = [];
+      let destination: SpacePose = { ...spacePoses.orbit };
+      const pose: SpacePose = { ...spacePoses.orbit };
+      const manual = { azimuth: 0, elevation: 0, zoom: 1 };
+      const parallax = { x: 0, y: 0, targetX: 0, targetY: 0 };
+      let lastCameraFrame = 0;
+      let measureFrame = 0;
+      let wasReading = playback.current.reading;
+
+      function journeySettling() {
+        return Object.keys(pose).some((key) => Math.abs(pose[key as keyof SpacePose] - destination[key as keyof SpacePose]) > 0.0005)
+          || Math.abs(manual.azimuth - camera.current.azimuth) + Math.abs(manual.elevation - camera.current.elevation)
+            + Math.abs(manual.zoom - camera.current.zoom) + Math.abs(parallax.x - parallax.targetX) + Math.abs(parallax.y - parallax.targetY) > 0.0005;
+      }
+
+      function stepCamera(now: number) {
+        const dt = lastCameraFrame ? Math.min((now - lastCameraFrame) / 1000, 0.05) : 1 / 60;
+        lastCameraFrame = now;
+        const ease = playback.current.reducedMotion ? 1 : 1 - Math.exp(-4.2 * dt);
+        Object.assign(pose, mixSpacePose(pose, destination, ease));
+        manual.azimuth += (camera.current.azimuth - manual.azimuth) * ease;
+        manual.elevation += (camera.current.elevation - manual.elevation) * ease;
+        manual.zoom += (camera.current.zoom - manual.zoom) * ease;
+        parallax.x += (parallax.targetX - parallax.x) * ease;
+        parallax.y += (parallax.targetY - parallax.y) * ease;
+      }
+
+      function updateDestination() {
+        const fallback = playback.current.reading ? "intro" : "orbit";
+        destination = playback.current.reducedMotion
+          ? { ...spacePoses[fallback] }
+          : spacePoseAtScroll(markers, window.scrollY, fallback);
+        invalidate();
+      }
+
+      function measureJourney() {
+        markers = Array.from(document.querySelectorAll<HTMLElement>("[data-space-chapter]"))
+          .filter((element) => element.dataset.spaceChapter! in spacePoses)
+          .map((element) => ({
+            chapter: element.dataset.spaceChapter as SpaceChapter,
+            top: Math.max(0, element.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.18),
+          }));
+        updateDestination();
+      }
+
+      function lookAround(event: PointerEvent) {
+        if (!playback.current.active || playback.current.reducedMotion || event.pointerType !== "mouse") return;
+        parallax.targetX = (event.clientX / window.innerWidth - 0.5) * 0.045;
+        parallax.targetY = (event.clientY / window.innerHeight - 0.5) * 0.025;
+        invalidate();
+      }
 
       function renderScene() {
         if (!gl || !canvas) return;
@@ -217,8 +270,10 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
         gl.bindTexture(gl.TEXTURE_2D, textures[1] ?? null);
         gl.uniform2f(resolution, canvas.width, canvas.height);
         gl.uniform1f(time, playback.current.reducedMotion ? 8 : elapsed.current);
-        gl.uniform3f(cameraUniform, camera.current.azimuth, camera.current.elevation, camera.current.zoom);
-        gl.uniform2f(focus, 0.5, 0.5);
+        gl.uniform3f(cameraUniform, manual.azimuth + parallax.x, manual.elevation + parallax.y, manual.zoom);
+        gl.uniform4f(journeyUniform, pose.azimuth, pose.elevation, pose.distance, pose.roll);
+        const focusX = canvas.clientWidth < 700 ? 0.5 + (pose.focusX - 0.5) * 0.65 : pose.focusX;
+        gl.uniform2f(focus, focusX, pose.focusY);
         gravity.strength += (gravity.target - gravity.strength) * 0.18;
         gl.uniform4f(gravityUniform, gravity.x, gravity.y, playback.current.reducedMotion ? 0 : gravity.strength, Math.min(260, canvas.clientWidth * 0.28) / Math.max(canvas.clientHeight, 1));
         gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -240,13 +295,14 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
           }
           lastFrame = now;
           needsDraw = false;
+          stepCamera(now);
           draw();
         }
-        if (playback.current.active && (playback.current.moving || needsDraw || gravitySettling()) && !document.hidden && !gl?.isContextLost()) frame = requestAnimationFrame(render);
+        if (playback.current.active && (playback.current.moving || needsDraw || gravitySettling() || journeySettling()) && !document.hidden && !gl?.isContextLost()) frame = requestAnimationFrame(render);
       }
 
       function start() {
-        if (playback.current.active && texturesReady && !arriving && (playback.current.moving || needsDraw || gravitySettling()) && !document.hidden && !frame && !gl?.isContextLost()) {
+        if (playback.current.active && texturesReady && !arriving && (playback.current.moving || needsDraw || gravitySettling() || journeySettling()) && !document.hidden && !frame && !gl?.isContextLost()) {
           lastFrame = 0;
           frame = requestAnimationFrame(render);
         }
@@ -273,7 +329,7 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
       }
 
       function orbitBy(x: number, y: number) {
-        camera.current.azimuth = (camera.current.azimuth - x) % (Math.PI * 2);
+        camera.current.azimuth -= x;
         camera.current.elevation = Math.max(-1.2, Math.min(1.2, camera.current.elevation + y));
         invalidate();
       }
@@ -348,6 +404,8 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
         }
       };
       const wheel = (event: WheelEvent) => {
+        // Ordinary scrolling moves through the scene; a trackpad pinch still zooms.
+        if (!event.ctrlKey && !event.metaKey) return;
         event.preventDefault();
         const pixels = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? interaction.clientHeight : 1);
         zoomBy(Math.exp(Math.max(-120, Math.min(120, pixels)) * 0.003));
@@ -368,8 +426,14 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
       };
       const observer = new ResizeObserver(resize);
       observer.observe(canvas);
+      const contentObserver = new ResizeObserver(measureJourney);
+      const shell = document.querySelector(".site-shell");
+      if (shell) contentObserver.observe(shell);
       window.addEventListener("theme-arrived", arrive);
       window.addEventListener("gravity-warp", warp);
+      window.addEventListener("scroll", updateDestination, { passive: true });
+      window.addEventListener("resize", measureJourney);
+      document.addEventListener("pointermove", lookAround, { passive: true });
       document.addEventListener("visibilitychange", visibility);
       interaction.addEventListener("pointerdown", down);
       interaction.addEventListener("pointermove", move);
@@ -381,18 +445,30 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
       updatePlayback.current = () => {
         cancelAnimationFrame(frame);
         frame = 0;
+        if (wasReading !== playback.current.reading) {
+          camera.current = { azimuth: 0, elevation: 0, zoom: 1 };
+          wasReading = playback.current.reading;
+        }
         if (playback.current.active && !wasActive) {
           elapsed.current = playback.current.moving ? 0 : 8;
           camera.current = { azimuth: 0, elevation: 0, zoom: 1 };
           arriving = document.documentElement.dataset.themeSwap === "alternate";
         }
         wasActive = playback.current.active;
+        parallax.targetX = 0;
+        parallax.targetY = 0;
+        if (playback.current.reducedMotion) { parallax.x = 0; parallax.y = 0; }
+        cancelAnimationFrame(measureFrame);
+        measureFrame = requestAnimationFrame(measureJourney);
+        measureJourney();
+        if (playback.current.reducedMotion) stepCamera(performance.now());
         if (playback.current.active) draw();
         start();
       };
       loadTexture("/space/io-8k.webp", 0, "uSurfaceMap", "surface");
       loadTexture("/space/jupiter-4k.webp", 1, "uJupiterMap", "jupiter");
       resize();
+      measureJourney();
       start();
 
       return () => {
@@ -400,9 +476,14 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
         updatePlayback.current = null;
         cameraAction.current = null;
         cancelAnimationFrame(frame);
+        cancelAnimationFrame(measureFrame);
         observer.disconnect();
+        contentObserver.disconnect();
         window.removeEventListener("theme-arrived", arrive);
         window.removeEventListener("gravity-warp", warp);
+        window.removeEventListener("scroll", updateDestination);
+        window.removeEventListener("resize", measureJourney);
+        document.removeEventListener("pointermove", lookAround);
         document.removeEventListener("visibilitychange", visibility);
         for (const pointerId of pointers.keys()) {
           if (interaction.hasPointerCapture(pointerId)) interaction.releasePointerCapture(pointerId);
@@ -434,7 +515,7 @@ export default function SpaceScene({ active, reading, onPrepared }: { active: bo
         <canvas ref={canvasRef} className="space-canvas" />
       </div>
       <div ref={interactionRef} className="space-interaction" tabIndex={0} role="region" aria-label="Explore Io" aria-describedby={instructionsId} />
-      <p id={instructionsId} className="sr-only">Drag to orbit Io. Scroll or pinch to zoom. With the scene focused, use arrow keys to orbit, plus and minus to zoom, and Home to reset the view.</p>
+      <p id={instructionsId} className="sr-only">Scroll to travel through the site. Drag to orbit Io. Pinch or hold Control while scrolling to zoom. With the scene focused, use arrow keys to orbit, plus and minus to zoom, and Home to reset the view.</p>
       <div className="space-controls">
         {!reducedMotion && (
           <button type="button" aria-label={paused ? "Resume orbit" : "Pause orbit"} onClick={() => setPaused((value) => !value)}>

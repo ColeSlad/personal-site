@@ -1,0 +1,322 @@
+html:has(.alternate-page) {
+  scroll-behavior: smooth;
+}
+
+.alternate-page {
+  overflow: clip;
+}
+
+.alternate-page::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, #0009, #0003 45%, transparent 75%);
+}
+
+.alternate-header {
+  position: sticky;
+  top: 24px;
+  z-index: 3;
+}
+
+.space-runtime[data-reading="true"] {
+  opacity: 1;
+}
+
+.space-interaction {
+  touch-action: pan-y;
+}
+
+.orbital-journey {
+  position: relative;
+  z-index: 1;
+}
+
+.orbit-chapter {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding: 14vh 0;
+  scroll-margin-top: 100px;
+}
+
+.orbit-hero {
+  min-height: calc(100svh - 100px);
+  padding-top: 8vh;
+}
+
+.orbit-copy {
+  width: 100%;
+  max-width: 900px;
+  text-shadow: 0 3px 35px #0009;
+}
+
+.orbit-copy h1 {
+  font-size: clamp(72px, 10vw, 172px);
+  font-weight: 700;
+  line-height: 0.94;
+  letter-spacing: -0.075em;
+}
+
+.orbit-copy h1 > span {
+  color: #e8ce88;
+}
+
+.orbit-copy > p {
+  max-width: 420px;
+  margin-top: 32px;
+  color: #e0ded7;
+  font-size: clamp(17px, 1.6vw, 23px);
+  line-height: 1.7;
+  font-weight: 600;
+}
+
+.orbit-copy h2 {
+  font-size: clamp(52px, 7vw, 112px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.065em;
+}
+
+.orbit-copy a {
+  pointer-events: auto;
+}
+
+.orbit-scroll-cue,
+.orbit-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 44px;
+  margin-top: 34px;
+  color: #f8e7c2;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.orbit-scroll-cue > span {
+  font-size: 20px;
+}
+
+.orbit-copy a:hover {
+  color: #fff;
+}
+
+.orbit-copy a:focus-visible {
+  outline: 2px solid #e8ce88;
+  outline-offset: 7px;
+  border-radius: 4px;
+}
+
+.orbit-approach .orbit-copy,
+.orbit-work .orbit-copy {
+  position: relative;
+  isolation: isolate;
+  max-width: 600px;
+  margin-left: auto;
+}
+
+.orbit-approach .orbit-copy::before,
+.orbit-work .orbit-copy::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -100px;
+  pointer-events: none;
+  background: radial-gradient(ellipse, #000b 15%, #0008 50%, transparent 74%);
+}
+
+.orbit-projects {
+  display: grid;
+  gap: 0;
+  margin-top: 38px;
+}
+
+.orbit-projects a {
+  display: block;
+  padding: 26px 0;
+  border-top: 1px solid #ffffff30;
+  color: #fff4df;
+  text-decoration: none;
+}
+
+.orbit-project-tech {
+  color: #d2bd8d;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.orbit-projects h3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 9px;
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1.3;
+  letter-spacing: -0.04em;
+}
+
+.orbit-projects h3 > span {
+  font-size: 22px;
+}
+
+.orbit-projects p {
+  margin-top: 10px;
+  color: #d6d0c5;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.alternate-orbit-page > .alternate-footer {
+  position: fixed;
+  left: calc(clamp(56px, 7vw, 104px) + clamp(24px, 3vw, 48px));
+  bottom: 14px;
+  max-width: calc(100% - 240px);
+}
+
+.alternate-orbit-page .space-credit {
+  font-size: 10px;
+  text-shadow: 0 1px 8px #000;
+}
+
+.alternate-about-page::before {
+  background: linear-gradient(90deg, #0009, #0003 55%, #0002);
+}
+
+.alternate-about-page .orbital-about {
+  margin-top: 12vh;
+}
+
+.alternate-about-page .about-panels {
+  display: block;
+}
+
+.alternate-about-page .about-panel {
+  width: min(620px, 100%);
+  background: linear-gradient(135deg, #ffffff06, transparent 60%), #03030373;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.alternate-about-page .about-introduction h1 {
+  font-size: clamp(42px, 5.5vw, 76px);
+  letter-spacing: -0.065em;
+}
+
+.alternate-about-page .about-background {
+  margin: 24vh 0 0 auto;
+}
+
+.alternate-about-page .about-photo-section {
+  margin-top: 22vh;
+}
+
+.space-still-planet {
+  width: max(115svh, 80vw);
+  left: 73%;
+}
+
+@media (max-width: 1000px) {
+  .orbit-copy h1 {
+    font-size: clamp(64px, 10vw, 100px);
+  }
+
+  .alternate-about-page .orbital-about {
+    max-width: 100%;
+  }
+
+  .alternate-about-page .about-background {
+    margin-top: 16vh;
+  }
+}
+
+@media (max-width: 699px) {
+  .alternate-page {
+    min-height: 100svh;
+  }
+
+  .alternate-header {
+    top: 16px;
+    gap: 12px;
+  }
+
+  .alternate-navigation a {
+    min-width: 58px;
+    padding-inline: 10px;
+  }
+
+  .alternate-page::before {
+    background: linear-gradient(90deg, #0006, transparent), linear-gradient(0deg, #0009, transparent 60%);
+  }
+
+  .orbit-chapter {
+    min-height: 95svh;
+    padding-block: 14vh;
+  }
+
+  .orbit-hero {
+    min-height: calc(100svh - 150px);
+    padding-block: 8vh;
+  }
+
+  .orbit-copy h1 {
+    font-size: clamp(38px, 11vw, 72px);
+    letter-spacing: -0.07em;
+  }
+
+  .orbit-copy h2 {
+    font-size: clamp(36px, 10vw, 60px);
+  }
+
+  .orbit-copy > p {
+    margin-top: 24px;
+    font-size: 16px;
+  }
+
+  .orbit-projects h3 {
+    font-size: clamp(22px, 6vw, 32px);
+  }
+
+  .orbit-projects p {
+    font-size: 13px;
+  }
+
+  .alternate-orbit-page > .alternate-footer {
+    left: 80px;
+    max-width: calc(100% - 152px);
+    bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .alternate-orbit-page .space-credit {
+    font-size: 8px;
+  }
+
+  .alternate-about-page .orbital-about {
+    margin-top: 7vh;
+  }
+
+  .alternate-about-page .about-introduction h1 {
+    font-size: clamp(34px, 9vw, 56px);
+  }
+
+  .alternate-about-page .about-photo-section {
+    margin-top: 12vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:has(.alternate-page) {
+    scroll-behavior: auto;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .alternate-about-page .about-panel {
+    background: #080808;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

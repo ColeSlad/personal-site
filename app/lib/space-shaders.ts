@@ -8,6 +8,7 @@ export const spaceFragmentShader = `
 precision highp float;
 uniform vec2 uResolution;
 uniform vec3 uCamera;
+uniform vec4 uJourney;
 uniform vec2 uFocus;
 uniform vec4 uGravity;
 uniform float uTime;
@@ -80,14 +81,13 @@ void main() {
     uv += bend * pow(influence, 1.3) * uGravity.z / vec2(aspect, 1.0);
   }
   vec2 screen = (uv - uFocus) * vec2(aspect, 1.0);
+  float roll = uJourney.w;
+  screen = mat2(cos(roll), -sin(roll), sin(roll), cos(roll)) * screen;
   float mobile = 1.0 - step(0.86, aspect);
-  float arrival = smoothstep(0.0, 7.0, uTime);
-  float angle = -0.95 + 1.48 * arrival + uTime * 0.010 + uCamera.x;
-  // Open in a close-up, then drift back into the established orbital framing.
-  float distanceToIo = mix(3.0, 3.8, arrival) * mix(1.0, 1.80, mobile);
-  float cameraHeight = mix(0.55, 0.65, arrival) + sin(uTime * 0.045) * 0.12;
-  float elevation = clamp(atan(cameraHeight, distanceToIo) + uCamera.y, -1.35, 1.35);
-  float radius = length(vec2(distanceToIo, cameraHeight)) * uCamera.z;
+  float angle = uJourney.x + uTime * 0.004 + uCamera.x;
+  float elevation = clamp(uJourney.y + sin(uTime * 0.035) * 0.025 + uCamera.y, -1.35, 1.35);
+  // Stay close to the surface while scroll and navigation choose the flight path.
+  float radius = max(1.32, uJourney.z * uCamera.z) * mix(1.0, 1.25, mobile);
   vec3 camera = vec3(sin(angle) * cos(elevation), sin(elevation), cos(angle) * cos(elevation)) * radius;
   vec3 forward = normalize(-camera);
   vec3 right = normalize(cross(forward, vec3(0.0, 1.0, 0.0)));

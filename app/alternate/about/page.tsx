@@ -30,7 +30,7 @@ export default function AlternateAbout() {
 
       <div className="orbital-about">
         <div className="about-panels">
-          <section className="about-panel about-introduction" aria-labelledby="about-title">
+          <section className="about-panel about-introduction" data-space-chapter="intro" aria-labelledby="about-title">
             <h1 id="about-title">Hi, I’m Cole<span>.</span></h1>
             <p>I’m a computer science student and Presidential Scholar at the University of Maryland.</p>
             <p>I’m obsessed with <strong>efficiency, low-level systems, and making things run well.</strong> I’m always building and researching projects to explore new ideas.</p>
@@ -50,7 +50,7 @@ export default function AlternateAbout() {
             </a>
           </section>
 
-          <div className="about-panel about-background">
+          <div className="about-panel about-background" data-space-chapter="experience">
             <section aria-labelledby="experience-title">
               <h2 id="experience-title">Selected experience</h2>
               <ul className="about-experience-list">
@@ -75,7 +75,7 @@ export default function AlternateAbout() {
           </div>
         </div>
 
-        <section className="about-photo-section" aria-labelledby="life-title">
+        <section className="about-photo-section" data-space-chapter="life" aria-labelledby="life-title">
           <div className="about-photo-heading">
             <h2 id="life-title">A few moments from life.</h2>
           </div>
@@ -88,7 +88,7 @@ export default function AlternateAbout() {
           </div>
         </section>
 
-        <footer className="about-signoff">
+        <footer className="about-signoff" data-space-chapter="contact">
           <a href="mailto:coleslad31@gmail.com">coleslad31@gmail.com <span aria-hidden="true">↗</span></a>
           <div>
             <a href="https://github.com/ColeSlad" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
