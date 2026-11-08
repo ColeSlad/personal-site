@@ -4,6 +4,7 @@ import AlternateHeader from "../components/AlternateHeader";
 import AlternateAboutSection from "../components/AlternateAboutSection";
 import SpaceCredits from "../components/SpaceCredits";
 import { workExperience } from "../lib/experience";
+import { projects } from "../lib/projects";
 
 export const metadata: Metadata = {
   title: "Another side — Cole Sladowsky",
@@ -46,16 +47,13 @@ export default function Alternate() {
             <section className="orbit-work-group" aria-labelledby="orbit-projects-title">
               <h3 id="orbit-projects-title">Selected projects</h3>
               <div className="orbit-projects">
-                <a href="https://flowstate-web-ten.vercel.app/" target="_blank" rel="noopener noreferrer">
-                  <span className="orbit-project-tech">C++ · CUDA · AVX2</span>
-                  <h4>Flowstate <span aria-hidden="true">↗</span></h4>
-                  <p>Vector search across CPU and GPU.</p>
-                </a>
-                <a href="https://github.com/ColeSlad/inference-lab" target="_blank" rel="noopener noreferrer">
-                  <span className="orbit-project-tech">Python · PyTorch · vLLM</span>
-                  <h4>inference-lab <span aria-hidden="true">↗</span></h4>
-                  <p>Benchmarking how language models run.</p>
-                </a>
+                {projects.map((project) => (
+                  <a key={project.name} href={project.href} target="_blank" rel="noopener noreferrer">
+                    <span className="orbit-project-tech">{project.tech}</span>
+                    <h4>{project.name} <span aria-hidden="true">↗</span></h4>
+                    <p>{project.description}</p>
+                  </a>
+                ))}
               </div>
             </section>
             <a className="orbit-text-link" href="#about">More about me <span aria-hidden="true">↓</span></a>

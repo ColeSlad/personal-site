@@ -183,12 +183,14 @@ html:has(.alternate-page) {
 
 .orbit-projects {
   display: grid;
-  gap: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 24px;
   margin-top: 20px;
 }
 
 .orbit-projects a {
   display: block;
+  min-width: 0;
   padding: 26px 0;
   border-top: 1px solid #ffffff30;
   color: #fff4df;
@@ -196,23 +198,28 @@ html:has(.alternate-page) {
 }
 
 .orbit-project-tech {
+  display: block;
+  min-height: 3.2em;
   color: #d2bd8d;
   font-size: 11px;
   font-weight: 600;
+  line-height: 1.6;
 }
 
 .orbit-projects h4 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   margin-top: 9px;
-  font-size: clamp(24px, 3vw, 38px);
+  font-size: clamp(20px, 2vw, 26px);
   line-height: 1.3;
   letter-spacing: -0.04em;
 }
 
 .orbit-projects h4 > span {
-  font-size: 22px;
+  flex-shrink: 0;
+  font-size: 18px;
 }
 
 .orbit-projects p {
@@ -326,7 +333,6 @@ html:has(.alternate-page) {
     font-size: 16px;
   }
 
-  .orbit-projects h4,
   .orbit-experience-heading h4 {
     font-size: clamp(22px, 6vw, 32px);
   }
@@ -357,6 +363,12 @@ html:has(.alternate-page) {
 
   .alternate-about-content .about-photo-section {
     margin-top: 12vh;
+  }
+}
+
+@media (max-width: 599px) {
+  .orbit-projects {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
