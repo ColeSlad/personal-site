@@ -328,7 +328,6 @@ html[data-theme-swap] .theme-switch::before,
 
 .theme-switch:hover,
 .theme-switch:focus-visible {
-  background: var(--switch-highlight);
   color: #fff;
 }
 
@@ -346,6 +345,11 @@ html[data-theme-swap] .theme-switch::before,
   inset: 0 auto 0 0;
   background: #0002;
   color: var(--alternate-ink);
+}
+
+.theme-switch-return:hover,
+.theme-switch-return:focus-visible {
+  background: var(--switch-highlight);
 }
 
 /* Soft light stretches toward the edge as the hover's gravitational pull builds. */

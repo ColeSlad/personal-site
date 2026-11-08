@@ -19,7 +19,18 @@ export default function ThemeSwitch({ returnToMain = false }: { returnToMain?: b
     window.dispatchEvent(new CustomEvent("gravity-warp", { detail: { strength: 0 } }));
   }, []);
 
-  useEffect(() => stopAura, [stopAura]);
+  useEffect(() => {
+    const visibility = () => { if (document.hidden) stopAura(); };
+    window.addEventListener("blur", stopAura);
+    window.addEventListener("pagehide", stopAura);
+    document.addEventListener("visibilitychange", visibility);
+    return () => {
+      window.removeEventListener("blur", stopAura);
+      window.removeEventListener("pagehide", stopAura);
+      document.removeEventListener("visibilitychange", visibility);
+      stopAura();
+    };
+  }, [stopAura]);
 
   function startAura(event: PointerEvent<HTMLAnchorElement>) {
     if (event.pointerType !== "mouse" || !window.matchMedia("(hover: hover) and (pointer: fine)").matches
@@ -83,6 +94,7 @@ export default function ThemeSwitch({ returnToMain = false }: { returnToMain?: b
       onPointerMove={(event) => { pointer.current = { x: event.clientX, y: event.clientY }; }}
       onPointerLeave={stopAura}
       onPointerCancel={stopAura}
+      onBlur={stopAura}
       onClick={stopAura}
     >
       <span className="theme-switch-label">{returnToMain ? "back to main" : "press me"}</span>
