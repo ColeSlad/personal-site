@@ -521,8 +521,7 @@ html[data-theme-swap] .theme-switch::before,
 .alternate-page .theme-switch,
 .alternate-header,
 .alternate-footer,
-.space-interaction,
-.space-controls {
+.space-interaction {
   pointer-events: auto;
 }
 
@@ -618,43 +617,6 @@ html[data-theme-swap] .theme-switch::before,
 .space-runtime[data-space-ready="false"] .space-still-planet,
 .space-runtime[data-space-ready="false"] .space-still-jupiter {
   visibility: hidden;
-}
-
-.space-controls {
-  position: absolute;
-  z-index: 1;
-  right: clamp(24px, 6vw, 96px);
-  bottom: 25px;
-  display: flex;
-  font-size: 10px;
-  color: #a7bad2;
-  font-family: var(--font-alternate), Arial, sans-serif;
-  letter-spacing: 0.06em;
-}
-
-.space-controls button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 1px solid #a7bad238;
-  border-radius: 24px;
-  background: #05091699;
-  color: #d8e2f4;
-  cursor: pointer;
-  font: inherit;
-}
-
-.space-controls button:hover {
-  background: #253047;
-  border-color: #a7bad288;
-}
-
-.space-controls button:focus-visible {
-  outline: 2px solid var(--alternate-gold);
-  outline-offset: 4px;
 }
 
 .alternate-header {
@@ -829,11 +791,6 @@ html[data-theme-swap] .theme-switch::before,
 
   .alternate-description {
     margin-top: 10px;
-  }
-
-  .space-controls {
-    right: 24px;
-    bottom: 110px;
   }
 
   .alternate-footer {

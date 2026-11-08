@@ -20,14 +20,13 @@ export default function SpaceScene({ active, onPrepared }: { active: boolean; on
   const cameraAction = useRef<((action: "in" | "out" | "reset") => void) | null>(null);
   const instructionsId = useId();
   const elapsed = useRef(0);
-  const [paused, setPaused] = useState(false);
   const [rendererRevision, setRendererRevision] = useState(0);
   const reducedMotion = useSyncExternalStore(
     subscribeToMotion,
     () => window.matchMedia(motionQuery).matches,
     () => false,
   );
-  const moving = active && !paused && !reducedMotion;
+  const moving = active && !reducedMotion;
   const playback = useRef({ moving, reducedMotion, active });
   const updatePlayback = useRef<(() => void) | null>(null);
 
@@ -508,17 +507,6 @@ export default function SpaceScene({ active, onPrepared }: { active: boolean; on
       </div>
       <div ref={interactionRef} className="space-interaction" tabIndex={0} role="region" aria-label="Explore Io" aria-describedby={instructionsId} />
       <p id={instructionsId} className="sr-only">Scroll to travel through the site. Drag to orbit Io. Pinch or hold Control while scrolling to zoom. With the scene focused, use arrow keys to orbit, plus and minus to zoom, and Home to reset the view.</p>
-      <div className="space-controls">
-        {!reducedMotion && (
-          <button type="button" aria-label={paused ? "Resume orbit" : "Pause orbit"} onClick={() => setPaused((value) => !value)}>
-            <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-              {paused
-                ? <path d="M5 3.5 12 8l-7 4.5Z" fill="currentColor" />
-                : <path d="M5 3.5v9m6-9v9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />}
-            </svg>
-          </button>
-        )}
-      </div>
     </div>
   );
 }
