@@ -338,13 +338,13 @@ html[data-theme-swap] .theme-switch::before,
 }
 
 .theme-switch-return {
-  --switch-highlight: #6b4d1b;
+  --switch-highlight: #0003;
   --aura-direction: -1;
   --aura-violet: #b18af1;
   --aura-rose: #ef8c9e;
   --aura-warm: #f4c68d;
   inset: 0 auto 0 0;
-  background: var(--alternate-surface);
+  background: #0002;
   color: var(--alternate-ink);
 }
 
@@ -456,6 +456,10 @@ html[data-theme-swap] .theme-switch::before,
   cursor: none;
   background: #080808;
   color: #fff4df;
+}
+
+.theme-switch-return[data-aura-active] {
+  background: #0002;
 }
 
 .theme-switch[data-aura-active]::before {
