@@ -566,9 +566,8 @@ html[data-theme-swap] .theme-switch::before,
   cursor: grabbing;
 }
 
-.space-interaction:focus-visible {
-  outline: 1px solid #e8bc5880;
-  outline-offset: -8px;
+.space-interaction:focus {
+  outline: none;
 }
 
 .alternate-header,
