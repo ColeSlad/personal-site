@@ -20,15 +20,15 @@ function assertPose(actual, expected) {
   for (const key of Object.keys(expected)) assert.ok(Math.abs(actual[key] - expected[key]) < 1e-10, key);
 }
 
-test("Work ↔ About anchor navigation samples the latest scroll position on the shared camera path", () => {
+test("About ↔ Work anchor navigation samples the latest scroll position on the shared camera path", () => {
   const frames = frameQueue();
   const markers = [
     { chapter: "orbit", top: 0 },
-    { chapter: "work", top: 1600 },
-    { chapter: "intro", top: 3200 },
-    { chapter: "education", top: 4000 },
-    { chapter: "life", top: 4800 },
-    { chapter: "contact", top: 6400 },
+    { chapter: "intro", top: 1600 },
+    { chapter: "education", top: 2400 },
+    { chapter: "life", top: 3200 },
+    { chapter: "contact", top: 4000 },
+    { chapter: "work", top: 4800 },
   ];
   let scrollY = 1600;
   const destinations = [];
@@ -37,24 +37,24 @@ test("Work ↔ About anchor navigation samples the latest scroll position on the
   }, frames.request, frames.cancel);
 
   sampler.schedule();
-  scrollY = 2400; // Intermediate anchor scroll positions arrive within a frame.
+  scrollY = 3600; // Intermediate anchor scroll positions arrive within a frame.
   sampler.schedule();
-  scrollY = 3200;
+  scrollY = 4800;
   sampler.schedule();
   assert.equal(destinations.length, 0);
   frames.flush();
   assert.equal(destinations.length, 1);
-  assertPose(destinations[0], spacePoses.intro);
+  assertPose(destinations[0], spacePoses.work);
 
   sampler.schedule();
-  scrollY = 1600; // Return to Work without remounting the scene or page.
+  scrollY = 1600; // Return to About without remounting the scene or page.
   sampler.schedule();
   frames.flush();
   assert.equal(destinations.length, 2);
-  assertPose(destinations[0], spacePoses.intro);
-  assertPose(destinations[1], spacePoses.work);
+  assertPose(destinations[0], spacePoses.work);
+  assertPose(destinations[1], spacePoses.intro);
 
-  scrollY = 4000; // Native scrolling continues into About's education and photos.
+  scrollY = 2400; // Native scrolling continues into About's education and photos.
   sampler.schedule();
   frames.flush();
   assertPose(destinations.at(-1), spacePoses.education);

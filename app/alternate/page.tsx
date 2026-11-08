@@ -22,9 +22,11 @@ export default function Alternate() {
           <div className="orbit-copy">
             <h1 id="orbit-title">Cole<br />Sladowsky<span>.</span></h1>
             <p>Efficiency. Low-level systems.<br />Making things run well.</p>
-            <a className="orbit-scroll-cue" href="#work">Scroll to explore <span aria-hidden="true">↓</span></a>
+            <a className="orbit-scroll-cue" href="#about">Scroll to explore <span aria-hidden="true">↓</span></a>
           </div>
         </section>
+
+        <AlternateAboutSection />
 
         <section id="work" className="orbit-chapter orbit-work" data-space-chapter="work" aria-labelledby="orbit-work-title">
           <div className="orbit-copy">
@@ -56,10 +58,9 @@ export default function Alternate() {
                 ))}
               </div>
             </section>
-            <a className="orbit-text-link" href="#about">More about me <span aria-hidden="true">↓</span></a>
+            <a className="orbit-text-link" href="#about">Back to About <span aria-hidden="true">↑</span></a>
           </div>
         </section>
-        <AlternateAboutSection />
       </div>
 
       <footer className="alternate-footer">

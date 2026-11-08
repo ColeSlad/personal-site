@@ -45,8 +45,8 @@ export default function AlternateHeader() {
           </svg>
           Orbit
         </a>
-        <a href="#work" aria-current={active === "work" ? "location" : undefined}>Work</a>
         <a href="#about" aria-current={active === "about" ? "location" : undefined}>About</a>
+        <a href="#work" aria-current={active === "work" ? "location" : undefined}>Work</a>
       </nav>
     </header>
   );
