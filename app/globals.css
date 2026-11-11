@@ -1005,38 +1005,40 @@ html[data-theme-swap] .theme-switch::before,
   animation-delay: -5s;
 }
 
-.about-signoff {
+.orbit-signoff {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 16px 28px;
   padding: 34px 0;
-  margin-top: 44px;
+  width: min(1120px, 100%);
+  margin: 44px auto 0;
   border-top: 1px solid #ffffff1a;
   font-size: 13px;
+  pointer-events: auto;
 }
 
-.about-signoff > div {
+.orbit-signoff > div {
   display: flex;
   gap: 24px;
 }
 
-.about-signoff a {
+.orbit-signoff a {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   min-height: 44px;
-  color: var(--about-secondary);
+  color: var(--alternate-accent);
   text-decoration: none;
 }
 
-.about-signoff a:hover {
-  color: var(--about-text);
+.orbit-signoff a:hover {
+  color: var(--alternate-ink);
 }
 
 .about-email:focus-visible,
-.about-signoff a:focus-visible {
+.orbit-signoff a:focus-visible {
   outline: 2px solid var(--alternate-gold);
   outline-offset: 5px;
 }

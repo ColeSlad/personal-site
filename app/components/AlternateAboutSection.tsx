@@ -51,13 +51,6 @@ export default function AlternateAboutSection() {
         </div>
       </section>
 
-      <footer className="about-signoff" data-space-chapter="contact">
-        <a href="mailto:coleslad31@gmail.com">coleslad31@gmail.com <span aria-hidden="true">↗</span></a>
-        <div>
-          <a href="https://github.com/ColeSlad" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
-          <a href="https://linkedin.com/in/cole-sladowsky" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
-        </div>
-      </footer>
     </section>
   );
 }
