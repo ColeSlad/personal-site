@@ -80,8 +80,7 @@ html:has(.alternate-page) {
   pointer-events: auto;
 }
 
-.orbit-scroll-cue,
-.orbit-text-link {
+.orbit-scroll-cue {
   display: inline-flex;
   align-items: center;
   gap: 24px;

@@ -58,7 +58,6 @@ export default function Alternate() {
                 ))}
               </div>
             </section>
-            <a className="orbit-text-link" href="#about">Back to About <span aria-hidden="true">↑</span></a>
           </div>
         </section>
       </div>
