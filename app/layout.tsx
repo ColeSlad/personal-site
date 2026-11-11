@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { ThemeTransitionProvider } from "./components/ThemeTransition";
 import SiteLoader from "./components/SiteLoader";
-import { kumbhSans } from "./lib/fonts";
+import { syne } from "./lib/fonts";
 import "./globals.css";
 
 const siteDescription = "Cole Sladowsky — CS student and Presidential Scholar at the University of Maryland, obsessed with efficiency, low-level systems, and making things run well.";
@@ -38,7 +38,7 @@ export default function RootLayout({
         <link rel="preload" as="image" href="/space/io-8k.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/space/jupiter-4k.webp" fetchPriority="high" />
       </head>
-      <body className={kumbhSans.variable}>
+      <body className={syne.variable}>
         <SiteLoader>
           <ThemeTransitionProvider>{children}</ThemeTransitionProvider>
         </SiteLoader>
