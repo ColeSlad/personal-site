@@ -18,6 +18,7 @@
 .type-preview-toolbar {
   position: fixed;
   z-index: 10;
+  pointer-events: auto;
   bottom: max(24px, env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
