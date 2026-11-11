@@ -4,7 +4,7 @@ import { useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalSto
 import { spaceFragmentShader, spaceVertexShader } from "../lib/space-shaders";
 import { createSpaceBloom } from "../lib/space-bloom";
 import { loadSiteImage } from "../lib/site-assets";
-import { createSpaceJourneySampler, mixSpacePose, spacePoseAtScroll, spacePoses, type SpaceChapter, type SpacePose } from "../lib/space-journey";
+import { createSpaceJourneySampler, mixSpacePose, spaceArrivalDuration, spacePoseAtScroll, spacePoseDuringArrival, spacePoses, type SpaceChapter, type SpacePose } from "../lib/space-journey";
 
 const motionQuery = "(prefers-reduced-motion: reduce)";
 function subscribeToMotion(callback: () => void) {
@@ -200,8 +200,12 @@ export default function SpaceScene({ active, onPrepared }: { active: boolean; on
       let frame = 0;
       let lastFrame = 0;
       let needsDraw = false;
-      let arriving = document.documentElement.dataset.themeSwap === "alternate";
+      const waitsForReveal = () => document.documentElement.dataset.themeSwap === "alternate"
+        && document.documentElement.dataset.themePhase !== "revealing";
+      let waitingForReveal = waitsForReveal();
       let wasActive = playback.current.active;
+      let arrivalElapsed = playback.current.reducedMotion ? spaceArrivalDuration : 0;
+      let arrivalPending = playback.current.active;
       const gravity = { x: 0, y: 0, strength: 0, target: 0 };
       const gravitySettling = () => Math.abs(gravity.strength - gravity.target) > 0.001;
       const pointers = new Map<number, { x: number; y: number }>();
@@ -245,6 +249,16 @@ export default function SpaceScene({ active, onPrepared }: { active: boolean; on
         destination = playback.current.reducedMotion
           ? { ...spacePoses.orbit }
           : spacePoseAtScroll(markers, scrollY, "orbit");
+        if (arrivalPending && playback.current.active) {
+          // Start each visit from its actual section, including direct links.
+          // Sampling first avoids a frame using the previous visit's camera.
+          Object.assign(pose, destination);
+          Object.assign(manual, camera.current);
+          parallax.x = parallax.y = 0;
+          lastCameraFrame = 0;
+          arrivalPending = false;
+          draw();
+        }
         invalidate();
       }
 
@@ -268,9 +282,10 @@ export default function SpaceScene({ active, onPrepared }: { active: boolean; on
         gl.uniform2f(resolution, canvas.width, canvas.height);
         gl.uniform1f(time, playback.current.reducedMotion ? 8 : elapsed.current);
         gl.uniform3f(cameraUniform, manual.azimuth + parallax.x, manual.elevation + parallax.y, manual.zoom);
-        gl.uniform4f(journeyUniform, pose.azimuth, pose.elevation, pose.distance, pose.roll);
-        const focusX = canvas.clientWidth < 700 ? 0.5 + (pose.focusX - 0.5) * 0.65 : pose.focusX;
-        gl.uniform2f(focus, focusX, pose.focusY);
+        const view = spacePoseDuringArrival(pose, arrivalElapsed, playback.current.reducedMotion);
+        gl.uniform4f(journeyUniform, view.azimuth, view.elevation, view.distance, view.roll);
+        const focusX = canvas.clientWidth < 700 ? 0.5 + (view.focusX - 0.5) * 0.65 : view.focusX;
+        gl.uniform2f(focus, focusX, view.focusY);
         gravity.strength += (gravity.target - gravity.strength) * 0.18;
         gl.uniform4f(gravityUniform, gravity.x, gravity.y, playback.current.reducedMotion ? 0 : gravity.strength, Math.min(260, canvas.clientWidth * 0.28) / Math.max(canvas.clientHeight, 1));
         gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -287,8 +302,10 @@ export default function SpaceScene({ active, onPrepared }: { active: boolean; on
         // Aim for smooth desktop motion; never catch up after a hidden tab.
         const frameInterval = canvas && canvas.clientWidth < 700 ? 1000 / 30 : 1000 / 60;
         if (now - lastFrame >= frameInterval - 0.5) {
-          if (!arriving && playback.current.moving && pointers.size === 0 && lastFrame) {
-            elapsed.current += Math.min((now - lastFrame) / 1000, 0.08);
+          if (!waitingForReveal && playback.current.moving && lastFrame) {
+            const delta = Math.min((now - lastFrame) / 1000, 0.08);
+            arrivalElapsed = Math.min(spaceArrivalDuration, arrivalElapsed + delta);
+            if (pointers.size === 0) elapsed.current += delta;
           }
           lastFrame = now;
           needsDraw = false;
@@ -299,7 +316,7 @@ export default function SpaceScene({ active, onPrepared }: { active: boolean; on
       }
 
       function start() {
-        if (playback.current.active && texturesReady && !arriving && (playback.current.moving || needsDraw || gravitySettling() || journeySettling()) && !document.hidden && !frame && !gl?.isContextLost()) {
+        if (playback.current.active && texturesReady && !waitingForReveal && !arrivalPending && (playback.current.moving || needsDraw || gravitySettling() || journeySettling()) && !document.hidden && !frame && !gl?.isContextLost()) {
           lastFrame = 0;
           frame = requestAnimationFrame(render);
         }
@@ -357,7 +374,12 @@ export default function SpaceScene({ active, onPrepared }: { active: boolean; on
         draw();
       }
 
-      const arrive = () => { arriving = false; lastFrame = 0; start(); };
+      const arrive = () => {
+        if (!waitingForReveal) return;
+        waitingForReveal = false;
+        lastFrame = 0;
+        start();
+      };
       const visibility = () => {
         if (document.hidden) {
           cancelAnimationFrame(frame);
@@ -427,6 +449,7 @@ export default function SpaceScene({ active, onPrepared }: { active: boolean; on
       const shell = document.querySelector(".site-shell");
       if (shell) contentObserver.observe(shell);
       window.addEventListener("theme-arrived", arrive);
+      window.addEventListener("theme-revealing", arrive);
       window.addEventListener("gravity-warp", warp);
       window.addEventListener("scroll", journeySampler.schedule, { passive: true });
       window.addEventListener("resize", journeySampler.schedule);
@@ -444,16 +467,19 @@ export default function SpaceScene({ active, onPrepared }: { active: boolean; on
         frame = 0;
         if (playback.current.active && !wasActive) {
           elapsed.current = playback.current.moving ? 0 : 8;
+          arrivalElapsed = playback.current.reducedMotion ? spaceArrivalDuration : 0;
+          arrivalPending = true;
           camera.current = { azimuth: 0, elevation: 0, zoom: 1 };
-          arriving = document.documentElement.dataset.themeSwap === "alternate";
+          waitingForReveal = waitsForReveal();
         }
         wasActive = playback.current.active;
         parallax.targetX = 0;
         parallax.targetY = 0;
         if (playback.current.reducedMotion) { parallax.x = 0; parallax.y = 0; }
+        if (playback.current.reducedMotion) arrivalElapsed = spaceArrivalDuration;
         journeySampler.schedule();
         if (playback.current.reducedMotion) stepCamera(performance.now());
-        if (playback.current.active) draw();
+        if (playback.current.active && !arrivalPending) draw();
         start();
       };
       loadTexture("/space/io-8k.webp", 0, "uSurfaceMap", "surface");
@@ -471,6 +497,7 @@ export default function SpaceScene({ active, onPrepared }: { active: boolean; on
         observer.disconnect();
         contentObserver.disconnect();
         window.removeEventListener("theme-arrived", arrive);
+        window.removeEventListener("theme-revealing", arrive);
         window.removeEventListener("gravity-warp", warp);
         window.removeEventListener("scroll", journeySampler.schedule);
         window.removeEventListener("resize", journeySampler.schedule);

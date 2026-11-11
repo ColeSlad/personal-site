@@ -20,6 +20,22 @@ export const spacePoses = {
 export type SpaceChapter = keyof typeof spacePoses;
 export type SpaceMarker = { chapter: SpaceChapter; top: number };
 
+export const spaceArrivalDuration = 5;
+
+/** A timed camera approach, independent of the document's scroll position. */
+export function spacePoseDuringArrival(pose: SpacePose, elapsed: number, reducedMotion = false): SpacePose {
+  const t = reducedMotion ? 1 : Math.max(0, Math.min(1, elapsed / spaceArrivalDuration));
+  const remaining = 1 - t * t * (3 - 2 * t);
+  return {
+    azimuth: pose.azimuth - 1.2 * remaining,
+    elevation: pose.elevation + 0.24 * remaining,
+    distance: pose.distance + 3.8 * remaining,
+    focusX: pose.focusX + (0.6 - pose.focusX) * remaining,
+    focusY: pose.focusY + (0.5 - pose.focusY) * remaining,
+    roll: pose.roll - 0.12 * remaining,
+  };
+}
+
 /** Read layout and scroll together after the router has restored the new page. */
 export function createSpaceJourneySampler(
   sample: () => void,

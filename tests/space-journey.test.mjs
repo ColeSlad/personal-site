@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createSpaceJourneySampler, mixSpacePose, spacePoseAtScroll, spacePoses } from "../app/lib/space-journey.ts";
+import { createSpaceJourneySampler, mixSpacePose, spaceArrivalDuration, spacePoseAtScroll, spacePoseDuringArrival, spacePoses } from "../app/lib/space-journey.ts";
 
 function frameQueue() {
   let nextId = 0;
@@ -19,6 +19,49 @@ function frameQueue() {
 function assertPose(actual, expected) {
   for (const key of Object.keys(expected)) assert.ok(Math.abs(actual[key] - expected[key]) < 1e-10, key);
 }
+
+test("arrival starts wide and rotated, then approaches the close-up without scrolling", () => {
+  const target = spacePoses.orbit;
+  const original = { ...target };
+  const start = spacePoseDuringArrival(target, 0);
+  assert.ok(start.distance > target.distance * 2);
+  assert.ok(Math.abs(start.azimuth - target.azimuth) > Math.PI / 4);
+  assert.equal(start.focusX, 0.6);
+  let previous = start;
+  for (let step = 1; step <= 100; step++) {
+    const next = spacePoseDuringArrival(target, spaceArrivalDuration * step / 100);
+    assert.ok(next.distance <= previous.distance);
+    assert.ok(next.azimuth >= previous.azimuth);
+    assert.ok(next.distance > 1.3);
+    previous = next;
+  }
+  assertPose(previous, target);
+  assert.deepEqual(target, original);
+});
+
+test("arrival hands off continuously to the current scroll-driven camera", () => {
+  for (const target of Object.values(spacePoses)) {
+    const before = spacePoseDuringArrival(target, spaceArrivalDuration - 0.001);
+    const atEnd = spacePoseDuringArrival(target, spaceArrivalDuration);
+    assertPose(atEnd, target);
+    assertPose(spacePoseDuringArrival(target, spaceArrivalDuration + 10), target);
+    for (const key of Object.keys(target)) assert.ok(Math.abs(before[key] - atEnd[key]) < 0.000001, key);
+  }
+  // A scroll or section jump during arrival changes the base camera; the
+  // entrance never resets it to the hero or retains an old destination.
+  const scrolled = mixSpacePose(spacePoses.intro, spacePoses.education, 0.4);
+  const originalView = spacePoseDuringArrival(spacePoses.orbit, spaceArrivalDuration / 2);
+  const scrolledView = spacePoseDuringArrival(scrolled, spaceArrivalDuration / 2);
+  assert.ok(Math.abs((originalView.distance - spacePoses.orbit.distance) - (scrolledView.distance - scrolled.distance)) < 1e-10);
+  assert.ok(Math.abs((originalView.azimuth - spacePoses.orbit.azimuth) - (scrolledView.azimuth - scrolled.azimuth)) < 1e-10);
+  assertPose(spacePoseDuringArrival(scrolled, spaceArrivalDuration), scrolled);
+});
+
+test("reduced motion skips arrival by rendering the completed approach", () => {
+  assertPose(spacePoseDuringArrival(spacePoses.work, 0, true), spacePoses.work);
+  assertPose(spacePoseDuringArrival(spacePoses.intro, spaceArrivalDuration / 2, true), spacePoses.intro);
+  assertPose(spacePoseDuringArrival(spacePoses.orbit, -1), spacePoseDuringArrival(spacePoses.orbit, 0));
+});
 
 test("About ↔ Work anchor navigation samples the latest scroll position on the shared camera path", () => {
   const frames = frameQueue();
