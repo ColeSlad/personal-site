@@ -38,7 +38,7 @@ export default function Projects() {
 
             <a href="https://github.com/ColeSlad/inference-lab" target="_blank" rel="noopener noreferrer" className="project-card">
               <div className="exp-head">
-                <span className="exp-role">inference-lab</span>
+                <span className="exp-role">Inference Lab</span>
               </div>
               <div className="exp-company">Python · FastAPI · PyTorch · vLLM · Docker</div>
               <ul className="exp-bullets">

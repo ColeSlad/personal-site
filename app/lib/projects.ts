@@ -6,7 +6,7 @@ export const projects = [
     description: "Vector search across CPU and GPU.",
   },
   {
-    name: "inference-lab",
+    name: "Inference Lab",
     href: "https://github.com/ColeSlad/inference-lab",
     tech: "Python · FastAPI · PyTorch · vLLM · Docker",
     description: "Benchmarking LLM inference across three serving backends.",
