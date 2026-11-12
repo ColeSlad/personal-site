@@ -45,7 +45,9 @@ export default function AlternateAboutSection() {
         <div className="about-photos">
           {photos.map((photo) => (
             <figure key={photo.src} className={`about-photo ${photo.className}`}>
-              <Image src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} sizes={photo.className === "about-photo-landscape" ? "(max-width: 1000px) 85vw, 1120px" : "(max-width: 699px) 85vw, (max-width: 1000px) 42vw, 550px"} />
+              <div className="about-photo-image">
+                <Image src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} sizes={photo.className === "about-photo-landscape" ? "(max-width: 1000px) 85vw, 1120px" : "(max-width: 699px) 85vw, (max-width: 1000px) 42vw, 550px"} />
+              </div>
             </figure>
           ))}
         </div>

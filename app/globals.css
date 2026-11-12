@@ -999,6 +999,19 @@ html[data-theme-swap] .theme-switch::before,
   animation-delay: -3s;
 }
 
+.about-photo-food .about-photo-image {
+  position: relative;
+  aspect-ratio: 4 / 3;
+}
+
+.about-photo-food img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 75%;
+  transform: translate(-50%, -50%) rotate(270deg);
+}
+
 .about-photo-overlook {
   --photo-tilt: -1deg;
   --photo-lift: 20px;
