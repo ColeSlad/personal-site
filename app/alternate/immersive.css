@@ -56,10 +56,6 @@ html:has(.alternate-page) {
   letter-spacing: -0.06em;
 }
 
-.orbit-copy h1 > span {
-  color: #e8ce88;
-}
-
 .orbit-copy > p {
   max-width: 420px;
   margin-top: 32px;

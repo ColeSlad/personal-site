@@ -20,7 +20,7 @@ export default function Alternate() {
       <div className="orbital-journey">
         <section id="orbit" className="orbit-chapter orbit-hero" data-space-chapter="orbit" aria-labelledby="orbit-title">
           <div className="orbit-copy">
-            <h1 id="orbit-title">Cole<br />Sladowsky<span>.</span></h1>
+            <h1 id="orbit-title">Cole<br />Sladowsky</h1>
             <p>Efficiency. Low-level systems.<br />Making things run well.</p>
             <a className="orbit-scroll-cue" href="#about">Scroll to explore <span aria-hidden="true">↓</span></a>
           </div>
