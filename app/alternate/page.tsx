@@ -6,6 +6,14 @@ import SpaceCredits from "../components/SpaceCredits";
 import { workExperience } from "../lib/experience";
 import { projects } from "../lib/projects";
 
+const featuredExperience = workExperience.filter(({ company }) =>
+  ["Amazon Leo", "Visa", "MITRE", "Children’s National"].includes(company),
+);
+
+const featuredProjects = projects.filter(({ name }) =>
+  ["Flowstate", "Inference Lab", "GRCUT", "Parallax", "Entrain", "Trojan Hacks"].includes(name),
+);
+
 export const metadata: Metadata = {
   title: "Another side — Cole Sladowsky",
   description: "Orbit Io, Jupiter’s colorful volcanic moon, on the other side of Cole Sladowsky’s site.",
@@ -34,7 +42,7 @@ export default function Alternate() {
             <section className="orbit-work-group" aria-labelledby="orbit-experience-title">
               <h3 id="orbit-experience-title">Experience</h3>
               <ol className="orbit-experience">
-                {workExperience.map((item) => (
+                {featuredExperience.map((item) => (
                   <li key={item.company}>
                     <div className="orbit-experience-heading">
                       <h4>{item.company}</h4>
@@ -49,7 +57,7 @@ export default function Alternate() {
             <section className="orbit-work-group" aria-labelledby="orbit-projects-title">
               <h3 id="orbit-projects-title">Selected projects</h3>
               <div className="orbit-projects">
-                {projects.map((project) => (
+                {featuredProjects.map((project) => (
                   <a key={project.name} href={project.href} target="_blank" rel="noopener noreferrer">
                     <span className="orbit-project-tech">{project.tech}</span>
                     <h4>{project.name} <span aria-hidden="true">↗</span></h4>
